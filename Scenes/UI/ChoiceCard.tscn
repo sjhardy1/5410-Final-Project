@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=4 uid="uid://bo8smi2a2xpab"]
+
+[ext_resource type="Script" uid="uid://dvbhw6qjji4fx" path="res://Scripts/ChoiceCard.cs" id="1_d37f7"]
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Assets/Tilesets/UI.tres" id="1_jvivu"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Assets/UITheme.tres" id="2_d37f7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d37f7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_14r21"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_54dwx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajnib"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rh26s"]
+
+[node name="ChoiceCard" type="MarginContainer"]
+custom_minimum_size = Vector2(300, 450)
+offset_left = 1.0
+offset_right = 304.0
+offset_bottom = 500.0
+script = ExtResource("1_d37f7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0.74712205, 0.6082544, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 70
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 115
+
+[node name="TileMapLayer" type="TileMapLayer" parent="MarginContainer"]
+tile_map_data = PackedByteArray("AAAAAAAAAgAAAAAAAAAAAAEAAgAAAAEAAAAAAAIAAgAAAAMAAAAAAAMAAgAAAAMAAAAAAAQAAgAAAAMAAAAAAAUAAgAAAAUAAAABAAAAAgABAAAAAAABAAEAAgABAAEAAAABAAIAAgABAAMAAAABAAMAAgABAAMAAAABAAQAAgABAAMAAAABAAUAAgABAAUAAAACAAAAAgADAAAAAAACAAEAAgADAAEAAAACAAIAAgADAAMAAAACAAMAAgADAAMAAAACAAQAAgADAAMAAAACAAUAAgADAAUAAAADAAAAAgAFAAAAAAADAAEAAgAFAAEAAAADAAIAAgAFAAMAAAADAAMAAgAFAAMAAAADAAQAAgAFAAMAAAADAAUAAgAFAAUAAAAAAAYAAgAAAAYAAAABAAYAAgABAAYAAAACAAYAAgADAAYAAAADAAYAAgAFAAYAAAAEAAAAAgAGAAAAAAAEAAEAAgAGAAEAAAAEAAIAAgAGAAMAAAAEAAMAAgAGAAMAAAAEAAQAAgAGAAMAAAAEAAUAAgAGAAUAAAAEAAYAAgAGAAYAAAA=")
+tile_set = ExtResource("1_jvivu")
+
+[node name="Button" type="Button" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_d37f7")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_14r21")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_54dwx")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ajnib")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rh26s")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Button"]
+layout_mode = 0
+offset_right = 223.0
+offset_bottom = 315.0
+theme = ExtResource("2_d37f7")
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="MarginContainer/Button/VBoxContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "Farm"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Rarity" type="Label" parent="MarginContainer/Button/VBoxContainer"]
+layout_mode = 2
+text = "Common"
+horizontal_alignment = 1
+
+[node name="Type" type="Label" parent="MarginContainer/Button/VBoxContainer"]
+layout_mode = 2
+text = "Building"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="MarginContainer/Button/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Description
+Line 2
+Line 3 
+Line 4
+Line 5"
+horizontal_alignment = 1
+autowrap_mode = 3

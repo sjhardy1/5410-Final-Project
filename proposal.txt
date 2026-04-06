@@ -1,0 +1,115 @@
+Spencer Hardy
+Jaden Thomas
+Final Game Project
+Game Overview
+In this game, the player manages resources and makes tactical decisions in order to build and maintain a civilization. However, bandits and monsters covet the resources you produce, and are ready and waiting to attack!
+
+This game combines citybuilding and roguelite elements to create a fast-paced, engaging experience. Players are forced to choose between a set of randomly selected options for every upgrade, such as new buildings, new units, and new technologies. Some combinations of buildings, units, and technologies can create extremely powerful synergies which give players a certain type of “build” to work towards. 
+
+The enemies grow stronger and stronger over time, so the player must find a powerful strategy, or they will soon find their city destroyed and pillaged in no time. The enemies may even learn from their mistakes and make informed decisions about which units to send in order to counter the defenses they saw on their previous raid.
+
+Different units have different strengths and weaknesses. Many technologies will be tremendously beneficial for some units and completely useless to other ones.
+
+After surviving enough raids, you win the game. This ideally will take 15-30 minutes. Whether you win or lose, you will receive some kind of resource, which allows you to unlock permanent upgrades, which you can take with you into any new game. 
+Game Details
+The most basic building is a farm, which produces food. Every building has a food upkeep associated with it, so make sure to produce enough to feed your people. Food is often used in the construction, training new units, and researching new technologies. There are different sizes and varieties of farms, which excel in different areas, so the player is incentivized to try different things.
+
+The next building is a lumber mill, which produces wood. This material is essential for creating new buildings. There are many different types of wood, with different advantages and disadvantages. Wood is also consumed passively; it is not mandatory, but if you have it, then food consumption efficiency greatly increases.
+Core Mechanics, Features, and Tasks
+Gameplay Features
+Main Menu
+Description
+The main menu has the option to start a new game, resume an uncompleted game, purchase starting upgrades (meta-progression), access settings, or close the game. In the settings, the player will be able to modify sound volume, certain visual options, and remap keybinds.
+Tasks
+Design attractive-looking main menu screen
+Implement key binding system
+Play Area
+Description
+The main play area features grass, rocks, and trees on a grid-like canvas, although the exact decorations may be different across different playthroughs. This screen features a sidebar which stores inactive buildings and units. The player can drag units and buildings to move them around, and can drag to and from the sidebar to take them in and out of storage.
+Tasks
+Implement sidebar UI
+Design attractive procedurally generating starting area
+Implement obstacles as a type of game entity which prevents the player from placing buildings or units within their space
+Camera
+Description
+The game’s camera is top-down; the player sees only the top of units and buildings, except when they appear in menus. The player can drag empty spots on the canvas to scroll the camera, or they can use the WASD or arrow keys.
+Tasks
+Implement camera controls
+Dual-state Game Loop
+Description
+Players begin the game in a “downtime” state. During this time, players can rearrange their buildings, move around their units, upgrade their units, sell their units, construct new buildings, and research technology. After the player is ready, or after a timer runs out, the game proceeds into the “raid’ state.
+
+During the “raid” state, enemy units begin spawning outside of the canvas and move in to attack units and buildings. Enemy units nor ally units are locked to the grid during this state. They will have hitboxes which prevent them from intersecting one another, or intersecting buildings. Units have high acceleration, but quickly reach their max speed, so the movement feels natural but not too springy. Units will use “pursue” steering behavior in order to find their way towards opposing units, and “object avoidance” steering behavior if there are buildings or other units in the way. 
+Tasks
+Create a pipeline for implementing new units to the game
+Create a pipeline for implementing new buildings to the game
+Create a pipeline for implementing new technologies to the game
+Create a pipeline for implementing new enemies to the game
+Manage canvas state across all scenes and within save states, made periodically
+Implementing steering behaviors for friendly units and enemies
+Add drop-and-drop functionality for players to set the locations of units and buildings
+Create UI for downtime time limit
+Loot System
+Description
+There will be a “Choice screen,” which displays a series of boxes with descriptions and graphics on them, representing choices for buildings, units, or technologies for the player to claim. By default there might be a specific number of options (i.e. three) but certain upgrades and debuffs could increase or decrease this default number. 
+Tasks
+Design UI for the choice screen
+Carefully design and balance all game items to ensure a smooth player experience
+Pause
+Description
+The player can pause the game during the raid state or downtime state. Nothing happens when the game is paused. The timer doesn’t tick down. The only actions the player can do while paused are unpause, settings, and return to the menu. 
+Tasks
+Create a paused state which halts all processes that normally occur during the downtime or raid states, while keeping the current visual state the same
+Sound Design
+The game will feature music and sound effects. Different scenes will have different music to fit the atmosphere, such as tense music during the raid state and relaxing music during the downtime state. Some potential sound effects we might include: grunts and growls for units attacking, being attacked, or being repositioned by the player, building noises when the player constructs a new building, destruction noises when enemy units hit buildings, fire noises for if there are things on fire, crystal noises for when ice-type attacks are launched, bowstring noises for when arrows are fired, and shining noises when there is a rare item available in the choice menu.
+Tasks
+Write music or find royalty free music online fitting for each desired mood within the game
+Find royalty free sound effects for each desired sound effect within the game
+Connect the sounds to game events
+Connect the sound volume to the settings state
+Activated Abilities
+Description 
+Players can also unlock activated abilities from certain buildings, units, and technologies which can be activated during combat. They will have some kind of cost or cooldown associated with them, and it will be different for each one.
+Tasks
+Create UI for activated abilities, including a way to indicate the cooldown and cost
+Create a pipeline for implementing new activated abilities into the game
+Higher Difficulty
+Description
+When starting a new game, if the previous difficulty has already been completed, the player has the option of choosing a higher difficulty. This changes the location in which the player starts their city, which means that the decorations, weather, play area size, music, and enemies will all be different
+Tasks
+Design/Find appropriate pixel art for higher difficulties
+Design and balance different enemies that appear exclusively in higher difficulties
+Weather
+Description
+In higher difficulties, the weather mechanic is introduced, which changes as time passes, and can inflict debuffs on the player’s civilization. For example, if it is winter, then more wood is consumed.
+Tasks
+Design UI elements that indicate the weather and the effects it has on gameplay
+Design visual and sound effects to match the different weather conditions
+
+Scope and Complexity
+This project is appropriately sized for a two-person team over five weeks, totaling approximately 60–70 combined labor hours. The complexity arises from the integration of grid-based building mechanics with real-time AI steering behaviors, which requires a deep understanding of Godot’s physics engine and C# class inheritance.
+To ensure the project remains feasible within the 30-hour-per-person limit, we have categorized our features:
+Core Features (Must-Have): 
+Basic resource loop (collecting and spending food, wood, etc.)
+Dual-state game loop (transition between downtime state and raid state)
+Randomized upgrade choices
+Basic unit AI (attacking and navigating)
+Unit and building placement/repositioning
+Win/Loss conditions (all buildings destroyed results in a loss, final boss defeated results in a victory)
+Music and SFX
+Basic settings
+Camera controls
+Stretch Goals (Nice-to-Have): 
+Higher difficulties with different 2D environments 
+Activated Abilities
+Advanced settings
+Weather system
+Smart enemy system (send specific units to counter the player’s defenses)
+By focusing on the core loop first, we ensure a playable product while providing a clear path for expansion if development proceeds faster than anticipated.
+New Knowledge and Open Questions
+To successfully deliver this project, our team will need to research several specific technical areas:
+Navigation and Steering: We must learn to implement advanced steering behaviors in Godot, specifically how to combine "Pursue" logic with "Obstacle Avoidance" in a 2D environment without the units getting stuck on buildings.
+C# in Godot: While we are familiar with C#, we need to research the most efficient ways to handle signal-based communication between the UI and the game world to avoid tight coupling.
+Procedural Selection: We need to design a robust "Loot Table" system in C# that can handle weighted randomness for the choice cards.
+Art Pipeline: We must establish a workflow for top-down 2D assets to ensure visual consistency across buildings and units.
+

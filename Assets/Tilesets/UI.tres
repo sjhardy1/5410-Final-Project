@@ -1,0 +1,67 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://bxjn1ysranaho"]
+
+[ext_resource type="Texture2D" uid="uid://5oark76gwmvx" path="res://Assets/Tiny Swords (Free Pack)/UI Elements/UI Elements/Wood Table/WoodTable.png" id="1_uruj0"]
+[ext_resource type="Texture2D" uid="uid://b2h3pjqoxwjwk" path="res://Assets/Tiny Swords (Free Pack)/UI Elements/UI Elements/Banners/Banner.png" id="2_c5clf"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_i20b1"]
+texture = ExtResource("1_uruj0")
+texture_region_size = Vector2i(64, 64)
+1:1/0 = 0
+3:1/0 = 0
+6:1/0 = 0
+1:3/0 = 0
+3:3/0 = 0
+6:3/0 = 0
+1:6/0 = 0
+3:6/0 = 0
+6:6/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+3:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+5:1/0 = 0
+0:3/0 = 0
+5:3/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+3:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+0:6/0 = 0
+5:6/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vsxvo"]
+texture = ExtResource("2_c5clf")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+3:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+3:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+3:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+3:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+3:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+sources/1 = SubResource("TileSetAtlasSource_i20b1")
+sources/2 = SubResource("TileSetAtlasSource_vsxvo")

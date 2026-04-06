@@ -1,0 +1,112 @@
+[gd_scene load_steps=16 format=4 uid="uid://bxe06xhnjf1eb"]
+
+[ext_resource type="TileSet" uid="uid://cl8l4wvubm2hm" path="res://Assets/Tilesets/Farm.tres" id="1_1bpkm"]
+[ext_resource type="Texture2D" uid="uid://bfttikolibgpe" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Resources/Meat/Sheep/Sheep_Grass.png" id="2_mh4b7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5uya"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ab24"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6obgk"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0am6t"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8146b"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_meuj6"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_60hyb"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tf2kq"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mkts"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(1024, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_onme5"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(1152, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4gqf"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(1280, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5kndk"]
+atlas = ExtResource("2_mh4b7")
+region = Rect2(1408, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wdg18"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5uya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ab24")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6obgk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0am6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8146b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_meuj6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_60hyb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tf2kq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mkts")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_onme5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4gqf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5kndk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Farm" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAAAAQAFAAAAAAAAAAIAAQAFAAIAAAABAAAAAQAGAAAAAAABAAEAAQAGAAEAAAABAAIAAQAGAAIAAAACAAAAAQAHAAAAAAACAAEAAQAHAAEAAAACAAIAAQAHAAIAAAAAAAEAAQAFAAEAAAAAAAMAAQAFAAQAAAABAAMAAQAGAAQAAAACAAMAAQAHAAQAAAA=")
+tile_set = ExtResource("1_1bpkm")
+
+[node name="TileMapLayer2" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAP//AAAAAAAAAAABAAAAAAAAAAEAAAABAAEAAAAAAAIAAAACAP//AAABAAAAAAACAAAAAAABAAEAAAACAAEAAAABAAIAAAA=")
+tile_set = ExtResource("1_1bpkm")
+
+[node name="Sheep" type="AnimatedSprite2D" parent="."]
+position = Vector2(61, 117)
+sprite_frames = SubResource("SpriteFrames_wdg18")
+autoplay = "default"
+frame_progress = 0.8334028

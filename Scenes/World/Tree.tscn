@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://krkorxj6fyiv"]
+
+[ext_resource type="Texture2D" uid="uid://b2ekegkrhmc1o" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Tree1.png" id="1_3wlcx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ksdc"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(0, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gh2dj"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(192, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_34jb0"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(384, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_322hc"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(576, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6inxg"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(768, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxqvi"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(960, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sdhld"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(1152, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3a3o"]
+atlas = ExtResource("1_3wlcx")
+region = Rect2(1344, 0, 192, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ctj4e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ksdc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gh2dj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_34jb0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_322hc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6inxg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxqvi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sdhld")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3a3o")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Tree" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_ctj4e")
+frame = 5
+frame_progress = 0.9114739

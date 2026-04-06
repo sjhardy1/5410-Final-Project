@@ -1,0 +1,70 @@
+[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://ck545wppfjoej"]
+
+[ext_resource type="Texture2D" uid="uid://dijf2xp2kvpo8" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="1_pm13h"]
+[ext_resource type="Texture2D" uid="uid://ba670oow6y0si" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Tileset/Water Background color.png" id="2_7yyb2"]
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_7yyb2"]
+tile_data = PackedInt32Array(0, 1572864, 15, 65536, 1572864, 16, 131072, 1572864, 17, 196608, 1572864, 18, 262144, 1572864, 19, 1, 1638400, 15, 65537, 1638400, 16, 131073, 1638400, 17, 196609, 1638400, 18, 262145, 1638400, 19, 2, 1703936, 15, 65538, 1703936, 16, 131074, 1703936, 17, 196610, 1703936, 18, 262146, 1703936, 19, 3, 1769472, 15, 65539, 1769472, 16, 131075, 1769472, 17, 196611, 1769472, 18, 262147, 1769472, 19)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_ajao3"]
+tile_data = PackedInt32Array(0, 1310720, 13, 65536, 1310720, 14, 1, 1376256, 13, 65537, 1376256, 14)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tmlpd"]
+texture = ExtResource("1_pm13h")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+0:4/0 = 0
+3:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+3:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+8:0/0 = 0
+8:1/0 = 0
+8:2/0 = 0
+8:3/0 = 0
+8:4/0 = 0
+8:5/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ajao3"]
+texture = ExtResource("2_7yyb2")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_tmlpd")
+sources/1 = SubResource("TileSetAtlasSource_ajao3")
+pattern_0 = SubResource("TileMapPattern_7yyb2")
+pattern_1 = SubResource("TileMapPattern_ajao3")

@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://jvvnsblxejpn"]
+
+[ext_resource type="Script" uid="uid://bbxmi4qjymq85" path="res://Scripts/ChoiceScreen.cs" id="1_esgua"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Assets/UITheme.tres" id="1_xyny5"]
+[ext_resource type="PackedScene" uid="uid://bo8smi2a2xpab" path="res://Scenes/UI/ChoiceCard.tscn" id="2_oiyyp"]
+
+[node name="ChoiceScreen" type="CanvasLayer"]
+script = ExtResource("1_esgua")
+choiceCardScene = ExtResource("2_oiyyp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.20392157)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 57.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_xyny5")
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -0.5
+offset_right = 0.5
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Select one buff to continue"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 23.0
+offset_bottom = -62.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="ChoiceCard" parent="Control/ScrollContainer/HBoxContainer" instance=ExtResource("2_oiyyp")]
+layout_mode = 2
+
+[node name="ChoiceCard2" parent="Control/ScrollContainer/HBoxContainer" instance=ExtResource("2_oiyyp")]
+layout_mode = 2
+
+[node name="ChoiceCard3" parent="Control/ScrollContainer/HBoxContainer" instance=ExtResource("2_oiyyp")]
+layout_mode = 2
