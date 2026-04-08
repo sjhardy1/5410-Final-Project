@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://uq1vkvgucjo6"]
+[gd_scene load_steps=8 format=3 uid="uid://uq1vkvgucjo6"]
 
 [ext_resource type="Script" uid="uid://dxipohyxfgt1i" path="res://Scripts/GameRoot.cs" id="1_awmvw"]
 [ext_resource type="PackedScene" uid="uid://siu158h6kknh" path="res://Scenes/World/Playfield.tscn" id="1_rqi4g"]
 [ext_resource type="PackedScene" uid="uid://cn8bcm4dyw506" path="res://Scenes/ControllableCamera.tscn" id="2_gk1q0"]
-[ext_resource type="PackedScene" uid="uid://bxe06xhnjf1eb" path="res://Scenes/Buildings/Farm.tscn" id="3_gk1q0"]
+[ext_resource type="PackedScene" uid="uid://bxe06xhnjf1eb" path="res://Scenes/Buildings/SheepFarm.tscn" id="3_gk1q0"]
 [ext_resource type="PackedScene" uid="uid://jvvnsblxejpn" path="res://Scenes/UI/ChoiceScreen.tscn" id="5_2m18y"]
 [ext_resource type="PackedScene" uid="uid://sh7esf60u4um" path="res://Scenes/UI/HUD.tscn" id="6_qwuey"]
+[ext_resource type="PackedScene" uid="uid://dq74l261b161o" path="res://Scenes/Buildings/WheatFarm.tscn" id="7_7vkth"]
 
 [node name="GameRoot" type="Node2D"]
 script = ExtResource("1_awmvw")
@@ -16,9 +17,12 @@ position = Vector2(-4, -8)
 [node name="Playfield" parent="." instance=ExtResource("1_rqi4g")]
 
 [node name="Farm" parent="." instance=ExtResource("3_gk1q0")]
-position = Vector2(-88, -95)
+position = Vector2(-198, -76)
 
 [node name="ChoiceScreen" parent="." instance=ExtResource("5_2m18y")]
 visible = false
 
 [node name="HUD" parent="." instance=ExtResource("6_qwuey")]
+
+[node name="WheatFarm" parent="." instance=ExtResource("7_7vkth")]
+position = Vector2(25, -137)

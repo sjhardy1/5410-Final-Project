@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=9 format=3 uid="uid://bnfb0jq4ey6em"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_qa2of"]
+[ext_resource type="PackedScene" uid="uid://bxe06xhnjf1eb" path="res://Scenes/Buildings/SheepFarm.tscn" id="2_55fy3"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_x37bl"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_4mgrp"]
+[ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="3_x37bl"]
+
+[sub_resource type="Resource" id="Resource_goxau"]
+script = ExtResource("1_qa2of")
+Id = "sheep_farm"
+DisplayName = "Sheep Farm"
+Description = "Produces 10 food per round, increases unit HP"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_sdgfi"]
+script = ExtResource("2_x37bl")
+Health = 100.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_mltlr"]
+script = ExtResource("3_4mgrp")
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[resource]
+script = ExtResource("3_x37bl")
+CoreAttributes = SubResource("Resource_goxau")
+LootAttributes = SubResource("Resource_mltlr")
+DefensiveAttributes = SubResource("Resource_sdgfi")
+UpkeepFoodPerRound = 2.0
+UpkeepWoodPerRound = 1.0
+Scene = ExtResource("2_55fy3")
+ProductionFoodPerRound = 10.0

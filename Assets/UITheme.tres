@@ -1,8 +1,0 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://6ganltpue0ck"]
-
-[ext_resource type="FontFile" uid="uid://eb0rix5fruoa" path="res://Assets/Fonts/hercules-pixel-font/HerculesPixelFontRegular-ovAX0.otf" id="1_4pui4"]
-
-[resource]
-Button/fonts/font = ExtResource("1_4pui4")
-Label/colors/font_color = Color(0, 0, 0, 1)
-Label/fonts/font = ExtResource("1_4pui4")

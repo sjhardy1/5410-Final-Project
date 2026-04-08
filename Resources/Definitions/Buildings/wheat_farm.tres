@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=9 format=3 uid="uid://xcc40itk36a"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_7btrt"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_ko8hs"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_ohslv"]
+[ext_resource type="PackedScene" uid="uid://dq74l261b161o" path="res://Scenes/Buildings/WheatFarm.tscn" id="4_71wyi"]
+[ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="5_8yn11"]
+
+[sub_resource type="Resource" id="Resource_23661"]
+script = ExtResource("1_7btrt")
+Id = "wheat_farm"
+DisplayName = "Wheat Farm"
+Description = "Produces 20 food per round"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_h3pg6"]
+script = ExtResource("2_ko8hs")
+Health = 100.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_sgqgy"]
+script = ExtResource("3_ohslv")
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[resource]
+script = ExtResource("5_8yn11")
+CoreAttributes = SubResource("Resource_23661")
+LootAttributes = SubResource("Resource_sgqgy")
+DefensiveAttributes = SubResource("Resource_h3pg6")
+UpkeepFoodPerRound = 1.0
+UpkeepWoodPerRound = 1.0
+Scene = ExtResource("4_71wyi")
+ProductionFoodPerRound = 20.0

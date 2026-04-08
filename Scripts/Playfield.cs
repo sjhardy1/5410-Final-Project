@@ -19,7 +19,7 @@ public partial class Playfield : Node2D
                     Vector2 pos = new Vector2(x * tileSize, y * tileSize);
                     AnimatedSprite2D tree = (AnimatedSprite2D)treeScene.Instantiate();
                     tree.Position = pos;
-                    tree.Play();
+                    tree.Play(GD.Randf() > 0.5f ? "small1" : "small2");
                     AddChild(tree);
                 }
             }

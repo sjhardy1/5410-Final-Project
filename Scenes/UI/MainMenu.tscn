@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=4 uid="uid://ufhxsbks4i71"]
 
-[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Assets/UITheme.tres" id="1_72sra"]
-[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Assets/Tilesets/UI.tres" id="1_g18y6"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="1_72sra"]
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_g18y6"]
 [ext_resource type="FontFile" uid="uid://eb0rix5fruoa" path="res://Assets/Fonts/hercules-pixel-font/HerculesPixelFontRegular-ovAX0.otf" id="2_mjmdf"]
 
 [sub_resource type="Theme" id="Theme_72sra"]

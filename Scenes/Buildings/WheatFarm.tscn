@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=4 uid="uid://dq74l261b161o"]
+
+[ext_resource type="TileSet" uid="uid://cl8l4wvubm2hm" path="res://Resources/Tilesets/Farm.tres" id="1_y66gy"]
+[ext_resource type="TileSet" uid="uid://dcuvsgegy3fbr" path="res://Resources/Tilesets/Details.tres" id="2_nxcuy"]
+
+[node name="WheatFarm" type="Node2D"]
+
+[node name="House" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAP//AAAAAAAAAAABAAAAAAAAAAEAAAABAAEAAAAAAAIAAAACAP//AAABAAAAAAACAAAAAAABAAEAAAACAAEAAAABAAIAAAA=")
+tile_set = ExtResource("1_y66gy")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAAAAAAAAAABAAAAAAABAAAAAAADAAMAAAAAAAEAAAAAAAEAAAAAAAIAAAAAAAEAAAAAAAMAAAAAAAEAAAAAAAQAAAAAAAEAAAAAAAUAAAABAAIAAAABAAUAAAACAAMAAAACAAUAAAACAAMAAAADAAUAAAACAAMAAAAEAAUAAAACAAMAAAAFAAUAAAADAAIAAAAFAAQAAAAAAAEAAAAFAAMAAAAAAAAAAAABAAEAAQAEAAAAAAABAAIAAQAEAAAAAAABAAMAAQAEAAAAAAABAAQAAQAEAAAAAAACAAQAAQAEAAAAAAACAAMAAQAEAAAAAAADAAQAAQAEAAAAAAAEAAQAAQAEAAAAAAAEAAMAAQAEAAAAAAADAAMAAQAEAAAAAAA=")
+tile_set = ExtResource("2_nxcuy")

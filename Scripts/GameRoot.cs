@@ -6,10 +6,14 @@ public partial class GameRoot : Node2D
 {
     private ControllableCamera camera;
     private ChoiceScreen choiceScreen;
+    private GameDatabase database;
+    private SignalBus signalBus;
     private CanvasLayer hud;
     private RunState runState;
     public override void _Ready()
-    {
+    {		
+        database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
+
         camera = GetNode<ControllableCamera>("ControllableCamera");
         camera.Initialize(GetViewport().GetVisibleRect());
 
@@ -17,9 +21,18 @@ public partial class GameRoot : Node2D
         hud = GetNode<CanvasLayer>("HUD");
 
         runState = GetNode<RunState>("/root/RunState");
+        signalBus = GetNode<SignalBus>("/root/SignalBus");
 
         Button upgradeButton = hud.GetNode<Button>("Button");
         upgradeButton.Pressed += ActivateChoiceScreen;
+
+        signalBus.ChoicePicked += (Dictionary<string, Variant> choiceData) =>
+        {
+            string chosenId = (string)choiceData["Id"];
+            LootDefinitionModel chosenLoot = database.GetLootById(chosenId);
+            GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
+            DeactivateChoiceScreen();
+        };
     }
     private void ActivateChoiceScreen()
     {
@@ -27,26 +40,10 @@ public partial class GameRoot : Node2D
         camera.DisableControls();
         hud.Hide();
         choiceScreen.Show();
-        ChoiceCard card1 = choiceScreen.AddCard(new Dictionary<string, string>{
-            {"Title", "Wheat Farm"},
-            {"Description", "Produces 20 food per round."}
-        });
-        card1.OnCardClicked += () => {
-            GD.Print("Wheat Farm chosen!");
-            DeactivateChoiceScreen();
-        };
-        ChoiceCard card2 = choiceScreen.AddCard(new Dictionary<string, string>{
-            {"Title", "Sheep Farm"},
-            {"Description", "Produces 10 food per round."}
-        });
-        card2.OnCardClicked += () => {
-            GD.Print("Sheep Farm chosen!");
-            DeactivateChoiceScreen();
-        };
+        choiceScreen.GenerateCards(database, 3, LootType.Building);
     }
     private void DeactivateChoiceScreen()
     {
-        choiceScreen.ClearCards();
         choiceScreen.Hide();
         hud.Show();
         camera.EnableControls();

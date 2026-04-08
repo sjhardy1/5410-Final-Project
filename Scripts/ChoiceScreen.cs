@@ -29,4 +29,68 @@ public partial class ChoiceScreen : CanvasLayer
 		cardContainer.AddChild(card);	
 		return card;
 	}
+	public void GenerateCards(GameDatabase database, int num, LootType ?type = null, int ?round = null)
+	{
+		Array<LootDefinitionModel> lootPool = database.GetAllLoot();
+		var filteredLoot = new Dictionary<LootDefinitionModel, float>();
+		foreach (var loot in lootPool)
+		{
+			if(type != null  && !(type == loot.LootType)) continue;
+			if(round != null && loot.LootAttributes.UnlockWave > round) continue;
+			switch (loot.LootAttributes.Rarity)
+			{
+				case Rarity.Common:
+					filteredLoot.Add(loot, 10f);
+					break;
+				case Rarity.Uncommon:
+					filteredLoot.Add(loot, 4f);
+					break;
+				case Rarity.Rare:
+					filteredLoot.Add(loot, 2f);
+					break;
+				case Rarity.Epic:
+					filteredLoot.Add(loot, 1f);
+					break;
+				case Rarity.Legendary:
+					filteredLoot.Add(loot, 0.5f);
+					break;
+			}
+		}
+		for (int i = 0; i < num; i++)
+		{
+			LootDefinitionModel chosenLoot = WeightedRandom(filteredLoot);
+			ChoiceCard card = AddCard(new Dictionary<string, string>{
+				{"Title", chosenLoot.CoreAttributes.DisplayName},
+				{"Rarity", chosenLoot.LootAttributes.Rarity.ToString()},
+				{"Type", chosenLoot.LootType.ToString()},
+				{"Description", chosenLoot.CoreAttributes.Description}
+			});
+			card.GetButton().Pressed += () =>
+			{
+				ClearCards();
+				GetNode<SignalBus>("/root/SignalBus").PublishChoicePicked(new Dictionary<string, Variant>
+				{
+					{"Id", chosenLoot.CoreAttributes.Id},
+				});
+			};
+		}
+	}
+	private LootDefinitionModel WeightedRandom(Dictionary<LootDefinitionModel, float> lootPool)
+	{
+		float totalWeight = 0f;
+		foreach (var weight in lootPool.Values)
+		{
+			totalWeight += weight;
+		}
+		float randomValue = (float)GD.RandRange(0, totalWeight);
+		foreach (var kvp in lootPool)
+		{
+			if (randomValue < kvp.Value)
+			{
+				return kvp.Key;
+			}
+			randomValue -= kvp.Value;
+		}
+		return null; // Should never reach here if weights are correct
+	}
 }

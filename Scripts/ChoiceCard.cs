@@ -1,11 +1,16 @@
 using Godot;
 using System;
 using Godot.Collections;
+using System.ComponentModel;
 
 public partial class ChoiceCard : MarginContainer
 {
+    [Export]
+    public NodePath buttonPath;
+    [Export]
+    public NodePath containerPath;
     public void writeCardInfo(Dictionary<string, string> cardInfo){
-        Node container = GetNode<Node>("MarginContainer/Button/VBoxContainer");
+        Node container = GetNode<Node>(containerPath);
         foreach (var child in container.GetChildren())
         {
             if (child is Label label)
@@ -17,12 +22,8 @@ public partial class ChoiceCard : MarginContainer
             }
         }
     }
-    public override void _Ready()
-	{
-		Button button = GetNode<Button>("MarginContainer/Button");
-		button.Pressed += () => {
-			OnCardClicked?.Invoke();
-		};
-	}
-	public Action OnCardClicked;
+    public Button GetButton()
+    {
+        return GetNode<Button>(buttonPath);
+    }
 }

@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=11 format=3 uid="uid://ket7bfjmwaiw"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_mq54m"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_mhiv2"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_mjcxp"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="4_jvuwl"]
+[ext_resource type="PackedScene" uid="uid://b0i2jmenwkf0u" path="res://Scenes/Units/Warrior.tscn" id="5_wcyo6"]
+[ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="6_22l5k"]
+
+[sub_resource type="Resource" id="Resource_2c1s0"]
+script = ExtResource("1_mq54m")
+Id = "warrior"
+DisplayName = "Warrior"
+Description = "Strong unit"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_yld0w"]
+script = ExtResource("2_mhiv2")
+Health = 100.0
+Armor = 20.0
+HealthRegenPerRound = 10.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_24rlj"]
+script = ExtResource("3_mjcxp")
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[sub_resource type="Resource" id="Resource_0rg4f"]
+script = ExtResource("4_jvuwl")
+AttackDamage = 30.0
+AttackRange = 2.0
+AttackCooldown = 1.0
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("6_22l5k")
+CoreAttributes = SubResource("Resource_2c1s0")
+LootAttributes = SubResource("Resource_24rlj")
+DefensiveAttributes = SubResource("Resource_yld0w")
+OffensiveAttributes = SubResource("Resource_0rg4f")
+UpkeepFoodPerRound = 10.0
+Scene = ExtResource("5_wcyo6")
