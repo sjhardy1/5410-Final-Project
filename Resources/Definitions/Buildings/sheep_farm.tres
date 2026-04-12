@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=9 format=3 uid="uid://bnfb0jq4ey6em"]
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=10 format=3 uid="uid://bnfb0jq4ey6em"]
 
 [ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_qa2of"]
 [ext_resource type="PackedScene" uid="uid://bxe06xhnjf1eb" path="res://Scenes/Buildings/SheepFarm.tscn" id="2_55fy3"]
 [ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_x37bl"]
 [ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_4mgrp"]
+[ext_resource type="Resource" uid="uid://duxipoiu1r5hk" path="res://Resources/Footprints/3x3.tres" id="3_sdgfi"]
 [ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="3_x37bl"]
 
 [sub_resource type="Resource" id="Resource_goxau"]
@@ -26,6 +27,7 @@ metadata/_custom_type_script = "uid://56jqwa01y5dl"
 script = ExtResource("3_x37bl")
 CoreAttributes = SubResource("Resource_goxau")
 LootAttributes = SubResource("Resource_mltlr")
+Footprint = ExtResource("3_sdgfi")
 DefensiveAttributes = SubResource("Resource_sdgfi")
 UpkeepFoodPerRound = 2.0
 UpkeepWoodPerRound = 1.0

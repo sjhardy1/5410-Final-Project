@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using Godot.Collections;
-
 public partial class SaveManager : Node
 {
     [Signal]
@@ -49,7 +48,7 @@ public partial class SaveManager : Node
         {
             { "version", SaveVersion },
             { "saved_at_unix", Time.GetUnixTimeFromSystem() },
-            { "run_state", runState.ToSaveData() }
+            { "run_state", (Variant)runState.ToSaveData() }
         };
 
         bool ok = WriteDictionaryToPath(GetRunSavePath(), root, out string reason);

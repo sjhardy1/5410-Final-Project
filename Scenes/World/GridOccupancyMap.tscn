@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh21usguyak6y"]
+
+[ext_resource type="Script" uid="uid://bwwu5pjjxs4mr" path="res://Scripts/Placement/GridOccupancyMap.cs" id="1_rgna5"]
+
+[node name="GridOccupancyMap" type="Node"]
+script = ExtResource("1_rgna5")

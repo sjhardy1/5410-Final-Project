@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Collections = System.Collections.Generic;
 using Godot.Collections;
 
 public enum RunPhase
@@ -26,15 +27,21 @@ public partial class RunState : Node
     public delegate void TimerChangedEventHandler(float downtimeTimeRemaining, float raidTimeElapsed);
 
     [Export]
-    public float defaultDowntimeSeconds = 60f;
+    public float defaultDowntimeSeconds = 180f;
 
     public RunPhase Phase { get; private set; } = RunPhase.Downtime;
-    public int Food { get; private set; } = 100;
-    public int Wood { get; private set; } = 75;
+    public int Food { get; private set; } = 200;
+    public int Wood { get; private set; } = 100;
     public int MetaCurrency { get; private set; } = 0;
+    public Collections.List<BuildingDefinition> ActiveBuildings { get; private set; } = new Collections.List<BuildingDefinition>();
+    public Collections.List<UnitDefinition> ActiveUnits { get; private set; } = new Collections.List<UnitDefinition>();
+    public Collections.List<BuildingDefinition> StoredBuildings { get; private set; } = new Collections.List<BuildingDefinition>();
+    public Collections.List<UnitDefinition> StoredUnits { get; private set; } = new Collections.List<UnitDefinition>();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }
+
+    public SignalBus signalBus;
 
     public override void _Ready()
     {
@@ -59,14 +66,7 @@ public partial class RunState : Node
         {
             RaidTimeElapsed += dt;
             EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
-        }
-    }
-
-    public void StartRaid()
-    {
-        if (Phase == RunPhase.Downtime)
-        {
-            SetPhase(RunPhase.Raid);
+            GetNode<SignalBus>("/root/SignalBus").PublishRaidEnded(Wave);
         }
     }
 
@@ -77,6 +77,11 @@ public partial class RunState : Node
         RaidTimeElapsed = 0f;
         SetPhase(RunPhase.Downtime);
         EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+    }
+
+    public void StartRaid()
+    {
+        SetPhase(RunPhase.Raid);
     }
 
     public void SetPaused(bool paused)
@@ -115,6 +120,13 @@ public partial class RunState : Node
         Wood -= woodCost;
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
         return true;
+    }
+
+    public void ForceSpendResources(int foodCost, int woodCost)
+    {
+        Food = Mathf.Max(0, Food - foodCost);
+        Wood = Mathf.Max(0, Wood - woodCost);
+        EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
     }
 
     public void AddMetaCurrency(int amount)

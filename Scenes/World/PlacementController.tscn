@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bueqk6lqd6gfd"]
+
+[ext_resource type="Script" uid="uid://de58ksnxm8sb6" path="res://Scripts/Placement/PlacementController.cs" id="1_nnn5x"]
+
+[node name="PlacementController" type="Node2D"]
+script = ExtResource("1_nnn5x")

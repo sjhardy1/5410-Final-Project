@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="FootprintShape" load_steps=2 format=3 uid="uid://duxipoiu1r5hk"]
+
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="1_0w3qy"]
+
+[resource]
+script = ExtResource("1_0w3qy")
+OccupiedOffsets = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(-1, -1)])
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"

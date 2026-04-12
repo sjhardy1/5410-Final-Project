@@ -1,12 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://siu158h6kknh"]
+[gd_scene load_steps=7 format=3 uid="uid://siu158h6kknh"]
 
 [ext_resource type="Script" uid="uid://sho1egoagx47" path="res://Scripts/Playfield.cs" id="1_7yl7s"]
 [ext_resource type="TileSet" uid="uid://ck545wppfjoej" path="res://Resources/Tilesets/Playfield.tres" id="1_erc50"]
 [ext_resource type="PackedScene" uid="uid://krkorxj6fyiv" path="res://Scenes/World/Tree.tscn" id="2_yrhkc"]
+[ext_resource type="Shader" uid="uid://b3h7tyw50omka" path="res://Shaders/Playfield.gdshader" id="3_ei5ai"]
+[ext_resource type="Texture2D" uid="uid://c6jt4air1lhxi" path="res://Assets/grid.png" id="4_6wwh5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ei5ai"]
+shader = ExtResource("3_ei5ai")
+shader_parameter/overlay_texture = ExtResource("4_6wwh5")
+shader_parameter/scale = 0.015625
+shader_parameter/base_opacity = 0.1
+shader_parameter/highlight_opacity = 0.4
+shader_parameter/distance_scaling = 400.0
+shader_parameter/floor_color = Color(0, 0, 0, 1)
+shader_parameter/show_overlay = false
+shader_parameter/mouse_position = Vector2(0, 0)
 
 [node name="Playfield" type="Node2D"]
 script = ExtResource("1_7yl7s")
 treeScene = ExtResource("2_yrhkc")
 
 [node name="Ground" type="TileMapLayer" parent="."]
+material = SubResource("ShaderMaterial_ei5ai")
 tile_set = ExtResource("1_erc50")

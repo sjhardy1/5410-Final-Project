@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=10 format=3 uid="uid://d0mllxa0gvh75"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_hpa4b"]
+[ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="2_ggxml"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_hrsmj"]
+[ext_resource type="Resource" uid="uid://duxipoiu1r5hk" path="res://Resources/Footprints/3x3.tres" id="3_t337w"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_tfbvg"]
+[ext_resource type="PackedScene" uid="uid://dwmxjnps5ho8r" path="res://Scenes/Buildings/LumberMill.tscn" id="5_m2dy6"]
+
+[sub_resource type="Resource" id="Resource_nbbh8"]
+script = ExtResource("1_hpa4b")
+Id = "lumber_mill"
+DisplayName = "Lumber Mill"
+Description = "Generates 20 wood per round"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_8p14a"]
+script = ExtResource("2_hrsmj")
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_err1q"]
+script = ExtResource("4_tfbvg")
+Rarity = 1
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[resource]
+script = ExtResource("2_ggxml")
+CoreAttributes = SubResource("Resource_nbbh8")
+LootAttributes = SubResource("Resource_err1q")
+Footprint = ExtResource("3_t337w")
+DefensiveAttributes = SubResource("Resource_8p14a")
+UpkeepFoodPerRound = 1.0
+UpkeepWoodPerRound = 1.0
+Scene = ExtResource("5_m2dy6")
+ProductionWoodPerRound = 20.0

@@ -6,15 +6,16 @@ public partial class Playfield : Node2D
     [Export]
     public PackedScene treeScene;
     private int tileSize = 64;
+    private TileMapLayer ground;
     public override void _Ready()
     {
-        TileMapLayer ground = GetNode<TileMapLayer>("Ground");
-        for (int x = -10; x <= 10; x++)
+        ground = GetNode<TileMapLayer>("Ground");
+        for (int x = -15; x <= 15; x++)
         {
-            for (int y = -10; y <= 10; y++)
+            for (int y = -15; y <= 15; y++)
             {
                 ground.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 1));
-                if(!(x < 7 && x > -7 && y < 7 && y > -7))
+                if(!(x < 10 && x > -10 && y < 10 && y > -10))
                 {
                     Vector2 pos = new Vector2(x * tileSize, y * tileSize);
                     AnimatedSprite2D tree = (AnimatedSprite2D)treeScene.Instantiate();
@@ -23,6 +24,22 @@ public partial class Playfield : Node2D
                     AddChild(tree);
                 }
             }
+        }
+        GetNode<SignalBus>("/root/SignalBus").Placing += () => SetShowShader(true);
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing += () => SetShowShader(false);
+    }
+    private void SetShowShader(bool show)
+    {
+        if (ground.Material is ShaderMaterial mat)
+        {
+            mat.SetShaderParameter("show_overlay", show);
+        }
+    }
+    public override void _Process(double delta)
+    {
+        if(ground.Material is ShaderMaterial mat)
+        {
+            mat.SetShaderParameter("mouse_position", ground.GetLocalMousePosition());
         }
     }
 }

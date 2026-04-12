@@ -1,7 +1,10 @@
-[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://dcuvsgegy3fbr"]
+[gd_resource type="TileSet" load_steps=11 format=3 uid="uid://dcuvsgegy3fbr"]
 
 [ext_resource type="Texture2D" uid="uid://bpquio7nknqqu" path="res://Assets/Sprout Lands - Sprites - Basic pack/Tilesets/Fences.png" id="1_rwrrv"]
 [ext_resource type="Texture2D" uid="uid://y2rlw2k5od6u" path="res://Assets/Sprout Lands - Sprites - Basic pack/Objects/Basic Plants.png" id="2_cyjfi"]
+[ext_resource type="Texture2D" uid="uid://b67he5lbh3ws4" path="res://Assets/Sprout Lands - Sprites - Basic pack/Objects/Basic_Grass_Biom_things.png" id="3_cyjfi"]
+[ext_resource type="Texture2D" uid="uid://b6teqlrnpg5ay" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Resources/Wood/Wood Resource/Wood Resource.png" id="4_vh41g"]
+[ext_resource type="Texture2D" uid="uid://d4clqq63knmm6" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Stump 3.png" id="5_8k4jy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ab24"]
 texture = ExtResource("1_rwrrv")
@@ -37,6 +40,77 @@ texture = ExtResource("2_cyjfi")
 4:1/0 = 0
 5:1/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vh41g"]
+texture = ExtResource("3_cyjfi")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+8:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8myfq"]
+texture = ExtResource("4_vh41g")
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_877hf"]
+texture = ExtResource("5_8k4jy")
+5:12/0 = 0
+6:12/0 = 0
+5:13/0 = 0
+6:13/0 = 0
+5:14/0 = 0
+6:14/0 = 0
+
 [resource]
 sources/0 = SubResource("TileSetAtlasSource_3ab24")
 sources/1 = SubResource("TileSetAtlasSource_v2oyc")
+sources/2 = SubResource("TileSetAtlasSource_vh41g")
+sources/3 = SubResource("TileSetAtlasSource_8myfq")
+sources/4 = SubResource("TileSetAtlasSource_877hf")

@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="UnitDefinition" load_steps=11 format=3 uid="uid://ket7bfjmwaiw"]
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://ket7bfjmwaiw"]
 
 [ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_mq54m"]
 [ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_mhiv2"]
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="3_mhiv2"]
 [ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_mjcxp"]
 [ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="4_jvuwl"]
 [ext_resource type="PackedScene" uid="uid://b0i2jmenwkf0u" path="res://Scenes/Units/Warrior.tscn" id="5_wcyo6"]
@@ -21,6 +22,10 @@ Armor = 20.0
 HealthRegenPerRound = 10.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
+[sub_resource type="Resource" id="Resource_mjcxp"]
+script = ExtResource("3_mhiv2")
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
+
 [sub_resource type="Resource" id="Resource_24rlj"]
 script = ExtResource("3_mjcxp")
 metadata/_custom_type_script = "uid://56jqwa01y5dl"
@@ -36,7 +41,8 @@ metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 script = ExtResource("6_22l5k")
 CoreAttributes = SubResource("Resource_2c1s0")
 LootAttributes = SubResource("Resource_24rlj")
+Footprint = SubResource("Resource_mjcxp")
 DefensiveAttributes = SubResource("Resource_yld0w")
 OffensiveAttributes = SubResource("Resource_0rg4f")
-UpkeepFoodPerRound = 10.0
+UpkeepFoodPerRound = 10
 Scene = ExtResource("5_wcyo6")

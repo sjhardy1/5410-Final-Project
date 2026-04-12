@@ -1,11 +1,14 @@
-[gd_resource type="Resource" script_class="GameDatabase" load_steps=6 format=3 uid="uid://cgjspbxyjg1xa"]
+[gd_resource type="Resource" script_class="GameDatabase" load_steps=8 format=3 uid="uid://cgjspbxyjg1xa"]
 
 [ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="1_rw3jd"]
 [ext_resource type="Resource" uid="uid://bnfb0jq4ey6em" path="res://Resources/Definitions/Buildings/sheep_farm.tres" id="2_p25vr"]
 [ext_resource type="Resource" uid="uid://xcc40itk36a" path="res://Resources/Definitions/Buildings/wheat_farm.tres" id="3_5kasm"]
+[ext_resource type="Resource" uid="uid://d0mllxa0gvh75" path="res://Resources/Definitions/Buildings/lumber_mill.tres" id="4_p25vr"]
 [ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="4_rj1ip"]
 [ext_resource type="Script" uid="uid://c1pywev0ccojw" path="res://Scripts/Resources/GameDatabase.cs" id="5_y00kp"]
+[ext_resource type="Resource" uid="uid://ket7bfjmwaiw" path="res://Resources/Definitions/Units/warrior.tres" id="6_5kasm"]
 
 [resource]
 script = ExtResource("5_y00kp")
-Buildings = Array[ExtResource("1_rw3jd")]([ExtResource("2_p25vr"), ExtResource("3_5kasm")])
+Buildings = Array[ExtResource("1_rw3jd")]([ExtResource("2_p25vr"), ExtResource("3_5kasm"), ExtResource("4_p25vr")])
+Units = Array[ExtResource("4_rj1ip")]([ExtResource("6_5kasm")])

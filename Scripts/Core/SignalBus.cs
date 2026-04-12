@@ -9,15 +9,19 @@ public partial class SignalBus : Node
 
     [Signal]
     public delegate void ChoicePickedEventHandler(Dictionary<string, Variant> choiceData);
+    [Signal]
+    public delegate void PlacingEventHandler();
+    [Signal]
+    public delegate void StopPlacingEventHandler();
 
     [Signal]
-    public delegate void BuildingPlacedEventHandler(Node buildingNode, Vector2 worldPosition);
+    public delegate void BuildingPlacedEventHandler(string id, Vector2 worldPosition);
 
     [Signal]
     public delegate void BuildingDestroyedEventHandler(Node buildingNode);
 
     [Signal]
-    public delegate void UnitSpawnedEventHandler(Node unitNode, bool isEnemy);
+    public delegate void UnitPlacedEventHandler(string id, Vector2 worldPosition);
 
     [Signal]
     public delegate void UnitDiedEventHandler(Node unitNode, bool isEnemy);
@@ -26,13 +30,23 @@ public partial class SignalBus : Node
     public delegate void RaidStartedEventHandler(int wave);
 
     [Signal]
-    public delegate void RaidEndedEventHandler(int wave, bool victory);
+    public delegate void RaidEndedEventHandler(int wave);
 
     [Signal]
     public delegate void PauseToggledEventHandler(bool isPaused);
 
     [Signal]
     public delegate void ErrorRaisedEventHandler(string source, string message);
+    
+    [Signal]
+    public delegate void RaidBeginEventHandler();
+    [Signal]
+    public delegate void PlaceableAddedToStorageEventHandler(string id, string lootType);
+
+    public void PublishPlaceableAddedToStorage(string id, LootType lootType)
+    {
+        EmitSignal(nameof(PlaceableAddedToStorage), id, lootType.ToString());
+    }
 
     public void PublishChoiceScreenRequested(Array<Dictionary<string, Variant>> options)
     {
@@ -44,9 +58,22 @@ public partial class SignalBus : Node
         EmitSignal(nameof(ChoicePicked), choiceData);
     }
 
-    public void PublishBuildingPlaced(Node buildingNode, Vector2 worldPosition)
+    public void PublishPlacing()
     {
-        EmitSignal(nameof(BuildingPlaced), buildingNode, worldPosition);
+        EmitSignal(nameof(Placing));
+    }
+    public void PublishStopPlacing()
+    {
+        EmitSignal(nameof(StopPlacing));
+    }
+    public void PublishRaidBegin()
+    {
+        EmitSignal(nameof(RaidBegin));
+    }
+
+    public void PublishBuildingPlaced(string id, Vector2 worldPosition)
+    {
+        EmitSignal(nameof(BuildingPlaced), id, worldPosition);
     }
 
     public void PublishBuildingDestroyed(Node buildingNode)
@@ -54,9 +81,9 @@ public partial class SignalBus : Node
         EmitSignal(nameof(BuildingDestroyed), buildingNode);
     }
 
-    public void PublishUnitSpawned(Node unitNode, bool isEnemy)
+    public void PublishUnitPlaced(string id, Vector2 worldPosition)
     {
-        EmitSignal(nameof(UnitSpawned), unitNode, isEnemy);
+        EmitSignal(nameof(UnitPlaced), id, worldPosition);
     }
 
     public void PublishUnitDied(Node unitNode, bool isEnemy)
@@ -69,9 +96,9 @@ public partial class SignalBus : Node
         EmitSignal(nameof(RaidStarted), wave);
     }
 
-    public void PublishRaidEnded(int wave, bool victory)
+    public void PublishRaidEnded(int wave)
     {
-        EmitSignal(nameof(RaidEnded), wave, victory);
+        EmitSignal(nameof(RaidEnded), wave);
     }
 
     public void PublishPauseToggled(bool isPaused)
