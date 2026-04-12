@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://sh7esf60u4um"]
+[gd_scene load_steps=3 format=3 uid="uid://sh7esf60u4um"]
 
 [ext_resource type="Script" uid="uid://qbl1buc7rd4s" path="res://Scripts/Hud.cs" id="1_omqfp"]
+[ext_resource type="PackedScene" uid="uid://xytjqbi76kxn" path="res://Scenes/UI/StorageCard.tscn" id="2_qc5w2"]
 
 [node name="Hud" type="CanvasLayer"]
 script = ExtResource("1_omqfp")
 foodLabelPath = NodePath("Food")
 woodLabelPath = NodePath("Wood")
 timerLabelPath = NodePath("TimerLabel")
+storageCardScene = ExtResource("2_qc5w2")
 
 [node name="Button" type="Button" parent="."]
 offset_left = 33.0
@@ -42,3 +44,23 @@ offset_top = 30.0
 offset_right = 580.0
 offset_bottom = 53.0
 text = "Timer"
+
+[node name="Storage" type="VBoxContainer" parent="."]
+offset_left = 1020.0
+offset_top = 144.0
+offset_right = 1140.0
+offset_bottom = 599.0
+
+[node name="Label" type="Label" parent="Storage"]
+layout_mode = 2
+text = "Storage"
+horizontal_alignment = 1
+
+[node name="StorageCard" parent="Storage" instance=ExtResource("2_qc5w2")]
+layout_mode = 2
+
+[node name="StorageCard2" parent="Storage" instance=ExtResource("2_qc5w2")]
+layout_mode = 2
+
+[node name="StorageCard3" parent="Storage" instance=ExtResource("2_qc5w2")]
+layout_mode = 2

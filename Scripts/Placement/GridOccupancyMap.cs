@@ -11,6 +11,11 @@ public partial class GridOccupancyMap : Node
 
     private readonly System.Collections.Generic.Dictionary<Vector2I, GridPlaceable> occupiedCells = new();
 
+    public override void _Ready()
+    {
+        GetNode<SignalBus>("/root/SignalBus").ClearCells += ClearCells; 
+    }
+
     public Vector2I WorldToCell(Vector2 worldPosition)
     {
         return new Vector2I(
@@ -84,6 +89,17 @@ public partial class GridOccupancyMap : Node
         }
         placeable.GlobalPosition = CellToWorld(anchorCell);
         return true;
+    }
+
+    public void ClearCells(GridPlaceable gridPlaceable, Vector2I anchorCell)
+    {
+        foreach (Vector2I cell in gridPlaceable.GetOccupiedCells())
+        {
+            if (occupiedCells.TryGetValue(cell, out GridPlaceable existing) && existing == gridPlaceable)
+            {
+                occupiedCells.Remove(cell);
+            }
+        }
     }
 
     public void Remove(GridPlaceable placeable)

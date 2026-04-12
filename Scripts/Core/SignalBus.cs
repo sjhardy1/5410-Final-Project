@@ -43,9 +43,32 @@ public partial class SignalBus : Node
     [Signal]
     public delegate void PlaceableAddedToStorageEventHandler(string id, string lootType);
 
-    public void PublishPlaceableAddedToStorage(string id, LootType lootType)
+    public void PublishPlaceableAddedToStorage(string id, string lootType)
     {
-        EmitSignal(nameof(PlaceableAddedToStorage), id, lootType.ToString());
+        EmitSignal(nameof(PlaceableAddedToStorage), id, lootType);
+    }
+
+    [Signal]
+    public delegate void PlaceableRemovedFromStorageEventHandler(string id, string lootType);
+
+    public void PublishPlaceableRemovedFromStorage(string id, string lootType)
+    {
+        EmitSignal(nameof(PlaceableRemovedFromStorage), id, lootType);
+    }
+
+    [Signal]
+    public delegate void PlaceableRemovedFromActiveEventHandler(string id, string lootType);
+
+    public void PublishPlaceableRemovedFromActive(string id, string lootType)
+    {
+        EmitSignal(nameof(PlaceableRemovedFromActive), id, lootType);
+    }
+
+    [Signal]
+    public delegate void ClearCellsEventHandler(GridPlaceable gridPlaceable, Vector2I anchorCell);
+    public void PublishClearCells(GridPlaceable gridPlaceable, Vector2I anchorCell)
+    {
+        EmitSignal(nameof(ClearCells), gridPlaceable, anchorCell);
     }
 
     public void PublishChoiceScreenRequested(Array<Dictionary<string, Variant>> options)

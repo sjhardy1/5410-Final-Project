@@ -10,30 +10,37 @@ public partial class Hud : CanvasLayer
 	[Export]
 	public NodePath timerLabelPath;
 
+	[Export]
+	public PackedScene storageCardScene;
+
 	private Label foodLabel;
 	private Label woodLabel;
 	private Label timerLabel;
 	private RunState runState;
 	private Button phaseButton;
+	private VBoxContainer storage;
 
 	public override void _Ready()
 	{
 		foodLabel = GetNodeOrNull<Label>(foodLabelPath);
 		woodLabel = GetNodeOrNull<Label>(woodLabelPath);
 		timerLabel = GetNodeOrNull<Label>(timerLabelPath);
+		storage = GetNodeOrNull<VBoxContainer>("Storage");
 
 		phaseButton = GetNodeOrNull<Button>("PhaseButton");
 		runState = GetNodeOrNull<RunState>("/root/RunState");
 
+		SignalBus signalBus = GetNode<SignalBus>("/root/SignalBus");
+
 		// Keep HUD synced whenever resource values change.
 		runState.ResourcesChanged += OnResourcesChanged;
-		phaseButton.Pressed += GetNode<SignalBus>("/root/SignalBus").PublishRaidBegin;
+		phaseButton.Pressed += signalBus.PublishRaidBegin;
 
 		// Initialize text immediately so the HUD is correct on scene load.
 		UpdateLabels(runState.Food, runState.Wood);
 
 		runState.TimerChanged += UpdateTimer;
-
+		ClearStorage();
 	}
 
 	public override void _ExitTree()
@@ -74,5 +81,36 @@ public partial class Hud : CanvasLayer
 				timerLabel.Text = $"Raid Time: {Mathf.CeilToInt(raidTimeElapsed)}s";
 			}
 		}
+	}
+	private void ClearStorage()
+	{
+		foreach(Node child in storage.GetChildren())
+		{
+			if(child is StorageCard)
+			{
+				child.QueueFree();
+			}
+		}
+	}
+	public void UpdateStorage()
+	{
+		ClearStorage();
+		foreach(LootDefinitionModel def in runState.StoredPlaceables)
+		{
+			CreateCard(def);
+		}
+	}
+	public void CreateCard(LootDefinitionModel def)
+	{
+		StorageCard card = storageCardScene.Instantiate<StorageCard>();
+		GridPlaceable placeable = def.Scene.Instantiate<GridPlaceable>();
+		card.Initialize(def.CoreAttributes.DisplayName, placeable);
+		placeable.Initialize(def.CoreAttributes.Id, def.Footprint, def.LootType, false);
+		card.Pressed += () =>
+		{
+			GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromStorage(def.CoreAttributes.Id, def.LootType.ToString());
+			card.QueueFree();
+		};
+		storage.AddChild(card);
 	}
 }

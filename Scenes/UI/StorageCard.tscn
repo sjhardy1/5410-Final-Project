@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://xytjqbi76kxn"]
+
+[ext_resource type="Script" uid="uid://uo8jhfyb8807" path="res://Scripts/StorageCard.cs" id="1_5o0qf"]
+[ext_resource type="PackedScene" uid="uid://dq74l261b161o" path="res://Scenes/Buildings/WheatFarm.tscn" id="2_1tke1"]
+
+[node name="StorageCard" type="Button"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 136.0
+offset_bottom = 81.0
+tooltip_text = "Storage Card Info"
+script = ExtResource("1_5o0qf")
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 119.0
+offset_bottom = 24.0
+text = "Sample"
+horizontal_alignment = 1
+
+[node name="WheatFarm" parent="." instance=ExtResource("2_1tke1")]
+position = Vector2(51, 54)
+scale = Vector2(0.25, 0.25)

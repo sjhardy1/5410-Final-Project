@@ -35,8 +35,7 @@ public partial class RunState : Node
     public int MetaCurrency { get; private set; } = 0;
     public Collections.List<BuildingDefinition> ActiveBuildings { get; private set; } = new Collections.List<BuildingDefinition>();
     public Collections.List<UnitDefinition> ActiveUnits { get; private set; } = new Collections.List<UnitDefinition>();
-    public Collections.List<BuildingDefinition> StoredBuildings { get; private set; } = new Collections.List<BuildingDefinition>();
-    public Collections.List<UnitDefinition> StoredUnits { get; private set; } = new Collections.List<UnitDefinition>();
+    public Collections.List<LootDefinitionModel> StoredPlaceables { get; private set; } = new Collections.List<LootDefinitionModel>();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }

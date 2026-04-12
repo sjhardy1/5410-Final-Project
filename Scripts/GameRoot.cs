@@ -9,7 +9,7 @@ public partial class GameRoot : Node2D
     private GameDatabase database;
     private SignalBus signalBus;
     private PlacementController placementController;
-    private CanvasLayer hud;
+    private Hud hud;
     private RunState runState;
     public override void _Ready()
     {		
@@ -19,7 +19,7 @@ public partial class GameRoot : Node2D
         camera.Initialize(GetViewport().GetVisibleRect());
 
         choiceScreen = GetNode<ChoiceScreen>("ChoiceScreen");
-        hud = GetNode<CanvasLayer>("HUD");
+        hud = GetNode<Hud>("HUD");
         placementController = GetNode<PlacementController>("PlacementController");
 
         runState = GetNode<RunState>("/root/RunState");
@@ -70,22 +70,30 @@ public partial class GameRoot : Node2D
         };
         signalBus.PlaceableAddedToStorage += (string id, string lootType) =>
         {
-            if(lootType == LootType.Building.ToString())
+            LootDefinitionModel def = database.GetLootById(id);
+            runState.StoredPlaceables.Add(def);
+            hud.UpdateStorage();
+        };
+        signalBus.PlaceableRemovedFromStorage += (string id, string lootType) =>
+        {
+            LootDefinitionModel def = database.GetLootById(id);
+            runState.StoredPlaceables.Remove(def);
+            placementController.BeginPlacement(def.Scene, def.CoreAttributes.Id, def.Footprint, def.LootType);
+        };
+        signalBus.PlaceableRemovedFromActive += (string id, string lootType) =>
+        {
+            LootDefinitionModel def = database.GetLootById(id);
+            if (def.LootType == LootType.Building)
             {
-                BuildingDefinition def = database.GetBuilding(id);
-                if (def != null)
-                {
-                    runState.StoredBuildings.Add(def);
-                }
+                BuildingDefinition buildingDef = database.GetBuilding(id);
+                runState.ActiveBuildings.Remove(buildingDef);
             }
-            else if(lootType == LootType.Unit.ToString())
+            else if (def.LootType == LootType.Unit)
             {
-                UnitDefinition def = database.GetUnit(id);
-                if (def != null)
-                {
-                    runState.StoredUnits.Add(def);
-                }
+                UnitDefinition unitDef = database.GetUnit(id);
+                runState.ActiveUnits.Remove(unitDef);
             }
+            placementController.BeginPlacement(def.Scene, def.CoreAttributes.Id, def.Footprint, def.LootType);
         };
     }
     private void ActivateChoiceScreen()
