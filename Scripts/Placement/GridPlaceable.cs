@@ -18,6 +18,19 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
     private float holdAccumulator = 0f;
     private bool holdAlreadyEmitted = false;
     private bool isActive = false;
+    private bool placing = false;
+
+    public override void _Ready()
+    {
+        GetNode<SignalBus>("/root/SignalBus").Placing += () => placing = true;
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing += () => placing = false;
+    }
+
+    public override void _ExitTree()
+    {
+        GetNode<SignalBus>("/root/SignalBus").Placing -= () => placing = true;
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing -= () => placing = false;
+    }
 
     public Array<Vector2I> GetOccupiedCells()
     {
@@ -39,7 +52,7 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
 
     public override void _Input(InputEvent @event)
     {
-        if(!isActive) return;
+        if(!isActive || placing) return;
         if (@event is InputEventMouseButton mouseButton)
         {
             if (mouseButton.ButtonIndex == MouseButton.Left)
@@ -80,7 +93,7 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
 
     public override void _Process(double delta)
     {
-        if(!isActive) return;
+        if(!isActive || placing) return;
 
         // Only accumulate hold time if mouse is pressed and hovering
         if (isMousePressed && isMouseHovering && !holdAlreadyEmitted)
