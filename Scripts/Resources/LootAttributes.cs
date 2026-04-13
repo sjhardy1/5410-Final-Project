@@ -1,12 +1,5 @@
 using Godot;
-public enum Rarity
-{
-    Common,
-    Uncommon,
-    Rare,
-    Epic,
-    Legendary
-}
+
 [GlobalClass]
 public partial class LootAttributes : Resource
 {

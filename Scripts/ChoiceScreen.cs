@@ -31,8 +31,8 @@ public partial class ChoiceScreen : CanvasLayer
 	}
 	public void GenerateCards(GameDatabase database, int num, LootType ?type = null, int ?round = null)
 	{
-		Array<LootDefinitionModel> lootPool = database.GetAllLoot();
-		var filteredLoot = new Dictionary<LootDefinitionModel, float>();
+		Array<LootDefinition> lootPool = database.GetAllLoot();
+		var filteredLoot = new Dictionary<LootDefinition, float>();
 		foreach (var loot in lootPool)
 		{
 			if(type != null  && !(type == loot.LootType)) continue;
@@ -58,7 +58,7 @@ public partial class ChoiceScreen : CanvasLayer
 		}
 		for (int i = 0; i < num; i++)
 		{
-			LootDefinitionModel chosenLoot = WeightedRandom(filteredLoot);
+			LootDefinition chosenLoot = WeightedRandom(filteredLoot);
 			ChoiceCard card = AddCard(new Dictionary<string, string>{
 				{"Title", chosenLoot.CoreAttributes.DisplayName},
 				{"Rarity", chosenLoot.LootAttributes.Rarity.ToString()},
@@ -75,7 +75,7 @@ public partial class ChoiceScreen : CanvasLayer
 			};
 		}
 	}
-	private LootDefinitionModel WeightedRandom(Dictionary<LootDefinitionModel, float> lootPool)
+	private LootDefinition WeightedRandom(Dictionary<LootDefinition, float> lootPool)
 	{
 		float totalWeight = 0f;
 		foreach (var weight in lootPool.Values)

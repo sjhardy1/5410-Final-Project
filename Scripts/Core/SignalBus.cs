@@ -15,13 +15,14 @@ public partial class SignalBus : Node
     public delegate void StopPlacingEventHandler();
 
     [Signal]
-    public delegate void BuildingPlacedEventHandler(string id, Vector2 worldPosition);
+    public delegate void PlaceablePlacedEventHandler(PlaceableDefinition def);    
+    public void PublishPlaceablePlaced(PlaceableDefinition def)
+    {
+        EmitSignal(nameof(PlaceablePlaced), def);
+    }
 
     [Signal]
     public delegate void BuildingDestroyedEventHandler(Node buildingNode);
-
-    [Signal]
-    public delegate void UnitPlacedEventHandler(string id, Vector2 worldPosition);
 
     [Signal]
     public delegate void UnitDiedEventHandler(Node unitNode, bool isEnemy);
@@ -41,27 +42,27 @@ public partial class SignalBus : Node
     [Signal]
     public delegate void RaidBeginEventHandler();
     [Signal]
-    public delegate void PlaceableAddedToStorageEventHandler(string id, string lootType);
+    public delegate void PlaceableAddedToStorageEventHandler(PlaceableDefinition def);
 
-    public void PublishPlaceableAddedToStorage(string id, string lootType)
+    public void PublishPlaceableAddedToStorage(PlaceableDefinition def)
     {
-        EmitSignal(nameof(PlaceableAddedToStorage), id, lootType);
+        EmitSignal(nameof(PlaceableAddedToStorage), def);
     }
 
     [Signal]
-    public delegate void PlaceableRemovedFromStorageEventHandler(string id, string lootType);
+    public delegate void PlaceableRemovedFromStorageEventHandler(PlaceableDefinition def);
 
-    public void PublishPlaceableRemovedFromStorage(string id, string lootType)
+    public void PublishPlaceableRemovedFromStorage(PlaceableDefinition def)
     {
-        EmitSignal(nameof(PlaceableRemovedFromStorage), id, lootType);
+        EmitSignal(nameof(PlaceableRemovedFromStorage), def);
     }
 
     [Signal]
-    public delegate void PlaceableRemovedFromActiveEventHandler(string id, string lootType);
+    public delegate void PlaceableRemovedFromActiveEventHandler(PlaceableDefinition def);
 
-    public void PublishPlaceableRemovedFromActive(string id, string lootType)
+    public void PublishPlaceableRemovedFromActive(PlaceableDefinition def)
     {
-        EmitSignal(nameof(PlaceableRemovedFromActive), id, lootType);
+        EmitSignal(nameof(PlaceableRemovedFromActive), def);
     }
 
     [Signal]
@@ -94,19 +95,9 @@ public partial class SignalBus : Node
         EmitSignal(nameof(RaidBegin));
     }
 
-    public void PublishBuildingPlaced(string id, Vector2 worldPosition)
-    {
-        EmitSignal(nameof(BuildingPlaced), id, worldPosition);
-    }
-
     public void PublishBuildingDestroyed(Node buildingNode)
     {
         EmitSignal(nameof(BuildingDestroyed), buildingNode);
-    }
-
-    public void PublishUnitPlaced(string id, Vector2 worldPosition)
-    {
-        EmitSignal(nameof(UnitPlaced), id, worldPosition);
     }
 
     public void PublishUnitDied(Node unitNode, bool isEnemy)

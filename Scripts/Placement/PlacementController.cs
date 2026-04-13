@@ -55,16 +55,16 @@ public partial class PlacementController : Node2D
 
         if (@event.IsActionPressed("place_cancel"))
         {
-            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.id, activePlaceable.lootType.ToString());
+            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
             activePlaceable.QueueFree();
             activePlaceable = null;
             GetNode<SignalBus>("/root/SignalBus").PublishStopPlacing();
         }
     }
 
-    public GridPlaceable BeginPlacement(PackedScene scene, string id, FootprintShape footprint, LootType lootType)
+    public GridPlaceable BeginPlacement(PlaceableDefinition def)
     {
-        if (scene == null)
+        if (def.Scene == null)
         {
             return null;
         }
@@ -74,8 +74,8 @@ public partial class PlacementController : Node2D
             activePlaceable.QueueFree();
         }
 
-        activePlaceable = scene.Instantiate<GridPlaceable>();
-        activePlaceable.Initialize(id, footprint, lootType);
+        activePlaceable = def.Scene.Instantiate<GridPlaceable>();
+        activePlaceable.Initialize(def);
         AddChild(activePlaceable);
         UpdateActivePreviewFromMouse();
         GetNode<SignalBus>("/root/SignalBus").PublishPlacing();
@@ -103,7 +103,7 @@ public partial class PlacementController : Node2D
         }
 
         Vector2I anchor = occupancyMap.WorldToCell(GetGlobalMousePosition());
-        activePlaceable.AnchorCell = anchor;
+        activePlaceable.def.AnchorCell = anchor;
         activePlaceable.GlobalPosition = occupancyMap.CellToWorld(anchor);
         activePlaceable.ZIndex = anchor.Y + 10;
 

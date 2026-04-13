@@ -8,9 +8,9 @@ public partial class GameDatabase : Resource
     [Export] public Array<UnitDefinition> Units { get; set; } = new();
     public Array<BuildingDefinition> GetAllBuildings() => Buildings;
     public Array<UnitDefinition> GetAllUnits() => Units;
-    public Array<LootDefinitionModel> GetAllLoot()
+    public Array<LootDefinition> GetAllLoot()
     {
-        var lootDefinitions = new Array<LootDefinitionModel>();
+        var lootDefinitions = new Array<LootDefinition>();
         foreach (var building in Buildings)
         {
             if (building != null)
@@ -43,7 +43,7 @@ public partial class GameDatabase : Resource
         }
         return null;
     }
-    public LootDefinitionModel GetLootById(string id)
+    public LootDefinition GetLootById(string id)
     {
         foreach (var building in Buildings)
         {

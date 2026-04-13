@@ -33,9 +33,8 @@ public partial class RunState : Node
     public int Food { get; private set; } = 200;
     public int Wood { get; private set; } = 100;
     public int MetaCurrency { get; private set; } = 0;
-    public Collections.List<BuildingDefinition> ActiveBuildings { get; private set; } = new Collections.List<BuildingDefinition>();
-    public Collections.List<UnitDefinition> ActiveUnits { get; private set; } = new Collections.List<UnitDefinition>();
-    public Collections.List<LootDefinitionModel> StoredPlaceables { get; private set; } = new Collections.List<LootDefinitionModel>();
+    public Collections.List<PlaceableDefinition> ActivePlaceables { get; private set; } = new Collections.List<PlaceableDefinition>();
+    public Collections.List<PlaceableDefinition> StoredPlaceables { get; private set; } = new Collections.List<PlaceableDefinition>();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }

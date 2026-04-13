@@ -44,25 +44,25 @@ public partial class GridOccupancyMap : Node
             return false;
         }
 
-        Vector2I previousAnchor = placeable.AnchorCell;
-        placeable.AnchorCell = anchorCell;
+        Vector2I previousAnchor = placeable.def.AnchorCell;
+        placeable.def.AnchorCell = anchorCell;
 
         Array<Vector2I> cells = placeable.GetOccupiedCells();
         foreach (Vector2I cell in cells)
         {
             if (!IsInBounds(cell))
             {
-                placeable.AnchorCell = previousAnchor;
+                placeable.def.AnchorCell = previousAnchor;
                 return false;
             }
             if (occupiedCells.TryGetValue(cell, out GridPlaceable existing) && existing != placeable)
             {
-                placeable.AnchorCell = previousAnchor;
+                placeable.def.AnchorCell = previousAnchor;
                 return false;
             }
         }
 
-        placeable.AnchorCell = previousAnchor;
+        placeable.def.AnchorCell = previousAnchor;
         return true;
     }
 
@@ -75,18 +75,12 @@ public partial class GridOccupancyMap : Node
 
         Remove(placeable);
 
-        placeable.AnchorCell = anchorCell;
+        placeable.def.AnchorCell = anchorCell;
         foreach (Vector2I cell in placeable.GetOccupiedCells())
         {
             occupiedCells[cell] = placeable;
         }
-        if(placeable.lootType == LootType.Building)
-        {
-            GetNode<SignalBus>("/root/SignalBus").PublishBuildingPlaced(placeable.id, CellToWorld(anchorCell));
-        } else if (placeable.lootType == LootType.Unit)
-        {
-            GetNode<SignalBus>("/root/SignalBus").PublishUnitPlaced(placeable.id, CellToWorld(anchorCell));
-        }
+        GetNode<SignalBus>("/root/SignalBus").PublishPlaceablePlaced(placeable.def);
         placeable.GlobalPosition = CellToWorld(anchorCell);
         return true;
     }

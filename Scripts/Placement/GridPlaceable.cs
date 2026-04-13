@@ -1,18 +1,13 @@
 using Godot;
 using Godot.Collections;
 
-public partial class GridPlaceable : Node2D, IGridPlaceable
+public partial class GridPlaceable : Node2D
 {
 
-    [Export] public FootprintShape Footprint { get; set; }
+    public PlaceableDefinition def { get; private set; }
     [Export] public bool BlocksMovement { get; set; } = true;
     [Export] public float HoldDurationSeconds { get; set; } = 0.5f;
-
-    public Vector2I AnchorCell { get; set; } = Vector2I.Zero;
     public int RotationQuarterTurns { get; set; } = 0;
-    public string id { get; set; }
-    public LootType lootType { get; set; }
-
     private bool isMouseHovering = false;
     private bool isMousePressed = false;
     private float holdAccumulator = 0f;
@@ -35,16 +30,16 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
     public Array<Vector2I> GetOccupiedCells()
     {
         var occupied = new Array<Vector2I>();
-        if (Footprint == null)
+        if (def.Footprint == null)
         {
-            occupied.Add(AnchorCell);
+            occupied.Add(def.AnchorCell);
             return occupied;
         }
 
-        Array<Vector2I> offsets = Footprint.GetOffsetsForRotation(RotationQuarterTurns);
+        Array<Vector2I> offsets = def.Footprint.GetOffsetsForRotation(RotationQuarterTurns);
         foreach (Vector2I offset in offsets)
         {
-            occupied.Add(AnchorCell + offset);
+            occupied.Add(def.AnchorCell + offset);
         }
 
         return occupied;
@@ -103,8 +98,8 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
             // Check if hold duration has been reached
             if (holdAccumulator >= HoldDurationSeconds)
             {
-                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(id, lootType.ToString());
-                GetNode<SignalBus>("/root/SignalBus").PublishClearCells(this, AnchorCell);
+                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(def);
+                GetNode<SignalBus>("/root/SignalBus").PublishClearCells(this, def.AnchorCell);
                 holdAlreadyEmitted = true;
                 QueueFree();
             }
@@ -119,7 +114,7 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
         // Get the node's global position
         Vector2 nodePos = GlobalPosition;
         
-        foreach (Vector2I cellOffset in Footprint.GetOffsetsForRotation(RotationQuarterTurns))
+        foreach (Vector2I cellOffset in def.Footprint.GetOffsetsForRotation(RotationQuarterTurns))
         {
             Vector2 cellWorldPos = nodePos + new Vector2(cellOffset.X * 64, cellOffset.Y * 64);
             Rect2 cellRect = new Rect2(cellWorldPos, new Vector2(64, 64));
@@ -131,11 +126,10 @@ public partial class GridPlaceable : Node2D, IGridPlaceable
         return false;
     }
 
-    public void Initialize(string id, FootprintShape footprint, LootType lootType, bool isActive = true)
+    public void Initialize(PlaceableDefinition def, bool isActive = true)
     {
-        this.id = id;
-        Footprint = footprint;
-        this.lootType = lootType;
+        this.def = def;
         this.isActive = isActive;
+        def.AnchorCell = Vector2I.Zero;
     }
 }

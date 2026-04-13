@@ -95,20 +95,20 @@ public partial class Hud : CanvasLayer
 	public void UpdateStorage()
 	{
 		ClearStorage();
-		foreach(LootDefinitionModel def in runState.StoredPlaceables)
+		foreach(PlaceableDefinition def in runState.StoredPlaceables)
 		{
 			CreateCard(def);
 		}
 	}
-	public void CreateCard(LootDefinitionModel def)
+	public void CreateCard(PlaceableDefinition def)
 	{
 		StorageCard card = storageCardScene.Instantiate<StorageCard>();
 		GridPlaceable placeable = def.Scene.Instantiate<GridPlaceable>();
 		card.Initialize(def.CoreAttributes.DisplayName, placeable);
-		placeable.Initialize(def.CoreAttributes.Id, def.Footprint, def.LootType, false);
+		placeable.Initialize(def, false);
 		card.Pressed += () =>
 		{
-			GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromStorage(def.CoreAttributes.Id, def.LootType.ToString());
+			GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromStorage(def);
 			card.QueueFree();
 		};
 		storage.AddChild(card);

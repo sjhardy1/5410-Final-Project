@@ -11,6 +11,7 @@ public partial class GameRoot : Node2D
     private PlacementController placementController;
     private Hud hud;
     private RunState runState;
+    private int nextUid = 1;
     public override void _Ready()
     {		
         database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
@@ -37,26 +38,18 @@ public partial class GameRoot : Node2D
         signalBus.ChoicePicked += (Dictionary<string, Variant> choiceData) =>
         {
             string chosenId = (string)choiceData["Id"];
-            LootDefinitionModel chosenLoot = database.GetLootById(chosenId);
-            placementController.BeginPlacement(chosenLoot.Scene, chosenLoot.CoreAttributes.Id, chosenLoot.Footprint, chosenLoot.LootType);
+            LootDefinition chosenLoot = database.GetLootById(chosenId);
+            if(chosenLoot is PlaceableDefinition def)
+            {
+                def.Uid = nextUid++;
+                placementController.BeginPlacement(def);
+            }
             GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
             DeactivateChoiceScreen();
         };        
-        signalBus.BuildingPlaced += (string id, Vector2 worldPosition) =>
+        signalBus.PlaceablePlaced += (PlaceableDefinition def) =>
         {
-            BuildingDefinition def = database.GetBuilding(id);
-            if (def != null)
-            {
-                runState.ActiveBuildings.Add(def);
-            }
-        };
-        signalBus.UnitPlaced += (string id, Vector2 worldPosition) =>
-        {
-            UnitDefinition def = database.GetUnit(id);
-            if (def != null)
-            {
-                runState.ActiveUnits.Add(def);
-            }
+            runState.ActivePlaceables.Add(def);
         };
         signalBus.RaidEnded += (int wave) =>
         {
@@ -68,32 +61,20 @@ public partial class GameRoot : Node2D
         {
             runState.StartRaid();
         };
-        signalBus.PlaceableAddedToStorage += (string id, string lootType) =>
+        signalBus.PlaceableAddedToStorage += (PlaceableDefinition def) =>
         {
-            LootDefinitionModel def = database.GetLootById(id);
             runState.StoredPlaceables.Add(def);
             hud.UpdateStorage();
         };
-        signalBus.PlaceableRemovedFromStorage += (string id, string lootType) =>
+        signalBus.PlaceableRemovedFromStorage += (PlaceableDefinition def) =>
         {
-            LootDefinitionModel def = database.GetLootById(id);
             runState.StoredPlaceables.Remove(def);
-            placementController.BeginPlacement(def.Scene, def.CoreAttributes.Id, def.Footprint, def.LootType);
+            placementController.BeginPlacement(def);
         };
-        signalBus.PlaceableRemovedFromActive += (string id, string lootType) =>
+        signalBus.PlaceableRemovedFromActive += (PlaceableDefinition def) =>
         {
-            LootDefinitionModel def = database.GetLootById(id);
-            if (def.LootType == LootType.Building)
-            {
-                BuildingDefinition buildingDef = database.GetBuilding(id);
-                runState.ActiveBuildings.Remove(buildingDef);
-            }
-            else if (def.LootType == LootType.Unit)
-            {
-                UnitDefinition unitDef = database.GetUnit(id);
-                runState.ActiveUnits.Remove(unitDef);
-            }
-            placementController.BeginPlacement(def.Scene, def.CoreAttributes.Id, def.Footprint, def.LootType);
+            runState.ActivePlaceables.Remove(def);
+            placementController.BeginPlacement(def);
         };
     }
     private void ActivateChoiceScreen()
@@ -111,21 +92,24 @@ public partial class GameRoot : Node2D
     }
     private void ResolveUpkeep()
     {
-        foreach(BuildingDefinition def in runState.ActiveBuildings)
+        foreach(PlaceableDefinition def in runState.ActivePlaceables)
         {
-            runState.AddResources(def.ProductionFoodPerRound, def.ProductionWoodPerRound);
-            if(runState.TrySpendResources(0, def.UpkeepWoodPerRound))
+            if(def is BuildingDefinition buildingDef)
+            {
+                runState.AddResources(buildingDef.ProductionFoodPerRound, buildingDef.ProductionWoodPerRound);
+                if(runState.TrySpendResources(0, buildingDef.UpkeepWoodPerRound))
+                {
+                    runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
+                }
+                else
+                {
+                    runState.ForceSpendResources(def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound, 0);
+                }
+            }
+            if(def is UnitDefinition)
             {
                 runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
             }
-            else
-            {
-                runState.ForceSpendResources(def.UpkeepFoodPerRound * 2 + def.UpkeepWoodPerRound, 0);
-            }
-        }
-        foreach(UnitDefinition def in runState.ActiveUnits)
-        {
-            runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
         }
         ActivateChoiceScreen();
     }
