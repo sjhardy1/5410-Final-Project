@@ -12,3 +12,8 @@ public enum Rarity
     Epic,
     Legendary
 }
+public enum Faction
+{
+    Ally,
+    Enemy
+}

@@ -25,13 +25,10 @@ public partial class SignalBus : Node
     public delegate void BuildingDestroyedEventHandler(Node buildingNode);
 
     [Signal]
-    public delegate void UnitDiedEventHandler(Node unitNode, bool isEnemy);
+    public delegate void UnitDiedEventHandler(int combatantUid);
 
     [Signal]
-    public delegate void RaidStartedEventHandler(int wave);
-
-    [Signal]
-    public delegate void RaidEndedEventHandler(int wave);
+    public delegate void RaidEndedEventHandler();
 
     [Signal]
     public delegate void PauseToggledEventHandler(bool isPaused);
@@ -107,19 +104,14 @@ public partial class SignalBus : Node
         EmitSignal(nameof(BuildingDestroyed), buildingNode);
     }
 
-    public void PublishUnitDied(Node unitNode, bool isEnemy)
+    public void PublishUnitDied(int combatantUid)
     {
-        EmitSignal(nameof(UnitDied), unitNode, isEnemy);
+        EmitSignal(nameof(UnitDied), combatantUid);
     }
 
-    public void PublishRaidStarted(int wave)
+    public void PublishRaidEnded()
     {
-        EmitSignal(nameof(RaidStarted), wave);
-    }
-
-    public void PublishRaidEnded(int wave)
-    {
-        EmitSignal(nameof(RaidEnded), wave);
+        EmitSignal(nameof(RaidEnded));
     }
 
     public void PublishPauseToggled(bool isPaused)

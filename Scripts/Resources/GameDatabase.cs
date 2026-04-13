@@ -6,8 +6,10 @@ public partial class GameDatabase : Resource
 {
     [Export] public Array<BuildingDefinition> Buildings { get; set; } = new();
     [Export] public Array<UnitDefinition> Units { get; set; } = new();
+    [Export] public Array<EnemyDefinition> Enemies { get; set; } = new();
     public Array<BuildingDefinition> GetAllBuildings() => Buildings;
     public Array<UnitDefinition> GetAllUnits() => Units;
+    public Array<EnemyDefinition> GetAllEnemies() => Enemies;
     public Array<LootDefinition> GetAllLoot()
     {
         var lootDefinitions = new Array<LootDefinition>();

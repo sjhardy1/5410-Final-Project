@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://uq1vkvgucjo6"]
+[gd_scene load_steps=10 format=3 uid="uid://uq1vkvgucjo6"]
 
 [ext_resource type="Script" uid="uid://dxipohyxfgt1i" path="res://Scripts/GameRoot.cs" id="1_awmvw"]
 [ext_resource type="PackedScene" uid="uid://siu158h6kknh" path="res://Scenes/World/Playfield.tscn" id="1_rqi4g"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bh21usguyak6y" path="res://Scenes/World/GridOccupancyMap.tscn" id="8_aob1w"]
 [ext_resource type="Shader" uid="uid://dxtwixxk5dplk" path="res://Shaders/invalid_placement_tint.gdshader" id="8_o8ewf"]
 [ext_resource type="PackedScene" uid="uid://bueqk6lqd6gfd" path="res://Scenes/World/PlacementController.tscn" id="9_58i56"]
+[ext_resource type="PackedScene" uid="uid://b63kcjhqnxhmr" path="res://Scenes/World/RaidController.tscn" id="10_58i56"]
 
 [node name="GameRoot" type="Node2D"]
 script = ExtResource("1_awmvw")
@@ -27,3 +28,5 @@ visible = false
 [node name="PlacementController" parent="." instance=ExtResource("9_58i56")]
 OccupancyMapPath = NodePath("../GridOccupancyMap")
 InvalidPlacementShader = ExtResource("8_o8ewf")
+
+[node name="RaidController" parent="." instance=ExtResource("10_58i56")]

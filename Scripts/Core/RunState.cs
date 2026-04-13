@@ -35,6 +35,7 @@ public partial class RunState : Node
     public int MetaCurrency { get; private set; } = 0;
     public Collections.List<PlaceableDefinition> ActivePlaceables { get; private set; } = new Collections.List<PlaceableDefinition>();
     public Collections.List<PlaceableDefinition> StoredPlaceables { get; private set; } = new Collections.List<PlaceableDefinition>();
+    public Collections.List<Combatant> ActiveCombatants { get; private set; } = new Collections.List<Combatant>();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }
@@ -65,7 +66,6 @@ public partial class RunState : Node
         {
             RaidTimeElapsed += dt;
             EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
-            GetNode<SignalBus>("/root/SignalBus").PublishRaidEnded(Wave);
         }
     }
 

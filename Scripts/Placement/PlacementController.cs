@@ -74,14 +74,20 @@ public partial class PlacementController : Node2D
             return null;
         }
 
+        PlaceableDefinition runtimeDefinition = def.Duplicate() as PlaceableDefinition;
+        if (runtimeDefinition == null)
+        {
+            return null;
+        }
+
         if (activePlaceable != null)
         {
             GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
             activePlaceable.QueueFree();
         }
 
-        activePlaceable = def.Scene.Instantiate<GridPlaceable>();
-        activePlaceable.Initialize(def);
+        activePlaceable = runtimeDefinition.Scene.Instantiate<GridPlaceable>();
+        activePlaceable.Initialize(runtimeDefinition);
         AddChild(activePlaceable);
         UpdateActivePreviewFromMouse();
         GetNode<SignalBus>("/root/SignalBus").PublishPlacing();

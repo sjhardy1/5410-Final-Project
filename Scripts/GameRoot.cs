@@ -10,6 +10,7 @@ public partial class GameRoot : Node2D
     private GameDatabase database;
     private SignalBus signalBus;
     private PlacementController placementController;
+    private RaidController raidController;
     private Hud hud;
     private RunState runState;
     private Queue lootQueue = new Queue();
@@ -25,6 +26,7 @@ public partial class GameRoot : Node2D
         choiceScreen = GetNode<ChoiceScreen>("ChoiceScreen");
         hud = GetNode<Hud>("HUD");
         placementController = GetNode<PlacementController>("PlacementController");
+        raidController = GetNode<RaidController>("RaidController");
 
         runState = GetNode<RunState>("/root/RunState");
         signalBus = GetNode<SignalBus>("/root/SignalBus");
@@ -66,14 +68,37 @@ public partial class GameRoot : Node2D
         {
             runState.ActivePlaceables.Add(def);
         };
-        signalBus.RaidEnded += (int wave) =>
+        signalBus.RaidEnded += () =>
         {
+            foreach(Node child in placementController.GetChildren())
+            {
+                if(child is GridPlaceable placeable && placeable.def is UnitDefinition)
+                {
+                    placeable.Show();
+                }
+            }
             runState.AdvanceWave();
             runState.StartDowntime();
             ResolveUpkeep();
         };
         signalBus.RaidBegin += () =>
         {
+            foreach(PlaceableDefinition def in runState.ActivePlaceables)
+            {
+                if(def is UnitDefinition unitDef)
+                {
+                    GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+def.AnchorCell);
+                    raidController.PlaceUnit(unitDef);
+                }
+            }
+            foreach(Node child in placementController.GetChildren())
+            {
+                if(child is GridPlaceable placeable && placeable.def is UnitDefinition)
+                {
+                    placeable.Hide();
+                }
+            }
+            raidController.StartRaid(database);
             runState.StartRaid();
         };
         signalBus.PlaceableAddedToStorage += (PlaceableDefinition def) =>

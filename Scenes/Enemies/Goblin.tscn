@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1c7a2usamp"]
+
+[ext_resource type="TileSet" uid="uid://wqrqwor2fpo7" path="res://Resources/Tilesets/Monsters.tres" id="1_fsigs"]
+
+[node name="Goblin" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-53, -77)
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0)
+tile_set = ExtResource("1_fsigs")
