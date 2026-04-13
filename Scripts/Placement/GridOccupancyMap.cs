@@ -9,11 +9,11 @@ public partial class GridOccupancyMap : Node
     [Export] public Vector2I BoundsMinCell { get; set; } = new Vector2I(-10, -10);
     [Export] public Vector2I BoundsMaxCell { get; set; } = new Vector2I(10, 10);
 
-    private readonly System.Collections.Generic.Dictionary<Vector2I, GridPlaceable> occupiedCells = new();
+    private readonly System.Collections.Generic.Dictionary<Vector2I, PlaceableDefinition> occupiedCells = new();
 
     public override void _Ready()
     {
-        GetNode<SignalBus>("/root/SignalBus").ClearCells += ClearCells; 
+        GetNode<SignalBus>("/root/SignalBus").ClearCells += UpdateOccupiedCells; 
     }
 
     public Vector2I WorldToCell(Vector2 worldPosition)
@@ -24,9 +24,14 @@ public partial class GridOccupancyMap : Node
         );
     }
 
-    public Vector2 CellToWorld(Vector2I cell)
+    public Vector2 CellToWorld(Vector2I cell, bool centered = false)
     {
-        return new Vector2(cell.X * CellSize.X, cell.Y * CellSize.Y);
+        Vector2 position = new Vector2(cell.X * CellSize.X, cell.Y * CellSize.Y);
+        if (centered)
+        {
+            position += new Vector2(CellSize.X, CellSize.Y) / 2;
+        }
+        return position;
     }
 
     public bool IsInBounds(Vector2I cell)
@@ -47,7 +52,7 @@ public partial class GridOccupancyMap : Node
         Vector2I previousAnchor = placeable.def.AnchorCell;
         placeable.def.AnchorCell = anchorCell;
 
-        Array<Vector2I> cells = placeable.GetOccupiedCells();
+        Array<Vector2I> cells = placeable.def.GetOccupiedCells();
         foreach (Vector2I cell in cells)
         {
             if (!IsInBounds(cell))
@@ -55,7 +60,7 @@ public partial class GridOccupancyMap : Node
                 placeable.def.AnchorCell = previousAnchor;
                 return false;
             }
-            if (occupiedCells.TryGetValue(cell, out GridPlaceable existing) && existing != placeable)
+            if (occupiedCells.TryGetValue(cell, out PlaceableDefinition existing) && existing != placeable.def)
             {
                 placeable.def.AnchorCell = previousAnchor;
                 return false;
@@ -66,55 +71,29 @@ public partial class GridOccupancyMap : Node
         return true;
     }
 
+    private void UpdateOccupiedCells()
+    {
+        RunState runstate = GetNode<RunState>("/root/RunState");
+        occupiedCells.Clear();
+        foreach (PlaceableDefinition def in runstate.ActivePlaceables)
+        {
+            foreach (Vector2I cell in def.GetOccupiedCells())
+            {
+                occupiedCells[cell] = def;
+            }
+        }
+    }
+
     public bool TryPlace(GridPlaceable placeable, Vector2I anchorCell)
     {
         if (!CanPlace(placeable, anchorCell))
         {
             return false;
         }
-
-        Remove(placeable);
-
         placeable.def.AnchorCell = anchorCell;
-        foreach (Vector2I cell in placeable.GetOccupiedCells())
-        {
-            occupiedCells[cell] = placeable;
-        }
+        placeable.GlobalPosition = CellToWorld(anchorCell, placeable.def is UnitDefinition);
         GetNode<SignalBus>("/root/SignalBus").PublishPlaceablePlaced(placeable.def);
-        placeable.GlobalPosition = CellToWorld(anchorCell);
+        UpdateOccupiedCells();
         return true;
-    }
-
-    public void ClearCells(GridPlaceable gridPlaceable, Vector2I anchorCell)
-    {
-        foreach (Vector2I cell in gridPlaceable.GetOccupiedCells())
-        {
-            if (occupiedCells.TryGetValue(cell, out GridPlaceable existing) && existing == gridPlaceable)
-            {
-                occupiedCells.Remove(cell);
-            }
-        }
-    }
-
-    public void Remove(GridPlaceable placeable)
-    {
-        if (placeable == null)
-        {
-            return;
-        }
-
-        var toClear = new List<Vector2I>();
-        foreach (KeyValuePair<Vector2I, GridPlaceable> kvp in occupiedCells)
-        {
-            if (kvp.Value == placeable)
-            {
-                toClear.Add(kvp.Key);
-            }
-        }
-
-        foreach (Vector2I cell in toClear)
-        {
-            occupiedCells.Remove(cell);
-        }
     }
 }

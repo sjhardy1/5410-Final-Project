@@ -66,10 +66,10 @@ public partial class SignalBus : Node
     }
 
     [Signal]
-    public delegate void ClearCellsEventHandler(GridPlaceable gridPlaceable, Vector2I anchorCell);
-    public void PublishClearCells(GridPlaceable gridPlaceable, Vector2I anchorCell)
+    public delegate void ClearCellsEventHandler();
+    public void PublishClearCells()
     {
-        EmitSignal(nameof(ClearCells), gridPlaceable, anchorCell);
+        EmitSignal(nameof(ClearCells));
     }
 
     [Signal]

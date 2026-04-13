@@ -38,6 +38,7 @@ public partial class RunState : Node
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }
+    public int pendingConstruction = 0;
 
     public SignalBus signalBus;
 

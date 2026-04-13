@@ -27,24 +27,6 @@ public partial class GridPlaceable : Node2D
         GetNode<SignalBus>("/root/SignalBus").StopPlacing -= () => placing = false;
     }
 
-    public Array<Vector2I> GetOccupiedCells()
-    {
-        var occupied = new Array<Vector2I>();
-        if (def.Footprint == null)
-        {
-            occupied.Add(def.AnchorCell);
-            return occupied;
-        }
-
-        Array<Vector2I> offsets = def.Footprint.GetOffsetsForRotation(RotationQuarterTurns);
-        foreach (Vector2I offset in offsets)
-        {
-            occupied.Add(def.AnchorCell + offset);
-        }
-
-        return occupied;
-    }
-
     public override void _Input(InputEvent @event)
     {
         if(!isActive || placing) return;
@@ -98,7 +80,7 @@ public partial class GridPlaceable : Node2D
             // Check if hold duration has been reached
             if (holdAccumulator >= HoldDurationSeconds)
             {
-                GetNode<SignalBus>("/root/SignalBus").PublishClearCells(this, def.AnchorCell);
+                GetNode<SignalBus>("/root/SignalBus").PublishClearCells();
                 GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(def);
                 holdAlreadyEmitted = true;
                 QueueFree();
@@ -113,8 +95,12 @@ public partial class GridPlaceable : Node2D
         
         // Get the node's global position
         Vector2 nodePos = GlobalPosition;
+        if(def is UnitDefinition)
+        {
+            nodePos -= new Vector2(64, 64) / 2;
+        }
         
-        foreach (Vector2I cellOffset in def.Footprint.GetOffsetsForRotation(RotationQuarterTurns))
+        foreach (Vector2I cellOffset in def.Footprint.GetOffsets())
         {
             Vector2 cellWorldPos = nodePos + new Vector2(cellOffset.X * 64, cellOffset.Y * 64);
             Rect2 cellRect = new Rect2(cellWorldPos, new Vector2(64, 64));

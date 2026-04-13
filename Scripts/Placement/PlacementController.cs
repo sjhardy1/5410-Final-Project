@@ -110,7 +110,7 @@ public partial class PlacementController : Node2D
 
         Vector2I anchor = occupancyMap.WorldToCell(GetGlobalMousePosition());
         activePlaceable.def.AnchorCell = anchor;
-        activePlaceable.GlobalPosition = occupancyMap.CellToWorld(anchor);
+        activePlaceable.GlobalPosition = occupancyMap.CellToWorld(anchor, activePlaceable.def is UnitDefinition);
         activePlaceable.ZIndex = anchor.Y + 10;
 
         activePlacementIsValid = occupancyMap.CanPlace(activePlaceable, anchor);

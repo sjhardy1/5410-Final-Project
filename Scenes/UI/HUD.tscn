@@ -1,73 +1,98 @@
-[gd_scene load_steps=3 format=3 uid="uid://sh7esf60u4um"]
+[gd_scene load_steps=4 format=3 uid="uid://sh7esf60u4um"]
 
 [ext_resource type="Script" uid="uid://qbl1buc7rd4s" path="res://Scripts/Hud.cs" id="1_omqfp"]
 [ext_resource type="PackedScene" uid="uid://xytjqbi76kxn" path="res://Scenes/UI/StorageCard.tscn" id="2_qc5w2"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="3_xaom8"]
 
 [node name="Hud" type="CanvasLayer"]
 script = ExtResource("1_omqfp")
-foodLabelPath = NodePath("Food")
-woodLabelPath = NodePath("Wood")
-timerLabelPath = NodePath("TimerLabel")
+foodLabelPath = NodePath("Control/Food")
+woodLabelPath = NodePath("Control/Wood")
+timerLabelPath = NodePath("Control/TimerLabel")
 storageCardScene = ExtResource("2_qc5w2")
+storagePath = NodePath("Control/Storage")
+phaseButtonPath = NodePath("Control/PhaseButton")
 
-[node name="Button" type="Button" parent="."]
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("3_xaom8")
+
+[node name="RecruitButton" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 33.0
 offset_top = 33.0
-offset_right = 147.0
+offset_right = 264.0
 offset_bottom = 64.0
-text = "New Upgrade: Cost 60 food"
+text = "Enlist New Unit: Cost 50 food"
 
-[node name="Food" type="Label" parent="."]
-offset_left = 44.0
-offset_top = 88.0
-offset_right = 100.0
-offset_bottom = 111.0
+[node name="ConstructButton" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 76.0
+offset_right = 294.0
+offset_bottom = 130.0
+text = "Begin Construction: Cost 50 wood
+(Finishes after 1 round)"
+
+[node name="Food" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 150.0
+offset_right = 91.0
+offset_bottom = 173.0
 text = "Food: 0"
 
-[node name="PhaseButton" type="Button" parent="."]
-offset_left = 290.0
-offset_top = 30.0
-offset_right = 472.0
-offset_bottom = 61.0
+[node name="PhaseButton" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 32.0
+offset_right = 504.0
+offset_bottom = 63.0
 text = "Start next game phase"
 
-[node name="Wood" type="Label" parent="."]
-offset_left = 43.0
-offset_top = 128.0
-offset_right = 106.0
-offset_bottom = 151.0
+[node name="Wood" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 193.0
+offset_right = 99.0
+offset_bottom = 216.0
 text = "Wood: 0"
 
-[node name="TimerLabel" type="Label" parent="."]
-offset_left = 535.0
-offset_top = 30.0
-offset_right = 580.0
-offset_bottom = 53.0
+[node name="TimerLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 543.0
+offset_top = 41.0
+offset_right = 591.0
+offset_bottom = 64.0
 text = "Timer"
 
-[node name="Storage" type="VBoxContainer" parent="."]
+[node name="Storage" type="VBoxContainer" parent="Control"]
+layout_mode = 0
 offset_left = 1020.0
 offset_top = 69.0
 offset_right = 1140.0
 offset_bottom = 599.0
 
-[node name="Label" type="Label" parent="Storage"]
+[node name="Label" type="Label" parent="Control/Storage"]
 layout_mode = 2
 text = "Storage"
 horizontal_alignment = 1
 
-[node name="StorageButton" type="Button" parent="Storage"]
+[node name="StorageButton" type="Button" parent="Control/Storage"]
 visible = false
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "Put into Storage"
 autowrap_mode = 3
 
-[node name="StorageCard" parent="Storage" instance=ExtResource("2_qc5w2")]
+[node name="StorageCard" parent="Control/Storage" instance=ExtResource("2_qc5w2")]
 layout_mode = 2
 
-[node name="StorageCard2" parent="Storage" instance=ExtResource("2_qc5w2")]
+[node name="StorageCard2" parent="Control/Storage" instance=ExtResource("2_qc5w2")]
 layout_mode = 2
 
-[node name="StorageCard3" parent="Storage" instance=ExtResource("2_qc5w2")]
+[node name="StorageCard3" parent="Control/Storage" instance=ExtResource("2_qc5w2")]
 layout_mode = 2

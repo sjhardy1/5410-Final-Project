@@ -10,12 +10,12 @@ public partial class Playfield : Node2D
     public override void _Ready()
     {
         ground = GetNode<TileMapLayer>("Ground");
-        for (int x = -15; x <= 15; x++)
+        for (int x = -20; x <= 20; x++)
         {
             for (int y = -15; y <= 15; y++)
             {
                 ground.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 1));
-                if(!(x < 10 && x > -10 && y < 10 && y > -10))
+                if(!(x < 12 && x > -12 && y < 10 && y > -10))
                 {
                     Vector2 pos = new Vector2(x * tileSize, y * tileSize);
                     AnimatedSprite2D tree = (AnimatedSprite2D)treeScene.Instantiate();

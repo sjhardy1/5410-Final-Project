@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Godot.Collections;
+using System.Collections;
 
 public partial class GameRoot : Node2D
 {
@@ -11,7 +12,9 @@ public partial class GameRoot : Node2D
     private PlacementController placementController;
     private Hud hud;
     private RunState runState;
+    private Queue lootQueue = new Queue();
     private int nextUid = 1;
+    private bool choiceScreenActive = false;
     public override void _Ready()
     {		
         database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
@@ -26,12 +29,24 @@ public partial class GameRoot : Node2D
         runState = GetNode<RunState>("/root/RunState");
         signalBus = GetNode<SignalBus>("/root/SignalBus");
 
-        Button upgradeButton = hud.GetNode<Button>("Button");
-        upgradeButton.Pressed += () =>
+        runState.StoredPlaceables.Add(database.GetLootById("wheat_farm") as PlaceableDefinition);
+        runState.StoredPlaceables.Add(database.GetLootById("warrior") as PlaceableDefinition);
+        hud.UpdateStorage();
+
+        Button recruitButton = hud.GetNode<Button>("Control/RecruitButton");
+        recruitButton.Pressed += () =>
         {
-            if(runState.TrySpendResources(60, 0))
+            if(runState.TrySpendResources(50, 0))
             {
-                ActivateChoiceScreen();
+                lootQueue.Enqueue(new PendingLoot(2, LootType.Unit, runState.Wave));
+            }
+        };
+        Button constructButton = hud.GetNode<Button>("Control/ConstructButton");
+        constructButton.Pressed += () =>
+        {            
+            if(runState.TrySpendResources(0, 50))
+            {
+                runState.pendingConstruction++;
             }
         };
 
@@ -39,9 +54,9 @@ public partial class GameRoot : Node2D
         {
             string chosenId = (string)choiceData["Id"];
             LootDefinition chosenLoot = database.GetLootById(chosenId);
+            chosenLoot.Uid = nextUid++;
             if(chosenLoot is PlaceableDefinition def)
             {
-                def.Uid = nextUid++;
                 placementController.BeginPlacement(def);
             }
             GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
@@ -77,21 +92,36 @@ public partial class GameRoot : Node2D
             placementController.BeginPlacement(def);
         };
     }
+    public override void _Process(double delta)
+    {
+        if (!choiceScreenActive && lootQueue.Count > 0)
+        {
+            PendingLoot pendingLoot = (PendingLoot)lootQueue.Dequeue();
+            ActivateChoiceScreen();
+            choiceScreen.GenerateCards(database, pendingLoot.num, pendingLoot.lootType, runState.Wave);
+        }
+    }
     private void ActivateChoiceScreen()
     {
+        choiceScreenActive = true;
         camera.DisableControls();
         hud.Hide();
         choiceScreen.Show();
-        choiceScreen.GenerateCards(database, 3);
     }
     private void DeactivateChoiceScreen()
     {
+        choiceScreenActive = false;
         choiceScreen.Hide();
         hud.Show();
         camera.EnableControls();
     }
     private void ResolveUpkeep()
     {
+        for(int i = 0; i < runState.pendingConstruction; i++)
+        {
+            lootQueue.Enqueue(new PendingLoot(3, LootType.Building));
+        }
+         runState.pendingConstruction = 0;
         foreach(PlaceableDefinition def in runState.ActivePlaceables)
         {
             if(def is BuildingDefinition buildingDef)
@@ -111,6 +141,6 @@ public partial class GameRoot : Node2D
                 runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
             }
         }
-        ActivateChoiceScreen();
+        lootQueue.Enqueue(new PendingLoot(3));
     }
 }

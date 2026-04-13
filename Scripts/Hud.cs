@@ -3,15 +3,12 @@ using System;
 
 public partial class Hud : CanvasLayer
 {
-	[Export]
-	public NodePath foodLabelPath;
-	[Export]
-	public NodePath woodLabelPath;
-	[Export]
-	public NodePath timerLabelPath;
-
-	[Export]
-	public PackedScene storageCardScene;
+	[Export]public NodePath foodLabelPath;
+	[Export] public NodePath woodLabelPath;
+	[Export] public NodePath timerLabelPath;
+	[Export] public PackedScene storageCardScene;
+	[Export] public NodePath storagePath;
+	[Export] public NodePath phaseButtonPath;
 
 	private Label foodLabel;
 	private Label woodLabel;
@@ -25,10 +22,10 @@ public partial class Hud : CanvasLayer
 		foodLabel = GetNodeOrNull<Label>(foodLabelPath);
 		woodLabel = GetNodeOrNull<Label>(woodLabelPath);
 		timerLabel = GetNodeOrNull<Label>(timerLabelPath);
-		storage = GetNodeOrNull<VBoxContainer>("Storage");
+		storage = GetNodeOrNull<VBoxContainer>(storagePath);
 		Button storageButton = storage.GetNodeOrNull<Button>("StorageButton");
 
-		phaseButton = GetNodeOrNull<Button>("PhaseButton");
+		phaseButton = GetNodeOrNull<Button>(phaseButtonPath);
 		runState = GetNodeOrNull<RunState>("/root/RunState");
 
 		SignalBus signalBus = GetNode<SignalBus>("/root/SignalBus");

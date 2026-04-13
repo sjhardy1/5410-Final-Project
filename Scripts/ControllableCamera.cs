@@ -5,6 +5,7 @@ public partial class ControllableCamera : Camera2D
 {
 	[Export]
 	public float[] zoomRange = {0.5f, 2f};
+	[Export] public int[] panRange = {-1200, 1200, -900, 900}; // left, right, top, bottom
 	private Rect2 dragArea;
 	private bool dragging = false;
 	private bool active = true;
@@ -45,7 +46,7 @@ public partial class ControllableCamera : Camera2D
 		else if (@event is InputEventMouseMotion motionEvent && dragging)
 		{
 			Vector2 delta = motionEvent.Position - lastMousePos;
-			GlobalPosition -= delta / Zoom; // Adjust for zoom level
+			GlobalPosition -= delta / Zoom; // Adjust for zoom level			
 			lastMousePos = motionEvent.Position;
 		}
 		if(@event is InputEventMouseButton zoomEvent)
@@ -59,5 +60,20 @@ public partial class ControllableCamera : Camera2D
 				Zoom = new Vector2(Mathf.Clamp(Zoom.X * 1.1f, zoomRange[0], zoomRange[1]), Mathf.Clamp(Zoom.Y * 1.1f, zoomRange[0], zoomRange[1]));
 			}
 		}
+		clampPosition();
+	}
+	private void clampPosition()
+	{
+		Rect2 viewportRect = GetViewport().GetVisibleRect();
+		float minx = panRange[0] + viewportRect.Size.X /2/ Zoom.X;
+		float miny = panRange[2] + viewportRect.Size.Y /2/ Zoom.Y;
+		float maxx = panRange[1] - viewportRect.Size.X  /2/ Zoom.X;
+		float maxy = panRange[3] - viewportRect.Size.Y /2/ Zoom.Y;
+		if(minx > maxx) minx = maxx = 0;
+		if(miny > maxy) miny = maxy = 0;
+		GlobalPosition = new Vector2(
+			Mathf.Clamp(GlobalPosition.X, minx, maxx),
+			Mathf.Clamp(GlobalPosition.Y, miny, maxy)
+		);
 	}
 }
