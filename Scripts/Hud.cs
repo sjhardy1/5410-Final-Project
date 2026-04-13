@@ -26,15 +26,20 @@ public partial class Hud : CanvasLayer
 		woodLabel = GetNodeOrNull<Label>(woodLabelPath);
 		timerLabel = GetNodeOrNull<Label>(timerLabelPath);
 		storage = GetNodeOrNull<VBoxContainer>("Storage");
+		Button storageButton = storage.GetNodeOrNull<Button>("StorageButton");
 
 		phaseButton = GetNodeOrNull<Button>("PhaseButton");
 		runState = GetNodeOrNull<RunState>("/root/RunState");
 
 		SignalBus signalBus = GetNode<SignalBus>("/root/SignalBus");
 
+		signalBus.Placing += storageButton.Show;
+		signalBus.StopPlacing += storageButton.Hide;
+
 		// Keep HUD synced whenever resource values change.
 		runState.ResourcesChanged += OnResourcesChanged;
 		phaseButton.Pressed += signalBus.PublishRaidBegin;
+		storageButton.Pressed += signalBus.PublishCancelPlacement;
 
 		// Initialize text immediately so the HUD is correct on scene load.
 		UpdateLabels(runState.Food, runState.Wood);

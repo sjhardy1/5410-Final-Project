@@ -13,12 +13,12 @@ public partial class PlacementController : Node2D
 
     public override void _Ready()
     {        
-
         occupancyMap = GetNode<GridOccupancyMap>(OccupancyMapPath);
         SetupMaterials();
+        GetNode<SignalBus>("/root/SignalBus").CancelPlacement += CancelPlacement;
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
         if (activePlaceable == null || occupancyMap == null)
         {
@@ -53,7 +53,12 @@ public partial class PlacementController : Node2D
             }
         }
 
-        if (@event.IsActionPressed("place_cancel"))
+        if (@event.IsActionPressed("place_cancel")) CancelPlacement();
+    }
+
+    private void CancelPlacement()
+    {
+        if (activePlaceable != null)
         {
             GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
             activePlaceable.QueueFree();
@@ -71,6 +76,7 @@ public partial class PlacementController : Node2D
 
         if (activePlaceable != null)
         {
+            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
             activePlaceable.QueueFree();
         }
 

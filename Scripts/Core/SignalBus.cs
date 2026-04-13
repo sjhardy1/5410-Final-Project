@@ -72,6 +72,13 @@ public partial class SignalBus : Node
         EmitSignal(nameof(ClearCells), gridPlaceable, anchorCell);
     }
 
+    [Signal]
+    public delegate void CancelPlacementEventHandler();
+    public void PublishCancelPlacement()
+    {
+        EmitSignal(nameof(CancelPlacement));
+    }
+
     public void PublishChoiceScreenRequested(Array<Dictionary<string, Variant>> options)
     {
         EmitSignal(nameof(ChoiceScreenRequested), options);

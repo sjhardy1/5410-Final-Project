@@ -98,8 +98,8 @@ public partial class GridPlaceable : Node2D
             // Check if hold duration has been reached
             if (holdAccumulator >= HoldDurationSeconds)
             {
-                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(def);
                 GetNode<SignalBus>("/root/SignalBus").PublishClearCells(this, def.AnchorCell);
+                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(def);
                 holdAlreadyEmitted = true;
                 QueueFree();
             }
