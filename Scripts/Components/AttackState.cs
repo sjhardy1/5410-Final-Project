@@ -14,12 +14,14 @@ public partial class AttackState : ICombatantState
 
     public void Enter()
     {
+        combatant.LinearVelocity = Vector2.Zero;
         attackTimer = combatant.OffensiveAttributes.AttackCooldown / 2;
         if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("attack");
     }
 
     public void Exit()
     {
+        target.Defeated -= OnTargetDefeated;
     }
 
     public void Process(double delta)
@@ -30,7 +32,7 @@ public partial class AttackState : ICombatantState
             return;
         }
          // If target is out of range, transition back to ChaseState
-        if (combatant.Position.DistanceTo(target.Position) > combatant.OffensiveAttributes.AttackRange * 64)
+        if (!CombatRangeUtility.IsTargetInAttackRange(combatant, target))
         {
             combatant.ChangeState(new ChaseState(combatant, target));
             return;
@@ -42,11 +44,11 @@ public partial class AttackState : ICombatantState
             attackTimer = 0f; // Reset timer for next attack
         }
     }
+
     private void OnTargetDefeated()
     {
-        target.Defeated -= OnTargetDefeated;
-        GD.Print(combatant.CoreAttributes.DisplayName + " defeated " + target.CoreAttributes.DisplayName + ", now changing to idle state.");
-        target = null;
+        
+        GD.Print(combatant.CoreAttributes.DisplayName + "#" + combatant.uid + " defeated " + target.CoreAttributes.DisplayName + "#" + target.uid + ", now changing to idle state.");
         combatant.ChangeState(new IdleState(combatant));
     }
 }

@@ -9,4 +9,5 @@ public interface ITargetable
     public event Action Defeated;
     public void TakeDamage(float damage);
     public void Die();
+    public int uid { get; }
 }

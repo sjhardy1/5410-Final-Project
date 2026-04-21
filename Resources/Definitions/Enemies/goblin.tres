@@ -21,7 +21,7 @@ metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 [sub_resource type="Resource" id="Resource_8e3ar"]
 script = ExtResource("3_rp7c4")
 AttackDamage = 12.0
-AttackRange = 1.5
+AttackRange = 1.0
 AttackCooldown = 0.6
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 

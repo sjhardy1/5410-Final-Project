@@ -21,7 +21,7 @@ metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 [sub_resource type="Resource" id="Resource_cauau"]
 script = ExtResource("3_jp3jo")
 AttackDamage = 50.0
-AttackRange = 2.0
+AttackRange = 1.5
 AttackCooldown = 2.0
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 

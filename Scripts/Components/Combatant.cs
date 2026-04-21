@@ -1,8 +1,10 @@
 using Godot;
 using System;
 
-public partial class Combatant : Node2D, ITargetable
+public partial class Combatant : RigidBody2D, ITargetable
 {
+    private const float TileSize = 64f;
+    private const float CollisionRadius = TileSize / 2f;
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
     public OffensiveAttributes OffensiveAttributes { get; set; }
@@ -10,12 +12,13 @@ public partial class Combatant : Node2D, ITargetable
     public Node2D childScene;
     private ICombatantState currentState;
     public Faction faction;
-    public int uid;
+    public int uid { get; set; }
     private HealthBar healthBar;
-    [Signal] public delegate void DefeatedSignalEventHandler();
+    private FootprintShape footprint;
+    //[Signal] public delegate void DefeatedSignalEventHandler();
     public event Action Defeated;
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         currentState.Process(delta);
     }   
@@ -29,7 +32,10 @@ public partial class Combatant : Node2D, ITargetable
         }
         OffensiveAttributes = definition.OffensiveAttributes;
         Scene = definition.Scene;
+        footprint = definition.Footprint;
         faction = Faction.Ally;
+        GravityScale = 0f;
+        LockRotation = true;
     }
     public Combatant(EnemyDefinition definition, Vector2 position)
     {
@@ -43,16 +49,35 @@ public partial class Combatant : Node2D, ITargetable
         Scene = definition.Scene;
         Position = position;
         faction = Faction.Enemy;
+        GravityScale = 0f;
+        LockRotation = true;
     }
     public override void _Ready()
     {
         childScene = Scene.Instantiate<Node2D>();
         AddChild(childScene);
+
+        if (faction == Faction.Enemy)
+        {
+            AddCircleCollision(Vector2.Zero);
+        }
+        else
+        {
+            AddFootprintCollisions(footprint, true);
+        }
+
         healthBar = new HealthBar();
         healthBar.Position = new Vector2(0f, -40f);
         healthBar.SetAttributes(DefensiveAttributes);
         AddChild(healthBar);
         ChangeState(new IdleState(this));
+    }
+    public override void _ExitTree()
+    {
+        if (currentState != null) currentState.Exit();
+        currentState = null;
+        GD.Print(CoreAttributes.DisplayName + "#" +uid + " is exiting the tree and will be removed from ActiveCombatants.");
+        GetNode<RunState>("/root/RunState").ActiveCombatants.Remove(this);
     }
     public void ChangeState(ICombatantState newState)
     {
@@ -72,16 +97,19 @@ public partial class Combatant : Node2D, ITargetable
         DefensiveAttributes.Health -= damage;
         if (DefensiveAttributes.Health <= 0)
         {
+            if(CoreAttributes.DisplayName == "Warrior") GD.Print("Warrior HP has reached 0, now calling Die() method.");
             Die();
         }
     }
+
     public void Die()
     {
         // Emit signal to notify GameRoot of death
         GetNode<SignalBus>("/root/SignalBus").PublishUnitDied(uid);
+        GD.Print(CoreAttributes.DisplayName + "#" + uid + " has died, now invoking Defeated event.");
         Defeated?.Invoke();
-        EmitSignal(SignalName.DefeatedSignal);
-        GD.Print(CoreAttributes.DisplayName + " has been defeated.");
+        //EmitSignal(SignalName.DefeatedSignal);
+        GD.Print(CoreAttributes.DisplayName + "#" + uid + " died");
         QueueFree(); // Remove from scene
     }
     public ITargetable FindTarget()
@@ -115,5 +143,32 @@ public partial class Combatant : Node2D, ITargetable
             }
         }
         return closestTarget;
+    }
+
+    private void AddFootprintCollisions(FootprintShape shape, bool centeredOnOrigin)
+    {
+        if (shape == null)
+        {
+            AddCircleCollision(centeredOnOrigin ? Vector2.Zero : Vector2.One * CollisionRadius);
+            return;
+        }
+
+        Vector2 centerOffset = centeredOnOrigin ? Vector2.Zero : Vector2.One * CollisionRadius;
+        foreach (Vector2I tileOffset in shape.GetOffsets())
+        {
+            Vector2 localCenter = new Vector2(tileOffset.X * TileSize, tileOffset.Y * TileSize) + centerOffset;
+            AddCircleCollision(localCenter);
+        }
+    }
+
+    private void AddCircleCollision(Vector2 localCenter)
+    {
+        CircleShape2D shape = new CircleShape2D { Radius = CollisionRadius };
+        CollisionShape2D collisionShape = new CollisionShape2D
+        {
+            Shape = shape,
+            Position = localCenter
+        };
+        AddChild(collisionShape);
     }
 }
