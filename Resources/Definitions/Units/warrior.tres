@@ -17,8 +17,8 @@ metadata/_custom_type_script = "uid://yaxpoere2ivy"
 
 [sub_resource type="Resource" id="Resource_yld0w"]
 script = ExtResource("2_mhiv2")
-Health = 100.0
-Armor = 20.0
+MaxHealth = 150.0
+Armor = 15.0
 HealthRegenPerRound = 10.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
@@ -34,7 +34,6 @@ metadata/_custom_type_script = "uid://56jqwa01y5dl"
 script = ExtResource("4_jvuwl")
 AttackDamage = 30.0
 AttackRange = 2.0
-AttackCooldown = 1.0
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 
 [resource]

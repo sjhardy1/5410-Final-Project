@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=9 format=3 uid="uid://cx0dncy3d5l2d"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_j3b35"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_vy8pb"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="3_jp3jo"]
+[ext_resource type="Script" uid="uid://vjqfi3wgfrst" path="res://Scripts/Resources/EnemyDefinition.cs" id="4_2e4dy"]
+[ext_resource type="PackedScene" uid="uid://d4iojw1dgldb7" path="res://Scenes/Enemies/Troll.tscn" id="4_vy8pb"]
+
+[sub_resource type="Resource" id="Resource_x8hwp"]
+script = ExtResource("1_j3b35")
+Id = "troll"
+DisplayName = "Troll"
+Description = "Big Guy"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_oatr5"]
+script = ExtResource("2_vy8pb")
+MaxHealth = 300.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_cauau"]
+script = ExtResource("3_jp3jo")
+AttackDamage = 50.0
+AttackRange = 2.0
+AttackCooldown = 2.0
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("4_2e4dy")
+CoreAttributes = SubResource("Resource_x8hwp")
+DefensiveAttributes = SubResource("Resource_oatr5")
+OffensiveAttributes = SubResource("Resource_cauau")
+Value = 5000
+Scene = ExtResource("4_vy8pb")

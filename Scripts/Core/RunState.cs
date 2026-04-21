@@ -36,6 +36,7 @@ public partial class RunState : Node
     public Collections.List<GridPlaceable> ActivePlaceables { get; private set; } = new Collections.List<GridPlaceable>();
     public Collections.List<GridPlaceable> StoredPlaceables { get; private set; } = new Collections.List<GridPlaceable>();
     public Collections.List<Combatant> ActiveCombatants { get; private set; } = new Collections.List<Combatant>();
+    public Collections.List<CombatObject> ActiveObjects { get; private set; } = new Collections.List<CombatObject>();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }

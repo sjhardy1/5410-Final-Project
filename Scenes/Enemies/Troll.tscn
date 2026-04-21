@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4iojw1dgldb7"]
+
+[ext_resource type="TileSet" uid="uid://wqrqwor2fpo7" path="res://Resources/Tilesets/Monsters.tres" id="1_ouicx"]
+
+[node name="Troll" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-91, -94)
+scale = Vector2(6, 6)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0)
+tile_set = ExtResource("1_ouicx")

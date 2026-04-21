@@ -15,6 +15,7 @@ public partial class RaidController : Node2D
         runState = GetNodeOrNull<RunState>("/root/RunState");
         signalBus = GetNodeOrNull<SignalBus>("/root/SignalBus");
         signalBus.UnitDied += RemoveUnit;
+        signalBus.BuildingDestroyed += RemoveBuilding;
     }
     public override void _Process(double delta)
     {
@@ -61,11 +62,12 @@ public partial class RaidController : Node2D
             child.QueueFree();
         }
         runState.ActiveCombatants.Clear();
+        runState.ActiveObjects.Clear();
     }
     public Queue<Combatant> GenerateWave(GameDatabase database, int wave)
     {
         Queue<Combatant> queue = new Queue<Combatant>();
-        int wavePower = wave * 25;
+        int wavePower = wave *  25;
         Array<EnemyDefinition> enemies = database.GetAllEnemies();
         while (wavePower > 0)
         {
@@ -75,7 +77,6 @@ public partial class RaidController : Node2D
                 if (enemy.Value <= wavePower)
                 {
                     affordableEnemies.Add(enemy);
-                    break;
                 }
             }
             if (affordableEnemies.Count == 0) break;
@@ -90,8 +91,16 @@ public partial class RaidController : Node2D
         Combatant combatant = new Combatant(placeable.def as UnitDefinition);
         combatant.uid = nextUid++;
         runState.ActiveCombatants.Add(combatant);
-        combatant.Position = placeable.AnchorCell * 64;
+        combatant.Position = placeable.AnchorCell * 64 + Vector2.One * 32;
         AddChild(combatant);
+    }
+    public void PlaceBuilding(GridPlaceable placeable)
+    {
+        CombatObject building = new CombatObject(placeable.def as BuildingDefinition);
+        building.uid = nextUid++;
+        building.Position = placeable.AnchorCell * 64;
+        runState.ActiveObjects.Add(building);
+        AddChild(building);   
     }
 
     public void RemoveUnit(int combatantUid)
@@ -108,6 +117,22 @@ public partial class RaidController : Node2D
         if(toRemove != null)
         {
             runState.ActiveCombatants.Remove(toRemove);
+        }
+    }
+    public void RemoveBuilding(int buildingUid)
+    {
+        CombatObject toRemove = null;
+        foreach(CombatObject building in runState.ActiveObjects)
+        {
+            if(building.uid == buildingUid)
+            {
+                toRemove = building;
+                break;
+            }
+        }
+        if(toRemove != null)
+        {
+            runState.ActiveObjects.Remove(toRemove);
         }
     }
 }

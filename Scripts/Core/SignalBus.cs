@@ -14,7 +14,7 @@ public partial class SignalBus : Node
     [Signal]
     public delegate void StopPlacingEventHandler();
     [Signal]
-    public delegate void BuildingDestroyedEventHandler(Node buildingNode);
+    public delegate void BuildingDestroyedEventHandler(int uid);
 
     [Signal]
     public delegate void UnitDiedEventHandler(int combatantUid);
@@ -98,9 +98,9 @@ public partial class SignalBus : Node
         EmitSignal(nameof(RaidBegin));
     }
 
-    public void PublishBuildingDestroyed(Node buildingNode)
+    public void PublishBuildingDestroyed(int uid)
     {
-        EmitSignal(nameof(BuildingDestroyed), buildingNode);
+        EmitSignal(nameof(BuildingDestroyed), uid);
     }
 
     public void PublishUnitDied(int combatantUid)

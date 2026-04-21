@@ -2,27 +2,24 @@ using Godot;
 public partial class AttackState : ICombatantState
 {
     private Combatant combatant;
-    private Combatant target;
-    private RunState runState;
+    private ITargetable target;
     private float attackTimer = 0f;
 
-    public AttackState(Combatant combatant, Combatant target)
+    public AttackState(Combatant combatant, ITargetable target)
     {
         this.combatant = combatant;
         this.target = target;
         target.Defeated += OnTargetDefeated;
     }
 
-    public void Enter(RunState runState)
+    public void Enter()
     {
-        this.runState = runState;
-        attackTimer = 0f;
+        attackTimer = combatant.OffensiveAttributes.AttackCooldown / 2;
         if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("attack");
     }
 
     public void Exit()
     {
-        // No cleanup needed for now.
     }
 
     public void Process(double delta)
@@ -48,6 +45,7 @@ public partial class AttackState : ICombatantState
     private void OnTargetDefeated()
     {
         target.Defeated -= OnTargetDefeated;
+        GD.Print(combatant.CoreAttributes.DisplayName + " defeated " + target.CoreAttributes.DisplayName + ", now changing to idle state.");
         target = null;
         combatant.ChangeState(new IdleState(combatant));
     }

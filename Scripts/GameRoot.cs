@@ -72,7 +72,7 @@ public partial class GameRoot : Node2D
         {
             foreach(Node child in placementController.GetChildren())
             {
-                if(child is GridPlaceable placeable && placeable.def is UnitDefinition)
+                if(child is GridPlaceable placeable)
                 {
                     placeable.Show();
                 }
@@ -90,10 +90,15 @@ public partial class GameRoot : Node2D
                     GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
                     raidController.PlaceUnit(placeable);
                 }
+                else if(placeable.def is BuildingDefinition buildingDef)
+                {
+                    GD.Print("Placing building: " + buildingDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
+                    raidController.PlaceBuilding(placeable);
+                }
             }
             foreach(Node child in placementController.GetChildren())
             {
-                if(child is GridPlaceable placeable && placeable.def is UnitDefinition)
+                if(child is GridPlaceable placeable)
                 {
                     placeable.Hide();
                 }

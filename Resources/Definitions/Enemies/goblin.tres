@@ -15,13 +15,14 @@ metadata/_custom_type_script = "uid://yaxpoere2ivy"
 
 [sub_resource type="Resource" id="Resource_uktb5"]
 script = ExtResource("2_7dumx")
-Health = 20.0
+MaxHealth = 40.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
 [sub_resource type="Resource" id="Resource_8e3ar"]
 script = ExtResource("3_rp7c4")
-AttackDamage = 5.0
+AttackDamage = 12.0
 AttackRange = 1.5
+AttackCooldown = 0.6
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 
 [resource]

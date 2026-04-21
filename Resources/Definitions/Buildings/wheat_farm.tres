@@ -16,7 +16,6 @@ metadata/_custom_type_script = "uid://yaxpoere2ivy"
 
 [sub_resource type="Resource" id="Resource_h3pg6"]
 script = ExtResource("2_ko8hs")
-Health = 100.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
 [sub_resource type="Resource" id="Resource_sgqgy"]

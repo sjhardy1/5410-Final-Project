@@ -3,25 +3,22 @@ using Godot;
 public partial class ChaseState : ICombatantState
 {
     private Combatant combatant;
-    private Combatant target;
-    private RunState runState;
+    private ITargetable target;
 
-    public ChaseState(Combatant combatant, Combatant target)
+    public ChaseState(Combatant combatant, ITargetable target)
     {
         this.combatant = combatant;
         this.target = target;
         target.Defeated += OnTargetDefeated;
     }
 
-    public void Enter(RunState runState)
+    public void Enter()
     {
-        this.runState = runState;
         if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("run");
     }
 
     public void Exit()
     {
-        // Stop moving
     }
 
     public void Process(double delta)
@@ -29,6 +26,13 @@ public partial class ChaseState : ICombatantState
         // Move towards the target
         if (target != null)
         {
+            ITargetable newTarget = combatant.FindTarget();
+            if (newTarget != null && newTarget != target)
+            {
+                target.Defeated -= OnTargetDefeated;
+                target = newTarget;
+                target.Defeated += OnTargetDefeated;
+            }
             Vector2 direction = (target.Position - combatant.Position).Normalized();
             float speed = 100f; // Example speed value
             combatant.Position += direction * speed * (float)delta;
