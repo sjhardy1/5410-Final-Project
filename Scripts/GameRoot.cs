@@ -31,8 +31,8 @@ public partial class GameRoot : Node2D
         runState = GetNode<RunState>("/root/RunState");
         signalBus = GetNode<SignalBus>("/root/SignalBus");
 
-        runState.StoredPlaceables.Add(database.GetLootById("wheat_farm") as PlaceableDefinition);
-        runState.StoredPlaceables.Add(database.GetLootById("warrior") as PlaceableDefinition);
+        runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("wheat_farm") as PlaceableDefinition));
+        runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("warrior") as PlaceableDefinition));
         hud.UpdateStorage();
 
         Button recruitButton = hud.GetNode<Button>("Control/RecruitButton");
@@ -59,14 +59,14 @@ public partial class GameRoot : Node2D
             chosenLoot.Uid = nextUid++;
             if(chosenLoot is PlaceableDefinition def)
             {
-                placementController.BeginPlacement(def);
+                placementController.BeginPlacement(InstantiatePlaceable(def));
             }
             GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
             DeactivateChoiceScreen();
         };        
-        signalBus.PlaceablePlaced += (PlaceableDefinition def) =>
+        signalBus.PlaceablePlaced += (GridPlaceable placeable) =>
         {
-            runState.ActivePlaceables.Add(def);
+            runState.ActivePlaceables.Add(placeable);
         };
         signalBus.RaidEnded += () =>
         {
@@ -83,12 +83,12 @@ public partial class GameRoot : Node2D
         };
         signalBus.RaidBegin += () =>
         {
-            foreach(PlaceableDefinition def in runState.ActivePlaceables)
+            foreach(GridPlaceable placeable in runState.ActivePlaceables)
             {
-                if(def is UnitDefinition unitDef)
+                if(placeable.def is UnitDefinition unitDef)
                 {
-                    GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+def.AnchorCell);
-                    raidController.PlaceUnit(unitDef);
+                    GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
+                    raidController.PlaceUnit(placeable);
                 }
             }
             foreach(Node child in placementController.GetChildren())
@@ -101,20 +101,21 @@ public partial class GameRoot : Node2D
             raidController.StartRaid(database);
             runState.StartRaid();
         };
-        signalBus.PlaceableAddedToStorage += (PlaceableDefinition def) =>
+        signalBus.PlaceableAddedToStorage += (GridPlaceable placeable) =>
         {
-            runState.StoredPlaceables.Add(def);
+            runState.StoredPlaceables.Add(placeable);
             hud.UpdateStorage();
         };
-        signalBus.PlaceableRemovedFromStorage += (PlaceableDefinition def) =>
+        signalBus.PlaceableRemovedFromStorage += (GridPlaceable placeable) =>
         {
-            runState.StoredPlaceables.Remove(def);
-            placementController.BeginPlacement(def);
+            runState.StoredPlaceables.Remove(placeable);
+            placementController.BeginPlacement(placeable);
         };
-        signalBus.PlaceableRemovedFromActive += (PlaceableDefinition def) =>
+        signalBus.PlaceableRemovedFromActive += (GridPlaceable placeable) =>
         {
-            runState.ActivePlaceables.Remove(def);
-            placementController.BeginPlacement(def);
+            placementController.RemoveChild(placeable);
+            runState.ActivePlaceables.Remove(placeable);
+            placementController.BeginPlacement(placeable);
         };
     }
     public override void _Process(double delta)
@@ -147,25 +148,32 @@ public partial class GameRoot : Node2D
             lootQueue.Enqueue(new PendingLoot(3, LootType.Building));
         }
          runState.pendingConstruction = 0;
-        foreach(PlaceableDefinition def in runState.ActivePlaceables)
+        foreach(GridPlaceable placeable in runState.ActivePlaceables)
         {
-            if(def is BuildingDefinition buildingDef)
+            if(placeable.def is BuildingDefinition buildingDef)
             {
                 runState.AddResources(buildingDef.ProductionFoodPerRound, buildingDef.ProductionWoodPerRound);
                 if(runState.TrySpendResources(0, buildingDef.UpkeepWoodPerRound))
                 {
-                    runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
+                    runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0);
                 }
                 else
                 {
-                    runState.ForceSpendResources(def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound, 0);
+                    runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound, 0);
                 }
             }
-            if(def is UnitDefinition)
+            if(placeable.def is UnitDefinition)
             {
-                runState.ForceSpendResources(def.UpkeepFoodPerRound, 0);
+                runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0);
             }
         }
         lootQueue.Enqueue(new PendingLoot(3));
+    }
+    private GridPlaceable InstantiatePlaceable(PlaceableDefinition def)
+    {
+        PlaceableDefinition runtimeDefinition = def.Duplicate() as PlaceableDefinition;
+        GridPlaceable placeable = def.Scene.Instantiate<GridPlaceable>();
+        placeable.Initialize(runtimeDefinition);
+        return placeable;
     }
 }

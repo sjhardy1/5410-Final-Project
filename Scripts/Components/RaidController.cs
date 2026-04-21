@@ -85,12 +85,12 @@ public partial class RaidController : Node2D
         }
         return queue;
     }
-    public void PlaceUnit(UnitDefinition def)
+    public void PlaceUnit(GridPlaceable placeable)
     {
-        Combatant combatant = new Combatant(def);
+        Combatant combatant = new Combatant(placeable.def as UnitDefinition);
         combatant.uid = nextUid++;
         runState.ActiveCombatants.Add(combatant);
-        combatant.Position = def.AnchorCell * 64;
+        combatant.Position = placeable.AnchorCell * 64;
         AddChild(combatant);
     }
 

@@ -29,14 +29,6 @@ public partial class PlacementController : Node2D
         {
             UpdateActivePreviewFromMouse();
         }
-
-        if (@event.IsActionPressed("rotate_building"))
-        {
-            activePlaceable.RotationQuarterTurns += 1;
-            activePlaceable.Rotation = Mathf.DegToRad(90 * activePlaceable.RotationQuarterTurns);
-            UpdateActivePreviewFromMouse();
-        }
-
         if (@event.IsActionPressed("place_confirm"))
         {
             Vector2I anchor = occupancyMap.WorldToCell(GetGlobalMousePosition());
@@ -60,38 +52,29 @@ public partial class PlacementController : Node2D
     {
         if (activePlaceable != null)
         {
-            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
-            activePlaceable.QueueFree();
+            RemoveChild(activePlaceable);
+            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable);
             activePlaceable = null;
             GetNode<SignalBus>("/root/SignalBus").PublishStopPlacing();
         }
     }
-
-    public GridPlaceable BeginPlacement(PlaceableDefinition def)
+    public void BeginPlacement(GridPlaceable placeable)
     {
-        if (def.Scene == null)
+        if (placeable.def.Scene == null)
         {
-            return null;
-        }
-
-        PlaceableDefinition runtimeDefinition = def.Duplicate() as PlaceableDefinition;
-        if (runtimeDefinition == null)
-        {
-            return null;
+            return;
         }
 
         if (activePlaceable != null)
         {
-            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable.def);
-            activePlaceable.QueueFree();
+            RemoveChild(activePlaceable);
+            GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable);
         }
 
-        activePlaceable = runtimeDefinition.Scene.Instantiate<GridPlaceable>();
-        activePlaceable.Initialize(runtimeDefinition);
+        activePlaceable = placeable;
         AddChild(activePlaceable);
         UpdateActivePreviewFromMouse();
         GetNode<SignalBus>("/root/SignalBus").PublishPlacing();
-        return activePlaceable;
     }
 
     private void SetupMaterials()
@@ -113,9 +96,8 @@ public partial class PlacementController : Node2D
         {
             return;
         }
-
         Vector2I anchor = occupancyMap.WorldToCell(GetGlobalMousePosition());
-        activePlaceable.def.AnchorCell = anchor;
+        activePlaceable.AnchorCell = anchor;
         activePlaceable.GlobalPosition = occupancyMap.CellToWorld(anchor, activePlaceable.def is UnitDefinition);
         activePlaceable.ZIndex = anchor.Y + 10;
 

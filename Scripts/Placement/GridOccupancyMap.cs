@@ -3,17 +3,19 @@ using Godot.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class GridOccupancyMap : Node
+public partial class GridOccupancyMap : Node2D
 {
     [Export] public Vector2I CellSize { get; set; } = new Vector2I(64, 64);
     [Export] public Vector2I BoundsMinCell { get; set; } = new Vector2I(-10, -10);
     [Export] public Vector2I BoundsMaxCell { get; set; } = new Vector2I(10, 10);
 
-    private readonly System.Collections.Generic.Dictionary<Vector2I, PlaceableDefinition> occupiedCells = new();
+    private TileMapLayer tiles;
+    private readonly System.Collections.Generic.Dictionary<Vector2I, GridPlaceable> occupiedCells = new();
 
     public override void _Ready()
     {
         GetNode<SignalBus>("/root/SignalBus").ClearCells += UpdateOccupiedCells; 
+        tiles = GetNode<TileMapLayer>("Tiles"); 
     }
 
     public Vector2I WorldToCell(Vector2 worldPosition)
@@ -49,37 +51,40 @@ public partial class GridOccupancyMap : Node
             return false;
         }
 
-        Vector2I previousAnchor = placeable.def.AnchorCell;
-        placeable.def.AnchorCell = anchorCell;
+        Vector2I previousAnchor = placeable.AnchorCell;
+        placeable.AnchorCell = anchorCell;
 
-        Array<Vector2I> cells = placeable.def.GetOccupiedCells();
+        Array<Vector2I> cells = placeable.GetOccupiedCells();
         foreach (Vector2I cell in cells)
         {
             if (!IsInBounds(cell))
             {
-                placeable.def.AnchorCell = previousAnchor;
+                placeable.AnchorCell = previousAnchor;
                 return false;
             }
-            if (occupiedCells.TryGetValue(cell, out PlaceableDefinition existing) && existing != placeable.def)
+            if (occupiedCells.TryGetValue(cell, out GridPlaceable existing) && existing != placeable)
             {
-                placeable.def.AnchorCell = previousAnchor;
+                placeable.AnchorCell = previousAnchor;
                 return false;
             }
         }
 
-        placeable.def.AnchorCell = previousAnchor;
+        placeable.AnchorCell = previousAnchor;
         return true;
     }
 
     private void UpdateOccupiedCells()
     {
+        GD.Print("Recreating occupancy map...");
         RunState runstate = GetNode<RunState>("/root/RunState");
         occupiedCells.Clear();
-        foreach (PlaceableDefinition def in runstate.ActivePlaceables)
+        tiles.Clear();
+        foreach (GridPlaceable placeable in runstate.ActivePlaceables)
         {
-            foreach (Vector2I cell in def.GetOccupiedCells())
+            foreach (Vector2I cell in placeable.GetOccupiedCells())
             {
-                occupiedCells[cell] = def;
+                occupiedCells[cell] = placeable;
+                tiles.SetCell(cell, 1, Vector2I.Zero);
             }
         }
     }
@@ -90,9 +95,9 @@ public partial class GridOccupancyMap : Node
         {
             return false;
         }
-        placeable.def.AnchorCell = anchorCell;
+        placeable.AnchorCell = anchorCell;
         placeable.GlobalPosition = CellToWorld(anchorCell, placeable.def is UnitDefinition);
-        GetNode<SignalBus>("/root/SignalBus").PublishPlaceablePlaced(placeable.def);
+        GetNode<SignalBus>("/root/SignalBus").PublishPlaceablePlaced(placeable);
         UpdateOccupiedCells();
         return true;
     }

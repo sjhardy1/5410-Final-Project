@@ -7,14 +7,13 @@ public partial class GridPlaceable : Node2D
     public PlaceableDefinition def { get; private set; }
     [Export] public bool BlocksMovement { get; set; } = true;
     [Export] public float HoldDurationSeconds { get; set; } = 0.5f;
-    public int RotationQuarterTurns { get; set; } = 0;
     private bool isMouseHovering = false;
     private bool isMousePressed = false;
     private float holdAccumulator = 0f;
     private bool holdAlreadyEmitted = false;
-    private bool isActive = false;
+    public bool storage = true;
     private bool placing = false;
-
+    public Vector2I AnchorCell { get; set; }
     public override void _Ready()
     {
         GetNode<SignalBus>("/root/SignalBus").Placing += () => placing = true;
@@ -27,9 +26,27 @@ public partial class GridPlaceable : Node2D
         GetNode<SignalBus>("/root/SignalBus").StopPlacing -= () => placing = false;
     }
 
+    public Array<Vector2I> GetOccupiedCells()
+    {
+        var occupied = new Array<Vector2I>();
+        if (def.Footprint == null)
+        {
+            occupied.Add(AnchorCell);
+            return occupied;
+        }
+
+        Array<Vector2I> offsets = def.Footprint.GetOffsets();
+        foreach (Vector2I offset in offsets)
+        {
+            occupied.Add(AnchorCell + offset);
+        }
+
+        return occupied;
+    }
+
     public override void _Input(InputEvent @event)
     {
-        if(!isActive || placing) return;
+        if(storage || placing) return;
         if (@event is InputEventMouseButton mouseButton)
         {
             if (mouseButton.ButtonIndex == MouseButton.Left)
@@ -70,7 +87,7 @@ public partial class GridPlaceable : Node2D
 
     public override void _Process(double delta)
     {
-        if(!isActive || placing) return;
+        if(storage || placing) return;
 
         // Only accumulate hold time if mouse is pressed and hovering
         if (isMousePressed && isMouseHovering && !holdAlreadyEmitted)
@@ -80,10 +97,9 @@ public partial class GridPlaceable : Node2D
             // Check if hold duration has been reached
             if (holdAccumulator >= HoldDurationSeconds)
             {
+                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(this);
                 GetNode<SignalBus>("/root/SignalBus").PublishClearCells();
-                GetNode<SignalBus>("/root/SignalBus").PublishPlaceableRemovedFromActive(def);
                 holdAlreadyEmitted = true;
-                QueueFree();
             }
         }
     }
@@ -112,10 +128,10 @@ public partial class GridPlaceable : Node2D
         return false;
     }
 
-    public void Initialize(PlaceableDefinition def, bool isActive = true)
+    public void Initialize(PlaceableDefinition def)
     {
         this.def = def;
-        this.isActive = isActive;
-        def.AnchorCell = Vector2I.Zero;
+        AnchorCell = Vector2I.Zero;
+        storage = false;
     }
 }

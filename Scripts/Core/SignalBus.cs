@@ -13,14 +13,6 @@ public partial class SignalBus : Node
     public delegate void PlacingEventHandler();
     [Signal]
     public delegate void StopPlacingEventHandler();
-
-    [Signal]
-    public delegate void PlaceablePlacedEventHandler(PlaceableDefinition def);    
-    public void PublishPlaceablePlaced(PlaceableDefinition def)
-    {
-        EmitSignal(nameof(PlaceablePlaced), def);
-    }
-
     [Signal]
     public delegate void BuildingDestroyedEventHandler(Node buildingNode);
 
@@ -39,27 +31,34 @@ public partial class SignalBus : Node
     [Signal]
     public delegate void RaidBeginEventHandler();
     [Signal]
-    public delegate void PlaceableAddedToStorageEventHandler(PlaceableDefinition def);
-
-    public void PublishPlaceableAddedToStorage(PlaceableDefinition def)
+    public delegate void PlaceablePlacedEventHandler(GridPlaceable placeable);    
+    public void PublishPlaceablePlaced(GridPlaceable placeable)
     {
-        EmitSignal(nameof(PlaceableAddedToStorage), def);
+        EmitSignal(nameof(PlaceablePlaced), placeable);
     }
 
     [Signal]
-    public delegate void PlaceableRemovedFromStorageEventHandler(PlaceableDefinition def);
+    public delegate void PlaceableAddedToStorageEventHandler(GridPlaceable placeable);
 
-    public void PublishPlaceableRemovedFromStorage(PlaceableDefinition def)
+    public void PublishPlaceableAddedToStorage(GridPlaceable placeable)
     {
-        EmitSignal(nameof(PlaceableRemovedFromStorage), def);
+        EmitSignal(nameof(PlaceableAddedToStorage), placeable);
     }
 
     [Signal]
-    public delegate void PlaceableRemovedFromActiveEventHandler(PlaceableDefinition def);
+    public delegate void PlaceableRemovedFromStorageEventHandler(GridPlaceable placeable);
 
-    public void PublishPlaceableRemovedFromActive(PlaceableDefinition def)
+    public void PublishPlaceableRemovedFromStorage(GridPlaceable placeable)
     {
-        EmitSignal(nameof(PlaceableRemovedFromActive), def);
+        EmitSignal(nameof(PlaceableRemovedFromStorage), placeable);
+    }
+
+    [Signal]
+    public delegate void PlaceableRemovedFromActiveEventHandler(GridPlaceable placeable);
+
+    public void PublishPlaceableRemovedFromActive(GridPlaceable placeable)
+    {
+        EmitSignal(nameof(PlaceableRemovedFromActive), placeable);
     }
 
     [Signal]
