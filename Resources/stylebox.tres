@@ -1,0 +1,10 @@
+[gd_resource type="StyleBoxTexture" load_steps=3 format=3 uid="uid://btel1txywul78"]
+
+[ext_resource type="Texture2D" uid="uid://dijf2xp2kvpo8" path="res://Assets/Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="1_xrh3n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvmqo"]
+atlas = ExtResource("1_xrh3n")
+region = Rect2(1, -3, 257, 261)
+
+[resource]
+texture = SubResource("AtlasTexture_kvmqo")

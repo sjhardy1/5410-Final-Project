@@ -1,7 +1,21 @@
-[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://bxjn1ysranaho"]
+[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://bxjn1ysranaho"]
 
+[ext_resource type="Texture2D" uid="uid://cyibj8sk6owj0" path="res://Assets/Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigBlueButton_Regular.png" id="1_byaa1"]
 [ext_resource type="Texture2D" uid="uid://5oark76gwmvx" path="res://Assets/Tiny Swords (Free Pack)/UI Elements/UI Elements/Wood Table/WoodTable.png" id="1_uruj0"]
 [ext_resource type="Texture2D" uid="uid://b2h3pjqoxwjwk" path="res://Assets/Tiny Swords (Free Pack)/UI Elements/UI Elements/Banners/Banner.png" id="2_c5clf"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q0gsl"]
+texture = ExtResource("1_byaa1")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+0:2/0 = 0
+2:2/0 = 0
+4:2/0 = 0
+0:4/0 = 0
+2:4/0 = 0
+4:4/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_i20b1"]
 texture = ExtResource("1_uruj0")
@@ -65,3 +79,4 @@ texture_region_size = Vector2i(64, 64)
 tile_size = Vector2i(64, 64)
 sources/1 = SubResource("TileSetAtlasSource_i20b1")
 sources/2 = SubResource("TileSetAtlasSource_vsxvo")
+sources/0 = SubResource("TileSetAtlasSource_q0gsl")

@@ -1,0 +1,113 @@
+[gd_scene load_steps=4 format=4 uid="uid://bthkst56hlfrq"]
+
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_qrgw4"]
+[ext_resource type="Script" uid="uid://qqoulqo71o0a" path="res://Scripts/UpkeepReport.cs" id="1_vffna"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_5sl0o"]
+
+[node name="UpkeepReport" type="CanvasLayer"]
+script = ExtResource("1_vffna")
+buttonPath = NodePath("ContentBox/MarginContainer/Button")
+newFoodPath = NodePath("ContentBox/Totals/Label")
+newWoodPath = NodePath("ContentBox/Totals/Label2")
+
+[node name="TileMap" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAAAAAgAAAAAAAAAEAAEAAgAAAAEAAAAFAAAAAgABAAAAAAAFAAEAAgABAAEAAAAEAAcAAgAAAAUAAAAEAAgAAgAAAAYAAAAFAAcAAgABAAUAAAAFAAgAAgABAAYAAAAEAAIAAgAAAAMAAAAFAAIAAgABAAMAAAAEAAMAAgAAAAMAAAAFAAMAAgABAAMAAAAEAAQAAgAAAAMAAAAFAAQAAgABAAMAAAAEAAUAAgAAAAMAAAAFAAUAAgABAAMAAAAEAAYAAgAAAAMAAAAFAAYAAgABAAMAAAAMAAAAAgAFAAAAAAAMAAEAAgAFAAEAAAANAAAAAgAGAAAAAAANAAEAAgAGAAEAAAAMAAcAAgAFAAUAAAAMAAgAAgAFAAYAAAANAAcAAgAGAAUAAAANAAgAAgAGAAYAAAAMAAYAAgAFAAMAAAANAAYAAgAGAAMAAAAMAAUAAgAFAAMAAAANAAUAAgAGAAMAAAAMAAQAAgAFAAMAAAANAAQAAgAGAAMAAAAMAAMAAgAFAAMAAAANAAMAAgAGAAMAAAAKAAMAAgADAAMAAAALAAMAAgADAAMAAAAKAAIAAgADAAMAAAALAAIAAgADAAMAAAAMAAIAAgAFAAMAAAANAAIAAgAGAAMAAAAGAAcAAgADAAUAAAAGAAgAAgADAAYAAAAHAAcAAgADAAUAAAAHAAgAAgADAAYAAAAIAAcAAgADAAUAAAAIAAgAAgADAAYAAAAJAAcAAgADAAUAAAAJAAgAAgADAAYAAAAKAAcAAgADAAUAAAAKAAgAAgADAAYAAAALAAcAAgADAAUAAAALAAgAAgADAAYAAAAGAAAAAgADAAAAAAAGAAEAAgADAAEAAAAHAAAAAgADAAAAAAAHAAEAAgADAAEAAAAIAAAAAgADAAAAAAAIAAEAAgADAAEAAAAJAAAAAgADAAAAAAAJAAEAAgADAAEAAAAKAAAAAgADAAAAAAAKAAEAAgADAAEAAAALAAAAAgADAAAAAAALAAEAAgADAAEAAAAGAAIAAgADAAMAAAAGAAMAAgADAAMAAAAHAAMAAgADAAMAAAAIAAMAAgADAAMAAAAIAAQAAgADAAMAAAAJAAQAAgADAAMAAAAJAAUAAgADAAMAAAAKAAUAAgADAAMAAAAKAAYAAgADAAMAAAALAAYAAgADAAMAAAALAAUAAgADAAMAAAALAAQAAgADAAMAAAAJAAIAAgADAAMAAAAIAAIAAgADAAMAAAAHAAIAAgADAAMAAAAGAAQAAgADAAMAAAAGAAUAAgADAAMAAAAGAAYAAgADAAMAAAAHAAYAAgADAAMAAAAHAAUAAgADAAMAAAAHAAQAAgADAAMAAAAIAAYAAgADAAMAAAAIAAUAAgADAAMAAAAJAAYAAgADAAMAAAAKAAQAAgADAAMAAAAJAAMAAgADAAMAAAA=")
+tile_set = ExtResource("1_qrgw4")
+
+[node name="ContentBox" type="VBoxContainer" parent="."]
+offset_left = 328.0
+offset_top = 73.0
+offset_right = 824.0
+offset_bottom = 498.0
+theme = ExtResource("2_5sl0o")
+
+[node name="Label" type="Label" parent="ContentBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Report"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentBox"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="ContentBox/HBoxContainer"]
+layout_mode = 2
+text = "Units Food Consumption"
+
+[node name="Label" type="Label" parent="ContentBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "-100"
+horizontal_alignment = 2
+
+[node name="Label3" type="Label" parent="ContentBox/HBoxContainer"]
+layout_mode = 2
+text = "Food"
+
+[node name="HSeparator" type="HSeparator" parent="ContentBox"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ContentBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ContentBox/HBoxContainer2"]
+layout_mode = 2
+text = "Buildings Food Consumption"
+
+[node name="Label2" type="Label" parent="ContentBox/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "-10"
+horizontal_alignment = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ContentBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ContentBox/HBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8901961, 0.4509804, 0.19607843, 1)
+text = "Food Production"
+
+[node name="Label2" type="Label" parent="ContentBox/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "+120"
+horizontal_alignment = 2
+
+[node name="Label2" type="Label" parent="ContentBox"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_font_sizes/font_size = 24
+text = "Total"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Totals" type="HBoxContainer" parent="ContentBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="ContentBox/Totals"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Food: 112"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="ContentBox/Totals"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Wood: 50"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 20
+
+[node name="Button" type="Button" parent="ContentBox/MarginContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "Next Round"
