@@ -4,17 +4,16 @@ using Godot.Collections;
 public partial class ChaseState : ICombatantState
 {
     private const float ChaseSpeed = 100f;
-    private const float LookAheadDistance = 96f;
-    private const float SteerAngleDegrees = 35f;
-    private const float AvoidanceWeight = 1.25f;
-    private const float SeparationWeight = 1.15f;
-    private const float SeparationRadius = 72f;
-    private const float MinSeparationDistance = 8f;
-    private const float AvoidanceCommitDuration = 0.35f;
+    private const float ProbeLength = 96f;
+    private const float ProbeWidth = 56f;
+    private const float ProbeForwardOffset = 56f;
+    private const float AngleStepDegrees = 10f;
+    private const float MaxScanDegrees = 180f;
+    private const float AvoidanceCommitDuration = 1.0f;
 
     private Combatant combatant;
     private ITargetable target;
-    private int committedSteerSign;
+    private Vector2 committedDirection;
     private float committedSteerTimeRemaining;
 
     public ChaseState(Combatant combatant, ITargetable target)
@@ -52,26 +51,21 @@ public partial class ChaseState : ICombatantState
             }
 
             Vector2 desiredDirection = (target.Position - combatant.Position).Normalized();
-            Vector2 steeringDirection = desiredDirection;
-
-            Vector2 obstacleAvoidance = ComputeObstacleAvoidance(desiredDirection);
-            if (obstacleAvoidance != Vector2.Zero)
+            if (desiredDirection == Vector2.Zero)
             {
-                steeringDirection += obstacleAvoidance * AvoidanceWeight;
+                combatant.LinearVelocity = Vector2.Zero;
+                return;
             }
 
-            Vector2 separation = ComputeSeparationVector();
-            if (separation != Vector2.Zero)
+            if (TryGetSteeringDirection(desiredDirection, out Vector2 steeringDirection))
             {
-                steeringDirection += separation * SeparationWeight;
+                combatant.LinearVelocity = steeringDirection * ChaseSpeed;
             }
-
-            if (steeringDirection == Vector2.Zero)
+            else
             {
-                steeringDirection = desiredDirection;
+                // No clear direction found in the scan, so stop instead of pushing into blockers.
+                combatant.LinearVelocity = Vector2.Zero;
             }
-
-            combatant.LinearVelocity = steeringDirection.Normalized() * ChaseSpeed;
         }
         else
         {
@@ -84,59 +78,81 @@ public partial class ChaseState : ICombatantState
         }
     }
 
-    private Vector2 ComputeObstacleAvoidance(Vector2 desiredDirection)
+    private bool TryGetSteeringDirection(Vector2 desiredDirection, out Vector2 steeringDirection)
     {
-        if (desiredDirection == Vector2.Zero)
+        if (committedSteerTimeRemaining > 0f && committedDirection != Vector2.Zero && IsProbeDirectionFree(committedDirection))
         {
-            return Vector2.Zero;
+            steeringDirection = committedDirection;
+            return true;
         }
 
-        if (GetPathClearance(desiredDirection, LookAheadDistance) >= LookAheadDistance)
+        bool pathBlockedAhead = !IsProbeDirectionFree(desiredDirection);
+        if (!pathBlockedAhead)
         {
-            if (committedSteerTimeRemaining <= 0f)
-            {
-                committedSteerSign = 0;
-            }
-            return Vector2.Zero;
+            committedDirection = Vector2.Zero;
+            steeringDirection = desiredDirection;
+            return true;
         }
 
-        if (committedSteerSign == 0)
+        if (FindFreeDirection(desiredDirection, out Vector2 freeDirection))
         {
-            Vector2 leftDirection = desiredDirection.Rotated(Mathf.DegToRad(-SteerAngleDegrees));
-            Vector2 rightDirection = desiredDirection.Rotated(Mathf.DegToRad(SteerAngleDegrees));
-
-            float leftClearance = GetPathClearance(leftDirection, LookAheadDistance);
-            float rightClearance = GetPathClearance(rightDirection, LookAheadDistance);
-
-            committedSteerSign = leftClearance >= rightClearance ? -1 : 1;
             committedSteerTimeRemaining = AvoidanceCommitDuration;
+            committedDirection = freeDirection;
+            steeringDirection = freeDirection;
+            return true;
         }
 
-        Vector2 preferredDirection = desiredDirection.Rotated(Mathf.DegToRad(committedSteerSign * SteerAngleDegrees));
-        if (GetPathClearance(preferredDirection, LookAheadDistance * 0.75f) > 0f)
-        {
-            return preferredDirection;
-        }
-
-        Vector2 oppositeDirection = desiredDirection.Rotated(Mathf.DegToRad(-committedSteerSign * SteerAngleDegrees));
-        return oppositeDirection;
+        committedDirection = Vector2.Zero;
+        steeringDirection = Vector2.Zero;
+        return false;
     }
 
-    private Vector2 ComputeSeparationVector()
+    private bool FindFreeDirection(Vector2 desiredDirection, out Vector2 freeDirection)
     {
-        CircleShape2D searchShape = new CircleShape2D { Radius = SeparationRadius };
+        int maxSteps = Mathf.CeilToInt(MaxScanDegrees / AngleStepDegrees);
+        for (int step = 0; step <= maxSteps; step++)
+        {
+            foreach (float signedMultiplier in GetStepSigns(step))
+            {
+                float offsetDegrees = step * AngleStepDegrees * signedMultiplier;
+                Vector2 candidateDirection = desiredDirection.Rotated(Mathf.DegToRad(offsetDegrees)).Normalized();
+                if (IsProbeDirectionFree(candidateDirection))
+                {
+                    freeDirection = candidateDirection;
+                    return true;
+                }
+            }
+        }
+
+        freeDirection = Vector2.Zero;
+        return false;
+    }
+
+    private Array<float> GetStepSigns(int step)
+    {
+        if (step == 0)
+        {
+            return new Array<float> { 0f };
+        }
+
+        return new Array<float> { -1f, 1f };
+    }
+
+    private bool IsProbeDirectionFree(Vector2 direction)
+    {
+        RectangleShape2D probeShape = new RectangleShape2D { Size = new Vector2(ProbeLength, ProbeWidth) };
+        Vector2 probeCenter = combatant.GlobalPosition + direction * ProbeForwardOffset;
+        Transform2D probeTransform = new Transform2D(direction.Angle(), probeCenter);
         PhysicsShapeQueryParameters2D query = new PhysicsShapeQueryParameters2D
         {
-            Shape = searchShape,
-            Transform = new Transform2D(0f, combatant.GlobalPosition),
+            Shape = probeShape,
+            Transform = probeTransform,
             CollideWithAreas = false,
             CollideWithBodies = true,
             Exclude = new Array<Rid> { combatant.GetRid() }
         };
 
-        Array<Dictionary> hits = combatant.GetWorld2D().DirectSpaceState.IntersectShape(query, 12);
-        Vector2 repulsion = Vector2.Zero;
-
+        Array<Dictionary> hits = combatant.GetWorld2D().DirectSpaceState.IntersectShape(query, 16);
         foreach (Dictionary hit in hits)
         {
             if (!hit.ContainsKey("collider"))
@@ -144,63 +160,16 @@ public partial class ChaseState : ICombatantState
                 continue;
             }
 
-            if (hit["collider"].AsGodotObject() is not CollisionObject2D body)
+            GodotObject collider = hit["collider"].AsGodotObject();
+            if (ReferenceEquals(collider, target as GodotObject))
             {
                 continue;
             }
 
-            if (ReferenceEquals(body, target))
-            {
-                continue;
-            }
-
-            Vector2 away = combatant.GlobalPosition - body.GlobalPosition;
-            float distance = away.Length();
-            if (distance <= 0.001f)
-            {
-                continue;
-            }
-
-            float clampedDistance = Mathf.Max(distance, MinSeparationDistance);
-            float strength = 1f - Mathf.Clamp(clampedDistance / SeparationRadius, 0f, 1f);
-            repulsion += away.Normalized() * strength;
+            return false;
         }
 
-        if (repulsion == Vector2.Zero)
-        {
-            return Vector2.Zero;
-        }
-
-        return repulsion.Normalized();
-    }
-
-    private float GetPathClearance(Vector2 direction, float distance)
-    {
-        Vector2 from = combatant.GlobalPosition;
-        Vector2 to = from + direction * distance;
-        PhysicsRayQueryParameters2D rayQuery = PhysicsRayQueryParameters2D.Create(from, to);
-        rayQuery.CollideWithAreas = false;
-        rayQuery.CollideWithBodies = true;
-        rayQuery.Exclude = new Array<Rid> { combatant.GetRid() };
-
-        Dictionary hit = combatant.GetWorld2D().DirectSpaceState.IntersectRay(rayQuery);
-        if (hit.Count == 0)
-        {
-            return distance;
-        }
-
-        if (hit.ContainsKey("collider") && hit["collider"].AsGodotObject() is GodotObject hitObject && ReferenceEquals(hitObject, target as GodotObject))
-        {
-            return distance;
-        }
-
-        if (!hit.ContainsKey("position"))
-        {
-            return 0f;
-        }
-
-        Vector2 hitPosition = hit["position"].AsVector2();
-        return from.DistanceTo(hitPosition);
+        return true;
     }
 
     private void OnTargetDefeated()
