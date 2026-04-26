@@ -176,13 +176,11 @@ public partial class GameRoot : Node2D
                 {
                     if(foodProduction.ContainsKey(buildingDef.CoreAttributes.DisplayName))
                     {
-                        GD.Print("Multiple " + buildingDef.CoreAttributes.DisplayName + " detected, stacking production in upkeep report.");
                         foodProduction[buildingDef.CoreAttributes.DisplayName] = 
                         [
                             foodProduction[buildingDef.CoreAttributes.DisplayName][0] + buildingDef.ProductionFoodPerRound, 
                             foodProduction[buildingDef.CoreAttributes.DisplayName][1] + 1
                         ];
-                        GD.Print("Total " + buildingDef.CoreAttributes.DisplayName + " production: " + foodProduction[buildingDef.CoreAttributes.DisplayName][0] + " from " + foodProduction[buildingDef.CoreAttributes.DisplayName][1] + " buildings.");
                     } else
                     {
                         foodProduction[buildingDef.CoreAttributes.DisplayName] = [buildingDef.ProductionFoodPerRound, 1];
@@ -192,8 +190,11 @@ public partial class GameRoot : Node2D
                 {
                     if(woodProduction.ContainsKey(buildingDef.CoreAttributes.DisplayName))
                     {
-                        woodProduction[buildingDef.CoreAttributes.DisplayName][0] += buildingDef.ProductionWoodPerRound;
-                        woodProduction[buildingDef.CoreAttributes.DisplayName][1] ++;
+                       woodProduction[buildingDef.CoreAttributes.DisplayName] = 
+                       [
+                            woodProduction[buildingDef.CoreAttributes.DisplayName][0] + buildingDef.ProductionWoodPerRound, 
+                            woodProduction[buildingDef.CoreAttributes.DisplayName][1] + 1
+                       ];
                     } else
                     {
                         woodProduction[buildingDef.CoreAttributes.DisplayName] = [buildingDef.ProductionWoodPerRound, 1];

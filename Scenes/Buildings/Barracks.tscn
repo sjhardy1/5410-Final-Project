@@ -1,3 +1,11 @@
-[gd_scene format=3 uid="uid://b1u4q0ixgghqe"]
+[gd_scene load_steps=3 format=4 uid="uid://b1u4q0ixgghqe"]
+
+[ext_resource type="TileSet" uid="uid://cl8l4wvubm2hm" path="res://Resources/Tilesets/Farm.tres" id="1_d84cd"]
+[ext_resource type="Script" uid="uid://bdtaosq7yhcy7" path="res://Scripts/Placement/GridPlaceable.cs" id="1_e3vjf"]
 
 [node name="Barracks" type="Node2D"]
+script = ExtResource("1_e3vjf")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD///7/AgAAAAAAAAD/////AgAAAAEAAAD//wAAAgAAAAIAAAD//wEAAgAAAAMAAAAAAP7/AgABAAAAAAAAAP//AgABAAEAAAAAAAAAAgABAAIAAAAAAAEAAgABAAMAAAABAP7/AgACAAAAAAABAP//AgACAAEAAAABAAAAAgACAAIAAAABAAEAAgACAAMAAAA=")
+tile_set = ExtResource("1_d84cd")

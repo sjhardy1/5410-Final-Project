@@ -35,6 +35,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         Scene = definition.Scene;
         footprint = definition.Footprint;
         faction = Faction.Ally;
+        moveSpeed = definition.moveSpeed;
         GravityScale = 0f;
         LockRotation = true;
     }
@@ -50,6 +51,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         Scene = definition.Scene;
         Position = position;
         faction = Faction.Enemy;
+        moveSpeed = definition.moveSpeed;
         GravityScale = 0f;
         LockRotation = true;
     }

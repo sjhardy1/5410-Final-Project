@@ -2,30 +2,34 @@
 
 [ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_14888"]
 [ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_4mkfk"]
-[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="3_y1fu5"]
+[ext_resource type="Resource" uid="uid://duxipoiu1r5hk" path="res://Resources/Footprints/3x3.tres" id="3_4mkfk"]
 [ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_hvhs7"]
 [ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="5_dcheo"]
+[ext_resource type="PackedScene" uid="uid://b1u4q0ixgghqe" path="res://Scenes/Buildings/Barracks.tscn" id="5_y1fu5"]
 
 [sub_resource type="Resource" id="Resource_oxyd0"]
 script = ExtResource("1_14888")
+Id = "barracks"
+DisplayName = "Barracks"
+Description = "Increases all units' attack damage and movement speed."
 metadata/_custom_type_script = "uid://yaxpoere2ivy"
 
 [sub_resource type="Resource" id="Resource_tqpwy"]
 script = ExtResource("2_4mkfk")
+MaxHealth = 1000.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
-
-[sub_resource type="Resource" id="Resource_5j13w"]
-script = ExtResource("3_y1fu5")
-metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
 
 [sub_resource type="Resource" id="Resource_tdf2y"]
 script = ExtResource("4_hvhs7")
-Rarity = 3
+Rarity = 2
 metadata/_custom_type_script = "uid://56jqwa01y5dl"
 
 [resource]
 script = ExtResource("5_dcheo")
 CoreAttributes = SubResource("Resource_oxyd0")
 LootAttributes = SubResource("Resource_tdf2y")
-Footprint = SubResource("Resource_5j13w")
+Footprint = ExtResource("3_4mkfk")
 DefensiveAttributes = SubResource("Resource_tqpwy")
+UpkeepFoodPerRound = 5
+UpkeepWoodPerRound = 5
+Scene = ExtResource("5_y1fu5")
