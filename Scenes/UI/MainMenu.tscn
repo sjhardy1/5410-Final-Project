@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ufhxsbks4i71"]
+[gd_scene load_steps=7 format=3 uid="uid://ufhxsbks4i71"]
 
 [ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="1_72sra"]
 [ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_g18y6"]
+[ext_resource type="Script" uid="uid://bx5wfkexd6ta0" path="res://Scripts/UI/MainMenu.cs" id="1_k8um8"]
 [ext_resource type="PackedScene" uid="uid://c15lcrsrsi2pt" path="res://Scenes/UI/TableBackdrop.tscn" id="1_t6w0q"]
 [ext_resource type="FontFile" uid="uid://eb0rix5fruoa" path="res://Assets/Fonts/hercules-pixel-font/HerculesPixelFontRegular-ovAX0.otf" id="2_mjmdf"]
 
@@ -9,15 +10,21 @@
 default_font = ExtResource("2_mjmdf")
 
 [node name="MainMenu" type="CanvasLayer"]
+script = ExtResource("1_k8um8")
+newGameButton = NodePath("VBoxContainer/Button")
+loadGameButton = NodePath("VBoxContainer/Button2")
+upgradesButton = NodePath("VBoxContainer/Button3")
+settingsButton = NodePath("VBoxContainer/Button4")
+exitButton = NodePath("VBoxContainer/Button5")
 
 [node name="TableBackdrop" parent="." instance=ExtResource("1_t6w0q")]
 layer = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 330.0
-offset_top = 209.0
-offset_right = 822.0
-offset_bottom = 437.0
+offset_left = 219.0
+offset_top = 138.0
+offset_right = 932.0
+offset_bottom = 469.0
 theme = ExtResource("1_72sra")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="VBoxContainer"]
@@ -29,7 +36,7 @@ tile_set = ExtResource("1_g18y6")
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "They Want our Blood"
 horizontal_alignment = 1
 vertical_alignment = 1

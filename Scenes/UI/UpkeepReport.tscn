@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=4 uid="uid://bthkst56hlfrq"]
 
 [ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_qrgw4"]
-[ext_resource type="Script" uid="uid://qqoulqo71o0a" path="res://Scripts/UpkeepReport.cs" id="1_vffna"]
+[ext_resource type="Script" uid="uid://qqoulqo71o0a" path="res://Scripts/UI/UpkeepReport.cs" id="1_vffna"]
 [ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_5sl0o"]
 
 [node name="UpkeepReport" type="CanvasLayer"]

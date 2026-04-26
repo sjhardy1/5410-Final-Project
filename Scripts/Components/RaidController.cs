@@ -40,6 +40,11 @@ public partial class RaidController : Node2D
             signalBus.PublishRaidEnded();
             CleanupRaid();
         }
+        if (isGameLost())
+        {
+            signalBus.PublishGameLost();
+            CleanupRaid();
+        }
     }
     public void StartRaid(GameDatabase database)
     {
@@ -48,18 +53,19 @@ public partial class RaidController : Node2D
     public bool IsRaidOver()
     {
         if(waveQueue == null || waveQueue.Count > 0) return false;
-        bool enemiesDead = true;
-        bool townCenterDefeated = true;
         foreach(Combatant combatant in runState.ActiveCombatants)
         {
-            if(combatant.faction == Faction.Enemy) enemiesDead = false;
+            if(combatant.faction == Faction.Enemy) return false;
         }
+        return true;
+    }
+    private bool isGameLost()
+    {
         foreach(CombatObject building in runState.ActiveObjects)
         {
-            if(building.CoreAttributes.Id == "town_center") townCenterDefeated = false;
+            if(building.CoreAttributes.Id == "town_center") return false;
         }
-        signalBus.PublishGameLost();
-        return enemiesDead || townCenterDefeated;
+        return true;
     }
     public void CleanupRaid()
     {

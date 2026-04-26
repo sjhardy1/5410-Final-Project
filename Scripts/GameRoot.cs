@@ -18,7 +18,7 @@ public partial class GameRoot : Node2D
 	private int nextUid = 1;
 	private bool isScreenBusy = false;
 	[Export] private PackedScene upkeepReportScene;
-    [Export] private PackedScene gameEndScene;
+	[Export] private PackedScene gameEndScene;
 	public override void _Ready()
 	{		
 		database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
@@ -126,12 +126,12 @@ public partial class GameRoot : Node2D
 			runState.ActivePlaceables.Remove(placeable);
 			placementController.BeginPlacement(placeable);
 		};
-        signalBus.GameLost += () => {
-            GameEndScreen gameEnd = gameEndScene.Instantiate<GameEndScreen>();
-            gameEnd.Initialize(false, [runState.Wave, 10], 5);
-            AddChild(gameEnd);
-            MarkScreenAsBusy();
-        };
+		signalBus.GameLost += () => {
+			GameEndScreen gameEnd = gameEndScene.Instantiate<GameEndScreen>();
+			gameEnd.Initialize(false, [runState.Wave, 10], 5);
+			AddChild(gameEnd);
+			MarkScreenAsBusy();
+		};
 
 		GridPlaceable townCenter = InstantiatePlaceable(database.GetLootById("town_center") as PlaceableDefinition);
 		placementController.AddChild(townCenter);

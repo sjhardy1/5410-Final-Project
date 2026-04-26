@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://uq1vkvgucjo6"]
+[gd_scene load_steps=12 format=3 uid="uid://uq1vkvgucjo6"]
 
 [ext_resource type="Script" uid="uid://dxipohyxfgt1i" path="res://Scripts/GameRoot.cs" id="1_awmvw"]
 [ext_resource type="PackedScene" uid="uid://siu158h6kknh" path="res://Scenes/World/Playfield.tscn" id="1_rqi4g"]
 [ext_resource type="PackedScene" uid="uid://bthkst56hlfrq" path="res://Scenes/UI/UpkeepReport.tscn" id="2_58i56"]
 [ext_resource type="PackedScene" uid="uid://cn8bcm4dyw506" path="res://Scenes/ControllableCamera.tscn" id="2_gk1q0"]
+[ext_resource type="PackedScene" uid="uid://dmq6fg5vfr3yp" path="res://Scenes/UI/GameEndScreen.tscn" id="3_ppc7m"]
 [ext_resource type="PackedScene" uid="uid://jvvnsblxejpn" path="res://Scenes/UI/ChoiceScreen.tscn" id="5_2m18y"]
 [ext_resource type="PackedScene" uid="uid://sh7esf60u4um" path="res://Scenes/UI/HUD.tscn" id="6_qwuey"]
 [ext_resource type="PackedScene" uid="uid://bh21usguyak6y" path="res://Scenes/World/GridOccupancyMap.tscn" id="8_aob1w"]
@@ -14,6 +15,7 @@
 [node name="GameRoot" type="Node2D"]
 script = ExtResource("1_awmvw")
 upkeepReportScene = ExtResource("2_58i56")
+gameEndScene = ExtResource("3_ppc7m")
 
 [node name="ControllableCamera" parent="." instance=ExtResource("2_gk1q0")]
 position = Vector2(-4, -8)

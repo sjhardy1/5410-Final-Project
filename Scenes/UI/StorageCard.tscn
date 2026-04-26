@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://xytjqbi76kxn"]
 
-[ext_resource type="Script" uid="uid://uo8jhfyb8807" path="res://Scripts/StorageCard.cs" id="1_5o0qf"]
+[ext_resource type="Script" uid="uid://uo8jhfyb8807" path="res://Scripts/UI/StorageCard.cs" id="1_5o0qf"]
 [ext_resource type="PackedScene" uid="uid://dq74l261b161o" path="res://Scenes/Buildings/WheatFarm.tscn" id="2_1tke1"]
 
 [node name="StorageCard" type="Button"]
