@@ -30,5 +30,6 @@ script = ExtResource("4_kadf2")
 CoreAttributes = SubResource("Resource_rwsy8")
 DefensiveAttributes = SubResource("Resource_uktb5")
 OffensiveAttributes = SubResource("Resource_8e3ar")
+moveSpeed = 150.0
 Value = 5
 Scene = ExtResource("4_7dumx")

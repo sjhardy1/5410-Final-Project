@@ -3,7 +3,6 @@ using Godot.Collections;
 
 public partial class ChaseState : ICombatantState
 {
-    private const float ChaseSpeed = 100f;
     private const float ProbeLength = 96f;
     private const float ProbeWidth = 56f;
     private const float ProbeForwardOffset = 56f;
@@ -59,7 +58,7 @@ public partial class ChaseState : ICombatantState
 
             if (TryGetSteeringDirection(desiredDirection, out Vector2 steeringDirection))
             {
-                combatant.LinearVelocity = steeringDirection * ChaseSpeed;
+                combatant.LinearVelocity = steeringDirection * combatant.moveSpeed;
             }
             else
             {
@@ -70,6 +69,13 @@ public partial class ChaseState : ICombatantState
         else
         {
             combatant.LinearVelocity = Vector2.Zero;
+        }
+        if(combatant.LinearVelocity.X < 0){
+            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = true;
+            if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = true;
+        } else {
+            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = false;
+            if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = false;
         }
         // If within attack range, transition to AttackState
         if (target != null && CombatRangeUtility.IsTargetInAttackRange(combatant, target))

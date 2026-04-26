@@ -90,6 +90,18 @@ public partial class RaidController : Node2D
     {
         Combatant combatant = new Combatant(placeable.def as UnitDefinition);
         combatant.uid = nextUid++;
+        foreach(GridPlaceable buffer in runState.ActivePlaceables)
+        {
+            if(buffer.def.CoreAttributes.Id == "sheep_farm")
+            {
+                combatant.DefensiveAttributes.MaxHealth += 50;
+            }
+            if(buffer.def.CoreAttributes.Id == "barracks")
+            {
+                combatant.OffensiveAttributes.AttackDamage += 10;
+                combatant.moveSpeed += 25;
+            }
+        }
         runState.ActiveCombatants.Add(combatant);
         combatant.Position = placeable.AnchorCell * 64 + Vector2.One * 32;
         AddChild(combatant);

@@ -8,6 +8,7 @@ public partial class Combatant : RigidBody2D, ITargetable
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
     public OffensiveAttributes OffensiveAttributes { get; set; }
+    public float moveSpeed { get; set; }
     public PackedScene Scene { get; set; }
     public Node2D childScene;
     private ICombatantState currentState;

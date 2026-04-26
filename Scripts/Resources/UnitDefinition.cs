@@ -9,6 +9,7 @@ public partial class UnitDefinition : PlaceableDefinition
     [Export] public override FootprintShape Footprint { get; set; }
     [Export] public override DefensiveAttributes DefensiveAttributes { get; set; }
     [Export] public OffensiveAttributes OffensiveAttributes { get; set; }
+    [Export] public float moveSpeed { get; set; }
     [Export] public override int UpkeepFoodPerRound { get; set; } = 0;
     [Export] public override PackedScene Scene { get; set; }
 }

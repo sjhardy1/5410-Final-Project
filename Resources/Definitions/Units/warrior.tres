@@ -43,5 +43,6 @@ LootAttributes = SubResource("Resource_24rlj")
 Footprint = SubResource("Resource_mjcxp")
 DefensiveAttributes = SubResource("Resource_yld0w")
 OffensiveAttributes = SubResource("Resource_0rg4f")
+moveSpeed = 100.0
 UpkeepFoodPerRound = 10
 Scene = ExtResource("5_wcyo6")
