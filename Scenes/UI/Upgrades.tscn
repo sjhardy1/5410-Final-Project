@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bptf5vmppifyn"]
+
+[ext_resource type="PackedScene" uid="uid://c15lcrsrsi2pt" path="res://Scenes/UI/TableBackdrop.tscn" id="1_pppmj"]
+
+[node name="Upgrades" type="CanvasLayer"]
+
+[node name="TableBackdrop" parent="." instance=ExtResource("1_pppmj")]
+layer = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 232.0
+offset_top = 143.0
+offset_right = 918.0
+offset_bottom = 470.0

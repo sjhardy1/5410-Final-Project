@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=4 uid="uid://dmq6fg5vfr3yp"]
+
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_owlkf"]
+[ext_resource type="Script" uid="uid://dutvy5h1kfc6x" path="res://Scripts/GameEndScreen.cs" id="1_xkvfy"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_f83ik"]
+
+[node name="GameEndScreen" type="CanvasLayer"]
+script = ExtResource("1_xkvfy")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAAEABAAAAAIAAAAEAAIABAAAAAMAAAAGAAEABAADAAIAAAAGAAIABAADAAMAAAAIAAEABAADAAIAAAAIAAIABAADAAMAAAAJAAEABAADAAIAAAALAAIABAADAAMAAAANAAEABAAGAAIAAAANAAIABAAGAAMAAAAFAAEABAABAAIAAAAFAAIABAABAAMAAAAHAAEABAADAAIAAAAHAAIABAADAAMAAAAMAAEABAAFAAIAAAAMAAIABAAFAAMAAAAJAAIABAADAAMAAAAKAAIABAADAAMAAAAKAAEABAADAAIAAAALAAEABAADAAIAAAADAAMAAwAAAAAAAAAOAAMAAwAEAAAAAAAFAAMAAwACAAAAAAAEAAMAAwACAAAAAAAGAAMAAwACAAAAAAAHAAMAAwACAAAAAAAIAAMAAwACAAAAAAAJAAMAAwACAAAAAAAKAAMAAwACAAAAAAALAAMAAwACAAAAAAAMAAMAAwACAAAAAAANAAMAAwACAAAAAAADAAQAAwAAAAIAAAADAAUAAwAAAAIAAAADAAYAAwAAAAIAAAADAAcAAwAAAAQAAAAEAAcAAwACAAQAAAAFAAcAAwACAAQAAAAGAAcAAwACAAQAAAAHAAcAAwACAAQAAAAIAAcAAwACAAQAAAAJAAcAAwACAAQAAAAKAAcAAwACAAQAAAALAAcAAwACAAQAAAAMAAcAAwACAAQAAAANAAcAAwACAAQAAAAOAAcAAwAEAAQAAAAOAAQAAwAEAAIAAAAOAAUAAwAEAAIAAAAOAAYAAwAEAAIAAAAHAAUAAwACAAIAAAAHAAQAAwACAAIAAAAGAAQAAwACAAIAAAAFAAQAAwACAAIAAAAEAAQAAwACAAIAAAAEAAUAAwACAAIAAAAEAAYAAwACAAIAAAAFAAYAAwACAAIAAAAFAAUAAwACAAIAAAAGAAUAAwACAAIAAAAGAAYAAwACAAIAAAAHAAYAAwACAAIAAAAIAAYAAwACAAIAAAAIAAUAAwACAAIAAAAIAAQAAwACAAIAAAAJAAQAAwACAAIAAAAJAAUAAwACAAIAAAAJAAYAAwACAAIAAAAKAAYAAwACAAIAAAAKAAUAAwACAAIAAAAKAAQAAwACAAIAAAALAAQAAwACAAIAAAALAAUAAwACAAIAAAALAAYAAwACAAIAAAAMAAYAAwACAAIAAAAMAAUAAwACAAIAAAAMAAQAAwACAAIAAAANAAQAAwACAAIAAAANAAUAAwACAAIAAAANAAYAAwACAAIAAAA=")
+tile_set = ExtResource("1_owlkf")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 378.0
+offset_top = 96.0
+offset_right = 810.0
+offset_bottom = 160.0
+theme = ExtResource("2_f83ik")
+theme_override_font_sizes/font_size = 48
+text = "You Lose!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 232.0
+offset_top = 229.0
+offset_right = 926.0
+offset_bottom = 470.0
+theme = ExtResource("2_f83ik")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Rounds completed: 7/10"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Game not completed"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "+15 Crystal gained"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 40
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+text = "Return to menu"
