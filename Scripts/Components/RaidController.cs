@@ -48,11 +48,18 @@ public partial class RaidController : Node2D
     public bool IsRaidOver()
     {
         if(waveQueue == null || waveQueue.Count > 0) return false;
+        bool enemiesDead = true;
+        bool townCenterDefeated = true;
         foreach(Combatant combatant in runState.ActiveCombatants)
         {
-            if(combatant.faction == Faction.Enemy) return false;
+            if(combatant.faction == Faction.Enemy) enemiesDead = false;
         }
-        return true;
+        foreach(CombatObject building in runState.ActiveObjects)
+        {
+            if(building.CoreAttributes.Id == "town_center") townCenterDefeated = false;
+        }
+        signalBus.PublishGameLost();
+        return enemiesDead || townCenterDefeated;
     }
     public void CleanupRaid()
     {
@@ -95,6 +102,7 @@ public partial class RaidController : Node2D
             if(buffer.def.CoreAttributes.Id == "sheep_farm")
             {
                 combatant.DefensiveAttributes.MaxHealth += 50;
+                combatant.DefensiveAttributes.Health += 50;
             }
             if(buffer.def.CoreAttributes.Id == "barracks")
             {

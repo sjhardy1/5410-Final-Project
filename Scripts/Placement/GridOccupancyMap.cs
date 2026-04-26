@@ -78,13 +78,13 @@ public partial class GridOccupancyMap : Node2D
         GD.Print("Recreating occupancy map...");
         RunState runstate = GetNode<RunState>("/root/RunState");
         occupiedCells.Clear();
-        //tiles.Clear();
+        tiles.Clear();
         foreach (GridPlaceable placeable in runstate.ActivePlaceables)
         {
             foreach (Vector2I cell in placeable.GetOccupiedCells())
             {
                 occupiedCells[cell] = placeable;
-                //tiles.SetCell(cell, 1, Vector2I.Zero);
+                tiles.SetCell(cell, 1, Vector2I.Zero);
             }
         }
     }

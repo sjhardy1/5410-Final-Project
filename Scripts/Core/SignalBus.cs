@@ -74,6 +74,11 @@ public partial class SignalBus : Node
     {
         EmitSignal(nameof(CancelPlacement));
     }
+    [Signal] public delegate void GameLostEventHandler();
+    public void PublishGameLost()
+    {
+        EmitSignal(nameof(GameLost));
+    }
 
     public void PublishChoiceScreenRequested(Array<Dictionary<string, Variant>> options)
     {

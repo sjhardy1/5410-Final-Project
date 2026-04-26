@@ -4,8 +4,8 @@ using Godot.Collections;
 public partial class ChaseState : ICombatantState
 {
     private const float ProbeLength = 96f;
-    private const float ProbeWidth = 56f;
-    private const float ProbeForwardOffset = 56f;
+    private const float ProbeWidth = 48f;
+    private const float ProbeForwardOffset = 48f;
     private const float AngleStepDegrees = 10f;
     private const float MaxScanDegrees = 180f;
     private const float AvoidanceCommitDuration = 1.0f;

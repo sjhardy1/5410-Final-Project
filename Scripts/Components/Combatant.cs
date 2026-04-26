@@ -4,7 +4,7 @@ using System;
 public partial class Combatant : RigidBody2D, ITargetable
 {
     private const float TileSize = 64f;
-    private const float CollisionRadius = TileSize / 2f;
+    private const float CollisionRadius = TileSize / 2.5f;
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
     public OffensiveAttributes OffensiveAttributes { get; set; }

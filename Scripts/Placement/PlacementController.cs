@@ -6,7 +6,7 @@ public partial class PlacementController : Node2D
     [Export] public NodePath OccupancyMapPath;
     [Export] public Shader InvalidPlacementShader;
 
-    private GridOccupancyMap occupancyMap;
+    public GridOccupancyMap occupancyMap;
     private GridPlaceable activePlaceable;
     private ShaderMaterial invalidPlacementMaterial;
     private bool activePlacementIsValid = true;
