@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=4 uid="uid://cmrcd6lukyrli"]
+
+[ext_resource type="Script" uid="uid://cnhnoxhix4hkn" path="res://Scripts/UI/Confirmation.cs" id="1_8rcf5"]
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_iyxsr"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_0ivep"]
+
+[node name="Confirmation" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_8rcf5")
+msgPath = NodePath("Control/Label")
+confirmButtonPath = NodePath("Control/HBoxContainer/Button2")
+cancelButtonPath = NodePath("Control/HBoxContainer/Button")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAAMAAwAAAAAAAAAEAAYAAwAAAAQAAAAEAAQAAwAAAAIAAAAEAAUAAwAAAAIAAAANAAMAAwAEAAAAAAANAAYAAwAEAAQAAAAFAAMAAwACAAAAAAAGAAMAAwACAAAAAAAHAAMAAwACAAAAAAAIAAMAAwACAAAAAAAJAAMAAwACAAAAAAAKAAMAAwACAAAAAAALAAMAAwACAAAAAAAMAAMAAwACAAAAAAANAAQAAwAEAAIAAAANAAUAAwAEAAIAAAAFAAYAAwACAAQAAAAGAAYAAwACAAQAAAAHAAYAAwACAAQAAAAIAAYAAwACAAQAAAAJAAYAAwACAAQAAAAKAAYAAwACAAQAAAALAAYAAwACAAQAAAAMAAYAAwACAAQAAAAGAAQAAwACAAIAAAAFAAQAAwACAAIAAAAFAAUAAwACAAIAAAAGAAUAAwACAAIAAAAHAAUAAwACAAIAAAAHAAQAAwACAAIAAAAIAAQAAwACAAIAAAAIAAUAAwACAAIAAAAJAAUAAwACAAIAAAAJAAQAAwACAAIAAAAKAAQAAwACAAIAAAAKAAUAAwACAAIAAAALAAUAAwACAAIAAAALAAQAAwACAAIAAAAMAAQAAwACAAIAAAAMAAUAAwACAAIAAAA=")
+tile_set = ExtResource("1_iyxsr")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 290.0
+offset_top = 234.0
+offset_right = 858.0
+offset_bottom = 409.0
+theme = ExtResource("2_0ivep")
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 11.0
+offset_right = 546.0
+offset_bottom = 104.0
+theme_override_font_sizes/font_size = 24
+text = "Yes or no question"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 122.0
+offset_right = 562.0
+offset_bottom = 162.0
+
+[node name="Button" type="Button" parent="Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No"
+
+[node name="Button2" type="Button" parent="Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Yes"

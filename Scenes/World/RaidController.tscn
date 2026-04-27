@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b63kcjhqnxhmr"]
 
-[ext_resource type="Script" uid="uid://dl07r83mcs2l1" path="res://Scripts/Components/RaidController.cs" id="1_5euxg"]
+[ext_resource type="Script" uid="uid://dl07r83mcs2l1" path="res://Scripts/Combat/RaidController.cs" id="1_5euxg"]
 
 [node name="RaidController" type="Node2D"]
 script = ExtResource("1_5euxg")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ufhxsbks4i71"]
+[gd_scene load_steps=9 format=3 uid="uid://ufhxsbks4i71"]
 
 [ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="1_72sra"]
 [ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_g18y6"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c15lcrsrsi2pt" path="res://Scenes/UI/TableBackdrop.tscn" id="1_t6w0q"]
 [ext_resource type="PackedScene" uid="uid://dw82fb44cpb8u" path="res://Scenes/UI/Notification.tscn" id="2_jex3y"]
 [ext_resource type="FontFile" uid="uid://eb0rix5fruoa" path="res://Assets/Fonts/hercules-pixel-font/HerculesPixelFontRegular-ovAX0.otf" id="2_mjmdf"]
+[ext_resource type="PackedScene" uid="uid://cmrcd6lukyrli" path="res://Scenes/UI/Confirmation.tscn" id="3_744d7"]
 
 [sub_resource type="Theme" id="Theme_72sra"]
 default_font = ExtResource("2_mjmdf")
@@ -18,6 +19,7 @@ upgradesButton = NodePath("VBoxContainer/Button3")
 settingsButton = NodePath("VBoxContainer/Button4")
 exitButton = NodePath("VBoxContainer/Button5")
 notifScene = ExtResource("2_jex3y")
+confirmationScene = ExtResource("3_744d7")
 
 [node name="TableBackdrop" parent="." instance=ExtResource("1_t6w0q")]
 layer = 0

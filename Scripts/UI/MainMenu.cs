@@ -9,10 +9,11 @@ public partial class MainMenu : CanvasLayer
 	[Export] public NodePath settingsButton;
 	[Export] public NodePath exitButton;
 	[Export] private PackedScene notifScene;
+	[Export] private PackedScene confirmationScene;
 	public override void _Ready()
 	{
 		GameManager gm = GetNode<GameManager>("/root/GameManager");
-		GetNode<Button>(newGameButton).Pressed += gm.StartNewGame;
+		GetNode<Button>(newGameButton).Pressed += TryStartNewGame;
 		GetNode<Button>(loadGameButton).Pressed += TryLoadGame;
 		GetNode<Button>(upgradesButton).Pressed += () => gm.ChangeScene("upgrades");
 		GetNode<Button>(settingsButton).Pressed += () => gm.ChangeScene("settings");
@@ -27,5 +28,17 @@ public partial class MainMenu : CanvasLayer
 			notification.Initialize("No saved run found.");
 			AddChild(notification);
 		}
+	}
+	private void TryStartNewGame()
+	{
+		GameManager gm = GetNode<GameManager>("/root/GameManager");
+		if(!GetNode<SaveManager>("/root/SaveManager").HasRunSave()) {
+			gm.StartNewGame();
+			return;
+		}
+		// Show confirmation dialog before starting a new game.
+		Confirmation confirmation = confirmationScene.Instantiate() as Confirmation;
+		confirmation.Initialize("This action will erase previous save data. Continue?", gm.StartNewGame);
+		AddChild(confirmation);
 	}
 }
