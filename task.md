@@ -3,25 +3,25 @@
 This checklist translates the proposal into concrete implementation tasks in dependency order.
 
 ## Phase 1: Project Setup and Core Scaffolding
-- [ ] Create base scenes: MainMenu, GameRoot, HUD, PauseMenu, SettingsMenu, ChoiceScreen.
-- [ ] Add core scripts: GameFlowManager, RunState, SaveManager, SignalBus.
-- [ ] Register required autoloads in project settings.
-- [ ] Define enums/state constants for downtime, raid, paused, victory, defeat.
-- [ ] Verify scene transitions among menu, game, pause, and settings.
+- [X] Create base scenes: MainMenu, GameRoot, HUD, PauseMenu, SettingsMenu, ChoiceScreen.
+- [X] Add core scripts: GameFlowManager, RunState, SaveManager, SignalBus.
+- [X] Register required autoloads in project settings.
+- [X] Define enums/state constants for downtime, raid, paused, victory, defeat.
+- [X] Verify scene transitions among menu, game, pause, and settings.
 
 ## Phase 2: Play Area and Camera
-- [ ] Build a top-down playfield with a grid-aligned placement layer.
-- [ ] Add environmental obstacles (rocks/trees) that block placement and movement.
-- [ ] Implement camera drag panning and keyboard movement (WASD/arrow keys).
-- [ ] Add camera bounds and sensible zoom defaults.
-- [ ] Ensure map generation/decor variation can differ per run.
+- [X] Build a top-down playfield with a grid-aligned placement layer.
+- [X] Add environmental obstacles (rocks/trees) that block placement and movement.
+- [X] Implement camera drag panning and keyboard movement (WASD/arrow keys).
+- [X] Add camera bounds and sensible zoom defaults.
+- [X] Ensure map generation/decor variation can differ per run.
 
 ## Phase 3: Resource Economy and Buildings
-- [ ] Create resource model for food and wood.
-- [ ] Implement periodic production and upkeep ticks.
-- [ ] Add Farm entity and data definition (cost, output, upkeep).
-- [ ] Add Lumber Mill entity and data definition (cost, output, passive efficiency effect).
-- [ ] Implement build validation (space blocked, cost affordability, placement rules).
+- [X] Create resource model for food and wood.
+- [X] Implement periodic production and upkeep ticks.
+- [X] Add Farm entity and data definition (cost, output, upkeep).
+- [X] Add Lumber Mill entity and data definition (cost, output, passive efficiency effect).
+- [X] Implement build validation (space blocked, cost affordability, placement rules).
 - [ ] Add selling/removal behavior for buildings.
 
 ## Phase 4: Unit System and Placement/Repositioning

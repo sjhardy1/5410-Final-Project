@@ -11,6 +11,8 @@ public partial class PlacementController : Node2D
     private ShaderMaterial invalidPlacementMaterial;
     private bool activePlacementIsValid = true;
 
+    public GridPlaceable ActivePlaceable => activePlaceable;
+
     public override void _Ready()
     {        
         occupancyMap = GetNode<GridOccupancyMap>(OccupancyMapPath);

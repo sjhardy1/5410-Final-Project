@@ -20,7 +20,7 @@ public partial class SignalBus : Node
     public delegate void UnitDiedEventHandler(int combatantUid);
 
     [Signal]
-    public delegate void RaidEndedEventHandler();
+    public delegate void RaidEndedEventHandler(int foodCost, int woodCost);
 
     [Signal]
     public delegate void PauseToggledEventHandler(bool isPaused);
@@ -113,9 +113,9 @@ public partial class SignalBus : Node
         EmitSignal(nameof(UnitDied), combatantUid);
     }
 
-    public void PublishRaidEnded()
+    public void PublishRaidEnded(int foodCost, int woodCost)
     {
-        EmitSignal(nameof(RaidEnded));
+        EmitSignal(nameof(RaidEnded), foodCost, woodCost);
     }
 
     public void PublishPauseToggled(bool isPaused)

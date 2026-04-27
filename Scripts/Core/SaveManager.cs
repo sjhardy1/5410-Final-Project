@@ -36,7 +36,7 @@ public partial class SaveManager : Node
         return saveDirectory.PathJoin(metaSaveFileName);
     }
 
-    public bool SaveRunState(RunState runState)
+    public bool SaveRunState(RunState runState, GridPlaceable activePlaceable = null)
     {
         if (runState == null)
         {
@@ -48,7 +48,7 @@ public partial class SaveManager : Node
         {
             { "version", SaveVersion },
             { "saved_at_unix", Time.GetUnixTimeFromSystem() },
-            { "run_state", (Variant)runState.ToSaveData() }
+            { "run_state", (Variant)runState.ToSaveData(activePlaceable) }
         };
 
         bool ok = WriteDictionaryToPath(GetRunSavePath(), root, out string reason);

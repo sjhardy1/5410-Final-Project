@@ -4,6 +4,8 @@ using Godot.Collections;
 
 public partial class GameManager : Node
 {
+    public bool LoadSavedRunOnGameRoot { get; private set; } = true;
+
     private Dictionary<string, PackedScene> scenes = new Dictionary<string, PackedScene>()
     {
         {"menu", GD.Load<PackedScene>("res://Scenes/UI/MainMenu.tscn")},
@@ -11,6 +13,32 @@ public partial class GameManager : Node
         {"settings", GD.Load<PackedScene>("res://Scenes/UI/Settings.tscn")},
         {"upgrades", GD.Load<PackedScene>("res://Scenes/UI/Upgrades.tscn")}
     };
+
+    public void StartNewGame()
+    {
+        LoadSavedRunOnGameRoot = false;
+        GetNode<RunState>("/root/RunState").ResetRun();
+        ChangeScene("game_root");
+    }
+
+    public bool LoadGame()
+    {
+        if (!GetNode<SaveManager>("/root/SaveManager").HasRunSave())
+        {
+            return false;
+        }
+
+        LoadSavedRunOnGameRoot = true;
+        ChangeScene("game_root");
+        return true;
+    }
+
+    public bool ConsumeLoadSavedRunOnGameRoot()
+    {
+        bool shouldLoad = LoadSavedRunOnGameRoot;
+        LoadSavedRunOnGameRoot = true;
+        return shouldLoad;
+    }
 
     public void ChangeScene(string sceneName)
     {

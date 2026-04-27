@@ -10,6 +10,8 @@ public partial class RaidController : Node2D
     private float spawnTimer = 0f;
     private Queue<Combatant> waveQueue;
     private int nextUid = 1;
+    private int repairCost = 0;
+    private int healCost = 0;
     public override void _Ready()
     {
         runState = GetNodeOrNull<RunState>("/root/RunState");
@@ -37,7 +39,7 @@ public partial class RaidController : Node2D
         // Check for end of raid
         if (IsRaidOver())
         {
-            signalBus.PublishRaidEnded();
+            signalBus.PublishRaidEnded(healCost, repairCost);
             CleanupRaid();
         }
         if (isGameLost())
@@ -61,6 +63,7 @@ public partial class RaidController : Node2D
     }
     private bool isGameLost()
     {
+        if(waveQueue == null) return false;
         foreach(CombatObject building in runState.ActiveObjects)
         {
             if(building.CoreAttributes.Id == "town_center") return false;
@@ -136,6 +139,10 @@ public partial class RaidController : Node2D
         {
             if(combatant.uid == combatantUid)
             {
+                if(combatant.faction == Faction.Ally)
+                {
+                    healCost += 10;
+                }
                 toRemove = combatant;
                 break;
             }
@@ -152,6 +159,7 @@ public partial class RaidController : Node2D
         {
             if(building.uid == buildingUid)
             {
+                repairCost += 20;
                 toRemove = building;
                 break;
             }

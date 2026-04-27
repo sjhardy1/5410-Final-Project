@@ -9,6 +9,7 @@ public partial class GameRoot : Node2D
 	private ControllableCamera camera;
 	private ChoiceScreen choiceScreen;
 	private GameDatabase database;
+	private SaveManager saveManager;
 	private SignalBus signalBus;
 	private PlacementController placementController;
 	private RaidController raidController;
@@ -19,9 +20,11 @@ public partial class GameRoot : Node2D
 	private bool isScreenBusy = false;
 	[Export] private PackedScene upkeepReportScene;
 	[Export] private PackedScene gameEndScene;
+	[Export] private PackedScene notifScene;
 	public override void _Ready()
 	{		
 		database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
+		saveManager = GetNode<SaveManager>("/root/SaveManager");
 
 		camera = GetNode<ControllableCamera>("ControllableCamera");
 		camera.Initialize(GetViewport().GetVisibleRect());
@@ -34,16 +37,16 @@ public partial class GameRoot : Node2D
 		runState = GetNode<RunState>("/root/RunState");
 		signalBus = GetNode<SignalBus>("/root/SignalBus");
 
-		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("wheat_farm") as PlaceableDefinition));
-		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("warrior") as PlaceableDefinition));
-		hud.UpdateStorage();
-
 		Button recruitButton = hud.GetNode<Button>("Control/RecruitButton");
 		recruitButton.Pressed += () =>
 		{
 			if(runState.TrySpendResources(50, 0))
 			{
 				lootQueue.Enqueue(new PendingLoot(2, LootType.Unit, runState.Wave));
+			} else {
+				Notification notification = notifScene.Instantiate<Notification>();
+				notification.Initialize("Not enough food to recruit unit!");
+				AddChild(notification);
 			}
 		};
 		Button constructButton = hud.GetNode<Button>("Control/ConstructButton");
@@ -52,6 +55,13 @@ public partial class GameRoot : Node2D
 			if(runState.TrySpendResources(0, 50))
 			{
 				runState.pendingConstruction++;
+				Notification notification = notifScene.Instantiate<Notification>();
+				notification.Initialize("Construction queued! It will appear as a loot choice at the end of the round.");
+				AddChild(notification);
+			} else {
+				Notification notification = notifScene.Instantiate<Notification>();
+				notification.Initialize("Not enough wood to construct building!");
+				AddChild(notification);
 			}
 		};
 
@@ -72,7 +82,7 @@ public partial class GameRoot : Node2D
 		{
 			runState.ActivePlaceables.Add(placeable);
 		};
-		signalBus.RaidEnded += () =>
+		signalBus.RaidEnded += (int healCost, int repairCost) =>
 		{
 			foreach(Node child in placementController.GetChildren())
 			{
@@ -83,7 +93,7 @@ public partial class GameRoot : Node2D
 			}
 			runState.AdvanceWave();
 			runState.StartDowntime();
-			ResolveUpkeep();
+			ResolveUpkeep(healCost, repairCost);
 		};
 		signalBus.RaidBegin += () =>
 		{
@@ -127,15 +137,19 @@ public partial class GameRoot : Node2D
 			placementController.BeginPlacement(placeable);
 		};
 		signalBus.GameLost += () => {
+			saveManager.DeleteRunSave();
 			GameEndScreen gameEnd = gameEndScene.Instantiate<GameEndScreen>();
 			gameEnd.Initialize(false, [runState.Wave, 10], 5);
 			AddChild(gameEnd);
 			MarkScreenAsBusy();
 		};
+		GameManager gameManager = GetNode<GameManager>("/root/GameManager");
+		if (gameManager.ConsumeLoadSavedRunOnGameRoot() && TryLoadSavedRun())
+		{
+			return;
+		}
 
-		GridPlaceable townCenter = InstantiatePlaceable(database.GetLootById("town_center") as PlaceableDefinition);
-		placementController.AddChild(townCenter);
-		placementController.occupancyMap.TryPlace(townCenter, Vector2I.Zero);
+		InitializeNewRun();
 	}
 	public override void _Process(double delta)
 	{
@@ -158,8 +172,14 @@ public partial class GameRoot : Node2D
 		isScreenBusy = false;
 		hud.Show();
 		camera.EnableControls();
+		if (!saveManager.SaveRunState(runState, placementController.ActivePlaceable))
+		{
+			GD.PrintErr("Failed to save run state");
+		} else {
+			GD.Print("Run state saved successfully");
+		}
 	}
-	private void ResolveUpkeep()
+	private void ResolveUpkeep(int healCost, int repairCost)
 	{
 
 		for(int i = 0; i < runState.pendingConstruction; i++)
@@ -177,6 +197,17 @@ public partial class GameRoot : Node2D
 		int totalBuildingWoodUpkeep = 0;
 		int totalUnitFoodUpkeep = 0;
 		bool decreasedFoodEfficiency = false;
+		runState.ForceSpendResources(healCost, repairCost);
+		if(healCost > 0)
+		{
+			foodChangeSources.Enqueue("Unit Heal Costs");
+			foodChanges.Enqueue(-healCost);
+		}
+		if(repairCost > 0)
+		{
+			woodChangeSources.Enqueue("Building Repair Costs");
+			woodChanges.Enqueue(-repairCost);
+		}
 		foreach(GridPlaceable placeable in runState.ActivePlaceables)
 		{
 			if(placeable.def is BuildingDefinition buildingDef)
@@ -265,6 +296,113 @@ public partial class GameRoot : Node2D
 		upkeepReport.TreeExited += MarkScreenAsFree;
 		lootQueue.Enqueue(new PendingLoot(3));
 	}
+
+	private bool TryLoadSavedRun()
+	{
+		if (!saveManager.HasRunSave())
+		{
+			return false;
+		}
+
+		if (!saveManager.LoadRunState(runState))
+		{
+			return false;
+		}
+
+		RestoreSavedPlaceables();
+		hud.UpdateStorage();
+		return true;
+	}
+
+	private void InitializeNewRun()
+	{
+		runState.ResetRun();
+		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("wheat_farm") as PlaceableDefinition));
+		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("warrior") as PlaceableDefinition));
+		hud.UpdateStorage();
+
+		GridPlaceable townCenter = InstantiatePlaceable(database.GetLootById("town_center") as PlaceableDefinition);
+		placementController.AddChild(townCenter);
+		placementController.occupancyMap.TryPlace(townCenter, Vector2I.Zero);
+	}
+
+	private void RestoreSavedPlaceables()
+	{
+		foreach (Variant value in runState.LoadedStoredPlaceablesData)
+		{
+			if (value.VariantType != Variant.Type.Dictionary)
+			{
+				continue;
+			}
+
+			Dictionary<string, Variant> placeableData = (Dictionary<string, Variant>)value;
+			GridPlaceable placeable = InstantiatePlaceableFromSave(placeableData);
+			if (placeable != null)
+			{
+				runState.StoredPlaceables.Add(placeable);
+			}
+		}
+
+		foreach (Variant value in runState.LoadedActivePlaceablesData)
+		{
+			if (value.VariantType != Variant.Type.Dictionary)
+			{
+				continue;
+			}
+
+			Dictionary<string, Variant> placeableData = (Dictionary<string, Variant>)value;
+			GridPlaceable placeable = InstantiatePlaceableFromSave(placeableData);
+			if (placeable == null)
+			{
+				continue;
+			}
+
+			Vector2I anchorCell = ReadAnchorCell(placeableData);
+			placementController.AddChild(placeable);
+			if (!placementController.occupancyMap.TryPlace(placeable, anchorCell))
+			{
+				GD.PrintErr($"Failed to restore placeable {placeable.def?.CoreAttributes?.Id} at {anchorCell}.");
+			}
+		}
+	}
+
+	private GridPlaceable InstantiatePlaceableFromSave(Dictionary<string, Variant> placeableData)
+	{
+		if (!placeableData.ContainsKey("id"))
+		{
+			return null;
+		}
+
+		string placeableId = (string)placeableData["id"];
+		PlaceableDefinition def = database.GetLootById(placeableId) as PlaceableDefinition;
+		if (def == null)
+		{
+			GD.PrintErr($"Could not find placeable definition for id '{placeableId}'.");
+			return null;
+		}
+
+		return InstantiatePlaceable(def);
+	}
+
+	private static Vector2I ReadAnchorCell(Dictionary<string, Variant> placeableData)
+	{
+		if (!placeableData.ContainsKey("anchor"))
+		{
+			return Vector2I.Zero;
+		}
+
+		Variant anchorVariant = placeableData["anchor"];
+		if (anchorVariant.VariantType != Variant.Type.Dictionary)
+		{
+			return Vector2I.Zero;
+		}
+
+		Dictionary<string, Variant> anchorData = (Dictionary<string, Variant>)anchorVariant;
+		int x = anchorData.ContainsKey("x") ? (int)anchorData["x"] : 0;
+		int y = anchorData.ContainsKey("y") ? (int)anchorData["y"] : 0;
+		return new Vector2I(x, y);
+	}
+
 	private GridPlaceable InstantiatePlaceable(PlaceableDefinition def)
 	{
 		PlaceableDefinition runtimeDefinition = def.Duplicate() as PlaceableDefinition;

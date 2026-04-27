@@ -34,7 +34,7 @@ public partial class Hud : CanvasLayer
 		signalBus.StopPlacing += storageButton.Hide;
 
 		signalBus.RaidBegin += Hide;
-		signalBus.RaidEnded += Show;
+		signalBus.RaidEnded += (int healCost, int repairCost) => Show();
 
 		// Keep HUD synced whenever resource values change.
 		runState.ResourcesChanged += OnResourcesChanged;

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using Collections = System.Collections.Generic;
 using Godot.Collections;
 
@@ -37,6 +36,8 @@ public partial class RunState : Node
     public Collections.List<GridPlaceable> StoredPlaceables { get; private set; } = new Collections.List<GridPlaceable>();
     public Collections.List<Combatant> ActiveCombatants { get; private set; } = new Collections.List<Combatant>();
     public Collections.List<CombatObject> ActiveObjects { get; private set; } = new Collections.List<CombatObject>();
+    public Array LoadedActivePlaceablesData { get; private set; } = new Array();
+    public Array LoadedStoredPlaceablesData { get; private set; } = new Array();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }
@@ -154,11 +155,19 @@ public partial class RunState : Node
     public void ResetRun()
     {
         Phase = RunPhase.Downtime;
-        Food = 100;
-        Wood = 75;
+        Food = 200;
+        Wood = 100;
+        MetaCurrency = 0;
         Wave = 1;
         RaidTimeElapsed = 0f;
         DowntimeTimeRemaining = defaultDowntimeSeconds;
+        pendingConstruction = 0;
+        ActivePlaceables.Clear();
+        StoredPlaceables.Clear();
+        ActiveCombatants.Clear();
+        ActiveObjects.Clear();
+        LoadedActivePlaceablesData = new Array();
+        LoadedStoredPlaceablesData = new Array();
 
         EmitSignal(nameof(PhaseChanged), (int)RunPhase.Downtime, (int)RunPhase.Downtime);
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
@@ -166,17 +175,20 @@ public partial class RunState : Node
         EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
     }
 
-    public Dictionary<string, Variant> ToSaveData()
+    public Dictionary<string, Variant> ToSaveData(GridPlaceable activePlaceable = null)
     {
         return new Dictionary<string, Variant>
         {
             { "phase", (int)Phase },
+            { "current_round", Wave },
+            { "wave", Wave },
             { "food", Food },
             { "wood", Wood },
             { "meta_currency", MetaCurrency },
-            { "wave", Wave },
             { "downtime_remaining", DowntimeTimeRemaining },
-            { "raid_elapsed", RaidTimeElapsed }
+            { "raid_elapsed", RaidTimeElapsed },
+            { "active_placeables", SerializePlaceables(ActivePlaceables, true) },
+            { "stored_placeables", SerializePlaceables(StoredPlaceables, false, activePlaceable) }
         };
     }
 
@@ -184,21 +196,84 @@ public partial class RunState : Node
     {
         if (data == null)
         {
+            ResetRun();
             return;
         }
 
+        ActivePlaceables.Clear();
+        StoredPlaceables.Clear();
+        ActiveCombatants.Clear();
+        ActiveObjects.Clear();
+        pendingConstruction = 0;
+
         Phase = data.ContainsKey("phase") ? (RunPhase)(int)data["phase"] : RunPhase.Downtime;
-        Food = data.ContainsKey("food") ? (int)data["food"] : 100;
-        Wood = data.ContainsKey("wood") ? (int)data["wood"] : 75;
-        MetaCurrency = data.ContainsKey("meta_currency") ? (int)data["meta_currency"] : MetaCurrency;
-        Wave = data.ContainsKey("wave") ? (int)data["wave"] : 1;
+        Food = data.ContainsKey("food") ? (int)data["food"] : 200;
+        Wood = data.ContainsKey("wood") ? (int)data["wood"] : 100;
+        MetaCurrency = data.ContainsKey("meta_currency") ? (int)data["meta_currency"] : 0;
+        Wave = data.ContainsKey("current_round") ? (int)data["current_round"] : data.ContainsKey("wave") ? (int)data["wave"] : 1;
         DowntimeTimeRemaining = data.ContainsKey("downtime_remaining") ? (float)data["downtime_remaining"] : defaultDowntimeSeconds;
         RaidTimeElapsed = data.ContainsKey("raid_elapsed") ? (float)data["raid_elapsed"] : 0f;
+        LoadedActivePlaceablesData = ReadPlaceableArray(data, "active_placeables");
+        LoadedStoredPlaceablesData = ReadPlaceableArray(data, "stored_placeables");
 
         EmitSignal(nameof(PhaseChanged), (int)Phase, (int)Phase);
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
         EmitSignal(nameof(WaveChanged), Wave);
         EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+    }
+
+    private static Array SerializePlaceables(Collections.List<GridPlaceable> placeables, bool includeAnchorCell, GridPlaceable extraPlaceable = null)
+    {
+        Array serializedPlaceables = new Array();
+        foreach (GridPlaceable placeable in placeables)
+        {
+            if (placeable?.def?.CoreAttributes == null)
+            {
+                continue;
+            }
+
+            Dictionary<string, Variant> placeableData = new Dictionary<string, Variant>
+            {
+                { "id", placeable.def.CoreAttributes.Id }
+            };
+
+            if (includeAnchorCell)
+            {
+                placeableData["anchor"] = new Dictionary<string, Variant>
+                {
+                    { "x", placeable.AnchorCell.X },
+                    { "y", placeable.AnchorCell.Y }
+                };
+            }
+
+            serializedPlaceables.Add(placeableData);
+        }
+
+        if (extraPlaceable?.def?.CoreAttributes != null)
+        {
+            serializedPlaceables.Add(new Dictionary<string, Variant>
+            {
+                { "id", extraPlaceable.def.CoreAttributes.Id }
+            });
+        }
+
+        return serializedPlaceables;
+    }
+
+    private static Array ReadPlaceableArray(Dictionary<string, Variant> data, string key)
+    {
+        if (!data.ContainsKey(key))
+        {
+            return new Array();
+        }
+
+        Variant value = data[key];
+        if (value.VariantType != Variant.Type.Array)
+        {
+            return new Array();
+        }
+
+        return (Array)value;
     }
 
     private void SetPhase(RunPhase next)

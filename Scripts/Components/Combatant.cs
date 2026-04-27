@@ -79,7 +79,6 @@ public partial class Combatant : RigidBody2D, ITargetable
     {
         if (currentState != null) currentState.Exit();
         currentState = null;
-        GD.Print(CoreAttributes.DisplayName + "#" +uid + " is exiting the tree and will be removed from ActiveCombatants.");
         GetNode<RunState>("/root/RunState").ActiveCombatants.Remove(this);
     }
     public void ChangeState(ICombatantState newState)
@@ -100,7 +99,6 @@ public partial class Combatant : RigidBody2D, ITargetable
         DefensiveAttributes.Health -= damage;
         if (DefensiveAttributes.Health <= 0)
         {
-            if(CoreAttributes.DisplayName == "Warrior") GD.Print("Warrior HP has reached 0, now calling Die() method.");
             Die();
         }
     }
@@ -109,10 +107,7 @@ public partial class Combatant : RigidBody2D, ITargetable
     {
         // Emit signal to notify GameRoot of death
         GetNode<SignalBus>("/root/SignalBus").PublishUnitDied(uid);
-        GD.Print(CoreAttributes.DisplayName + "#" + uid + " has died, now invoking Defeated event.");
         Defeated?.Invoke();
-        //EmitSignal(SignalName.DefeatedSignal);
-        GD.Print(CoreAttributes.DisplayName + "#" + uid + " died");
         QueueFree(); // Remove from scene
     }
     public ITargetable FindTarget()
