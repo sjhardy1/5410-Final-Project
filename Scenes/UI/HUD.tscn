@@ -47,10 +47,10 @@ text = "Food: 0"
 
 [node name="PhaseButton" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 35.0
-offset_right = 501.0
-offset_bottom = 66.0
+offset_left = 27.0
+offset_top = 226.0
+offset_right = 228.0
+offset_bottom = 257.0
 text = "Start next game phase"
 
 [node name="Wood" type="Label" parent="Control"]

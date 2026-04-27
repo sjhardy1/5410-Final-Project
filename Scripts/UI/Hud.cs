@@ -9,7 +9,6 @@ public partial class Hud : CanvasLayer
 	[Export] public PackedScene storageCardScene;
 	[Export] public NodePath storagePath;
 	[Export] public NodePath phaseButtonPath;
-
 	private Label foodLabel;
 	private Label woodLabel;
 	private Label timerLabel;

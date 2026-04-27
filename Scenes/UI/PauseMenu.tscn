@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=4 uid="uid://cp6dhwlcqit34"]
+
+[ext_resource type="Script" uid="uid://m5oxilv5k5ok" path="res://Scripts/UI/PauseMenu.cs" id="1_238ko"]
+[ext_resource type="TileSet" uid="uid://bxjn1ysranaho" path="res://Resources/Tilesets/UI.tres" id="1_eod5q"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_n4i8v"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1_238ko")
+resumeButtonPath = NodePath("Control/VBoxContainer/Button")
+mainMenuButtonPath = NodePath("Control/VBoxContainer/Button2")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAADAAIABQAAAAIAAAADAAMABQAAAAMAAAAEAAIABQABAAIAAAAEAAMABQABAAMAAAAFAAIABQADAAIAAAAGAAIABQADAAIAAAAGAAMABQADAAMAAAAHAAIABQADAAIAAAAHAAMABQADAAMAAAAIAAIABQADAAIAAAAIAAMABQADAAMAAAAJAAIABQADAAIAAAAJAAMABQADAAMAAAAKAAIABQADAAIAAAAKAAMABQADAAMAAAALAAIABQADAAIAAAALAAMABQADAAMAAAAMAAIABQADAAIAAAAMAAMABQADAAMAAAANAAIABQAFAAIAAAANAAMABQAFAAMAAAAOAAIABQAGAAIAAAAOAAMABQAGAAMAAAAFAAYAAwAAAAIAAAAFAAQAAwAAAAAAAAAGAAQAAwACAAAAAAAHAAQAAwACAAAAAAAIAAQAAwACAAAAAAAJAAQAAwACAAAAAAAKAAQAAwACAAAAAAALAAQAAwACAAAAAAAMAAQAAwAEAAAAAAAMAAcAAwAEAAQAAAAFAAcAAwAAAAQAAAAHAAcAAwACAAQAAAAGAAcAAwACAAQAAAAIAAcAAwACAAQAAAAJAAcAAwACAAQAAAAKAAcAAwACAAQAAAALAAcAAwACAAQAAAAMAAUAAwAEAAIAAAAMAAYAAwAEAAIAAAAFAAUAAwAAAAIAAAAHAAUAAwACAAIAAAAGAAUAAwACAAIAAAAGAAYAAwACAAIAAAAHAAYAAwACAAIAAAAIAAYAAwACAAIAAAAJAAYAAwACAAIAAAAJAAUAAwACAAIAAAAKAAUAAwACAAIAAAAKAAYAAwACAAIAAAALAAYAAwACAAIAAAALAAUAAwACAAIAAAAFAAMABQADAAMAAAAIAAUAAwACAAIAAAA=")
+tile_set = ExtResource("1_eod5q")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_n4i8v")
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 314.0
+offset_top = 162.0
+offset_right = 842.0
+offset_bottom = 219.0
+theme_override_font_sizes/font_size = 48
+text = "Game Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_left = 355.0
+offset_top = 299.0
+offset_right = 798.0
+offset_bottom = 466.0
+
+[node name="Button" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Resume"
+
+[node name="Button2" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Return to menu"

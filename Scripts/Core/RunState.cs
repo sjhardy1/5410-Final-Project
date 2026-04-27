@@ -96,7 +96,11 @@ public partial class RunState : Node
         }
         else
         {
-            if (Phase == RunPhase.Paused)
+            if (Phase == RunPhase.Paused && ActiveCombatants.Count > 0)
+            {
+                SetPhase(RunPhase.Raid);
+            }
+            else
             {
                 SetPhase(RunPhase.Downtime);
             }

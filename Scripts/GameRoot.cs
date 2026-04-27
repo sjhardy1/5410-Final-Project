@@ -14,6 +14,7 @@ public partial class GameRoot : Node2D
 	private PlacementController placementController;
 	private RaidController raidController;
 	private Hud hud;
+	private Button pauseButton;
 	private RunState runState;
 	private Queue lootQueue = new Queue();
 	private int nextUid = 1;
@@ -21,6 +22,8 @@ public partial class GameRoot : Node2D
 	[Export] private PackedScene upkeepReportScene;
 	[Export] private PackedScene gameEndScene;
 	[Export] private PackedScene notifScene;
+	[Export] private PackedScene pauseMenuScene;
+	[Export] private NodePath pauseButtonPath;
 	public override void _Ready()
 	{		
 		database = ResourceLoader.Load<GameDatabase>("res://Resources/Definitions/GameDatabase.tres");
@@ -64,6 +67,8 @@ public partial class GameRoot : Node2D
 				AddChild(notification);
 			}
 		};
+		pauseButton = GetNode<Button>(pauseButtonPath);
+		pauseButton.Pressed += PauseGame;
 
 		signalBus.ChoicePicked += (Dictionary<string, Variant> choiceData) =>
 		{
@@ -151,6 +156,13 @@ public partial class GameRoot : Node2D
 
 		InitializeNewRun();
 	}
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		if (@event.IsActionPressed("pause_game"))
+		{
+			PauseGame();
+		}
+	}
 	public override void _Process(double delta)
 	{
 		if (!isScreenBusy && lootQueue.Count > 0)
@@ -166,11 +178,13 @@ public partial class GameRoot : Node2D
 		isScreenBusy = true;
 		camera.DisableControls();
 		hud.Hide();
+		pauseButton.Hide();
 	}
 	private void MarkScreenAsFree()
 	{
 		isScreenBusy = false;
 		hud.Show();
+		pauseButton.Show();
 		camera.EnableControls();
 		if (!saveManager.SaveRunState(runState, placementController.ActivePlaceable))
 		{
@@ -409,5 +423,13 @@ public partial class GameRoot : Node2D
 		GridPlaceable placeable = def.Scene.Instantiate<GridPlaceable>();
 		placeable.Initialize(runtimeDefinition);
 		return placeable;
+	}
+	private void PauseGame()
+	{
+		PauseMenu pauseMenu = pauseMenuScene.Instantiate<PauseMenu>();
+		pauseMenu.TreeExited += MarkScreenAsFree;
+		MarkScreenAsBusy();
+		AddChild(pauseMenu);
+		GetNode<RunState>("/root/RunState").SetPaused(true);
 	}
 }

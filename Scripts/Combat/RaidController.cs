@@ -12,6 +12,7 @@ public partial class RaidController : Node2D
     private int nextUid = 1;
     private int repairCost = 0;
     private int healCost = 0;
+    private List<ITargetable> targetablesToRemove = new List<ITargetable>();
     public override void _Ready()
     {
         runState = GetNodeOrNull<RunState>("/root/RunState");
@@ -19,6 +20,34 @@ public partial class RaidController : Node2D
         signalBus.UnitDied += RemoveUnit;
         signalBus.BuildingDestroyed += RemoveBuilding;
     }
+    public override void _PhysicsProcess(double delta)
+    {
+        if (runState.Phase != RunPhase.Raid){
+            foreach(Combatant combatant in runState.ActiveCombatants)
+            {
+                combatant.LinearVelocity = Vector2.Zero;
+            }
+            return;
+        }
+        foreach(Combatant combatant in runState.ActiveCombatants)
+        {
+            combatant.Process(delta);
+        }
+        foreach(ITargetable targetable in targetablesToRemove)
+        {
+            if(targetable is Combatant combatant)
+            {
+                runState.ActiveCombatants.Remove(combatant);
+
+            }
+            else if(targetable is CombatObject building)
+            {
+                runState.ActiveObjects.Remove(building);
+            }
+        }
+        targetablesToRemove.Clear();
+    }
+
     public override void _Process(double delta)
     {
         if (runState.Phase != RunPhase.Raid) return;
@@ -149,7 +178,7 @@ public partial class RaidController : Node2D
         }
         if(toRemove != null)
         {
-            runState.ActiveCombatants.Remove(toRemove);
+            targetablesToRemove.Add(toRemove);
         }
     }
     public void RemoveBuilding(int buildingUid)
@@ -166,7 +195,7 @@ public partial class RaidController : Node2D
         }
         if(toRemove != null)
         {
-            runState.ActiveObjects.Remove(toRemove);
+            targetablesToRemove.Add(toRemove);
         }
     }
 }

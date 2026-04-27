@@ -19,7 +19,7 @@ public partial class Combatant : RigidBody2D, ITargetable
     //[Signal] public delegate void DefeatedSignalEventHandler();
     public event Action Defeated;
 
-    public override void _PhysicsProcess(double delta)
+    public void Process(double delta)
     {
         currentState.Process(delta);
     }   
