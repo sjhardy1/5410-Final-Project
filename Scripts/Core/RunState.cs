@@ -42,6 +42,9 @@ public partial class RunState : Node
     public float DowntimeTimeRemaining { get; private set; }
     public float RaidTimeElapsed { get; private set; }
     public int pendingConstruction = 0;
+    public int kitId = 0;
+    public int difficulty = 0;
+    public Dictionary<string, Variant> PurchasedUpgrades { get; private set; } = new Dictionary<string, Variant>();
 
     public SignalBus signalBus;
 
@@ -159,9 +162,8 @@ public partial class RunState : Node
     public void ResetRun()
     {
         Phase = RunPhase.Downtime;
-        Food = 200;
-        Wood = 100;
-        MetaCurrency = 0;
+        Food = 100 + (GetUpgradeLevel("extra_food") * 20);
+        Wood = 40 + (GetUpgradeLevel("extra_wood") * 10);
         Wave = 1;
         RaidTimeElapsed = 0f;
         DowntimeTimeRemaining = defaultDowntimeSeconds;
@@ -188,7 +190,6 @@ public partial class RunState : Node
             { "wave", Wave },
             { "food", Food },
             { "wood", Wood },
-            { "meta_currency", MetaCurrency },
             { "downtime_remaining", DowntimeTimeRemaining },
             { "raid_elapsed", RaidTimeElapsed },
             { "active_placeables", SerializePlaceables(ActivePlaceables, true) },
@@ -213,7 +214,6 @@ public partial class RunState : Node
         Phase = data.ContainsKey("phase") ? (RunPhase)(int)data["phase"] : RunPhase.Downtime;
         Food = data.ContainsKey("food") ? (int)data["food"] : 200;
         Wood = data.ContainsKey("wood") ? (int)data["wood"] : 100;
-        MetaCurrency = data.ContainsKey("meta_currency") ? (int)data["meta_currency"] : 0;
         Wave = data.ContainsKey("current_round") ? (int)data["current_round"] : data.ContainsKey("wave") ? (int)data["wave"] : 1;
         DowntimeTimeRemaining = data.ContainsKey("downtime_remaining") ? (float)data["downtime_remaining"] : defaultDowntimeSeconds;
         RaidTimeElapsed = data.ContainsKey("raid_elapsed") ? (float)data["raid_elapsed"] : 0f;
@@ -290,5 +290,99 @@ public partial class RunState : Node
         RunPhase previous = Phase;
         Phase = next;
         EmitSignal(nameof(PhaseChanged), (int)previous, (int)Phase);
+    }
+
+    public void LoadMetaState(Dictionary<string, Variant> metaData)
+    {
+        if (metaData == null)
+        {
+            PurchasedUpgrades = new Dictionary<string, Variant>();
+            return;
+        }
+        if (metaData.ContainsKey("crystals"))
+        {
+            MetaCurrency = (int)metaData["crystals"];
+        }
+        else
+        {
+            MetaCurrency = 0;
+        }
+        if (metaData.ContainsKey("upgrades"))
+        {
+            PurchasedUpgrades = (Dictionary<string, Variant>)metaData["upgrades"];
+        }
+        else
+        {
+            PurchasedUpgrades = new Dictionary<string, Variant>();
+        }
+    }
+
+    public Dictionary<string, Variant> ToMetaData()
+    {
+        return new Dictionary<string, Variant>
+        {
+            { "crystals", MetaCurrency },
+            { "upgrades", PurchasedUpgrades }
+        };
+    }
+
+    public bool TryPurchaseUpgrade(string upgradeId)
+    {
+        if(GetUpgradeLevel(upgradeId) >= GetUpgradeMaxLevel(upgradeId)) return false;
+        if(MetaCurrency < GetUpgradeCost(upgradeId, GetUpgradeLevel(upgradeId))) return false;
+        MetaCurrency -= GetUpgradeCost(upgradeId, GetUpgradeLevel(upgradeId));
+        if(!PurchasedUpgrades.ContainsKey(upgradeId))
+        {
+            PurchasedUpgrades[upgradeId] = 0;
+        }
+        PurchasedUpgrades[upgradeId] = (int)PurchasedUpgrades[upgradeId] + 1;
+        return true;
+    }
+
+    public bool HasUpgrade(string upgradeId)
+    {
+        return PurchasedUpgrades.ContainsKey(upgradeId) && (int)PurchasedUpgrades[upgradeId] > 0;
+    }
+
+    public int GetUpgradeLevel(string upgradeId)
+    {
+        return PurchasedUpgrades.ContainsKey(upgradeId) ? (int)PurchasedUpgrades[upgradeId] : 0;
+    }
+
+    public int GetUpgradeMaxLevel(string upgradeId)
+    {
+        return upgradeId switch 
+        {
+            "extra_food" => 5,
+            "extra_wood" => 5,
+            "kit_1" => 1,
+            "kit_2" => 1,
+            "kit_3" => 1,
+            _ => 0
+        };
+    }
+    public int GetUpgradeCost(string upgradeId, int level)
+    {
+        return upgradeId switch 
+        {
+            "extra_food" => 5 * (level + 1),
+            "extra_wood" => 5 * (level + 1),
+            "kit_1" => 10,
+            "kit_2" => 20,
+            "kit_3" => 30,
+            _ => int.MaxValue
+        };
+    }
+    public string GetUpgradeDisplayName(string upgradeId)
+    {
+        return upgradeId switch 
+        {
+            "extra_food" => "Extra Starting Food",
+            "extra_wood" => "Extra Starting Wood",
+            "kit_1" => "Shepherd's Kit",
+            "kit_2" => "Starting Kit 2",
+            "kit_3" => "Starting Kit 3",
+            _ => "Unknown Upgrade"
+        };
     }
 }

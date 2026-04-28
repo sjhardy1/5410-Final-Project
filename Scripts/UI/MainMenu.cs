@@ -13,9 +13,17 @@ public partial class MainMenu : CanvasLayer
 	public override void _Ready()
 	{
 		GameManager gm = GetNode<GameManager>("/root/GameManager");
+		RunState runState = GetNode<RunState>("/root/RunState");
+		SaveManager saveManager = GetNode<SaveManager>("/root/SaveManager");
+
+		// Load meta state at startup
+		Godot.Collections.Dictionary<string, Variant> metaData = saveManager.LoadMetaState();
+		runState.LoadMetaState(metaData);
+
 		GetNode<Button>(newGameButton).Pressed += TryStartNewGame;
 		GetNode<Button>(loadGameButton).Pressed += TryLoadGame;
 		GetNode<Button>(upgradesButton).Pressed += () => gm.ChangeScene("upgrades");
+		GetNode<Button>(upgradesButton).Text = "Purchase Upgrades (" + runState.MetaCurrency + " Crystals)";
 		GetNode<Button>(settingsButton).Pressed += () => gm.ChangeScene("settings");
 		GetNode<Button>(exitButton).Pressed += () => GetTree().Quit();
 	}
@@ -33,12 +41,12 @@ public partial class MainMenu : CanvasLayer
 	{
 		GameManager gm = GetNode<GameManager>("/root/GameManager");
 		if(!GetNode<SaveManager>("/root/SaveManager").HasRunSave()) {
-			gm.StartNewGame();
+			gm.SetupNewGame();
 			return;
 		}
 		// Show confirmation dialog before starting a new game.
 		Confirmation confirmation = confirmationScene.Instantiate() as Confirmation;
-		confirmation.Initialize("This action will erase previous save data. Continue?", gm.StartNewGame);
+		confirmation.Initialize("This action will erase previous save data. Continue?", gm.SetupNewGame);
 		AddChild(confirmation);
 	}
 }

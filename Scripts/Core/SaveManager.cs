@@ -109,7 +109,7 @@ public partial class SaveManager : Node
             EmitSignal(nameof(SaveFailed), GetMetaSavePath(), reason);
             return false;
         }
-
+        GD.Print("Meta state saved successfully.");
         EmitSignal(nameof(SaveCompleted), GetMetaSavePath());
         return true;
     }

@@ -112,7 +112,7 @@ public partial class RaidController : Node2D
     public Queue<Combatant> GenerateWave(GameDatabase database, int wave)
     {
         Queue<Combatant> queue = new Queue<Combatant>();
-        int wavePower = wave *  25;
+        int wavePower = wave *  20 + runState.difficulty * 5;
         Array<EnemyDefinition> enemies = database.GetAllEnemies();
         while (wavePower > 0)
         {

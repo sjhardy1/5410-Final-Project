@@ -11,9 +11,13 @@ public partial class GameManager : Node
         {"menu", GD.Load<PackedScene>("res://Scenes/UI/MainMenu.tscn")},
         {"game_root", GD.Load<PackedScene>("res://Scenes/GameRoot.tscn")},
         {"settings", GD.Load<PackedScene>("res://Scenes/UI/Settings.tscn")},
-        {"upgrades", GD.Load<PackedScene>("res://Scenes/UI/Upgrades.tscn")}
+        {"upgrades", GD.Load<PackedScene>("res://Scenes/UI/Upgrades.tscn")},
+        {"setup", GD.Load<PackedScene>("res://Scenes/UI/RunSetupScreen.tscn")},
     };
-
+    public void SetupNewGame()
+    {
+        ChangeScene("setup");
+    }
     public void StartNewGame()
     {
         LoadSavedRunOnGameRoot = false;

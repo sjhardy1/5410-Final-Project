@@ -1,15 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://bptf5vmppifyn"]
+[gd_scene load_steps=5 format=3 uid="uid://bptf5vmppifyn"]
 
 [ext_resource type="PackedScene" uid="uid://c15lcrsrsi2pt" path="res://Scenes/UI/TableBackdrop.tscn" id="1_pppmj"]
 [ext_resource type="Script" uid="uid://bp5nl0iydiogp" path="res://Scripts/UI/Upgrades.cs" id="1_uvldm"]
+[ext_resource type="PackedScene" uid="uid://dw82fb44cpb8u" path="res://Scenes/UI/Notification.tscn" id="2_cpe0j"]
 [ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_jiyet"]
 
 [node name="Upgrades" type="CanvasLayer"]
 script = ExtResource("1_uvldm")
+crystalsLabelPath = NodePath("VBoxContainer/Label")
 upgradeButtonPaths = Dictionary[String, NodePath]({
-"food": NodePath("VBoxContainer/HBoxContainer/Button")
+"extra_food": NodePath("VBoxContainer/HBoxContainer/Button"),
+"extra_wood": NodePath("VBoxContainer/HBoxContainer/Button2"),
+"kit_1": NodePath("VBoxContainer/HBoxContainer2/Button"),
+"kit_2": NodePath("VBoxContainer/HBoxContainer2/Button2"),
+"kit_3": NodePath("VBoxContainer/HBoxContainer2/Button3")
 })
 returnButtonPath = NodePath("VBoxContainer/Button")
+notifScene = ExtResource("2_cpe0j")
 
 [node name="TableBackdrop" parent="." instance=ExtResource("1_pppmj")]
 layer = 0
@@ -34,12 +41,14 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "More Starting Food"
+text = "More Starting Food 0/5
+Cost: 5 Crystals"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "More Starting Wood"
+text = "More Starting Wood 0/5
+Cost: 5 Crystals"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -48,7 +57,8 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Shepard's Starting Kit"
+text = "Shepard's Starting Kit 0/1
+Cost: 10 Crystals"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2

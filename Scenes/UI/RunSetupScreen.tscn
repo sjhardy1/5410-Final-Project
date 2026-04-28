@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5wx4xn25xcfp"]
+
+[ext_resource type="Script" uid="uid://bjnhsd6sdqf5n" path="res://Scripts/UI/RunSetupScreen.cs" id="1_5wlyp"]
+[ext_resource type="PackedScene" uid="uid://c15lcrsrsi2pt" path="res://Scenes/UI/TableBackdrop.tscn" id="1_snl0a"]
+[ext_resource type="Theme" uid="uid://6ganltpue0ck" path="res://Resources/UITheme.tres" id="2_ey5ka"]
+
+[node name="RunSetupScreen" type="CanvasLayer"]
+script = ExtResource("1_5wlyp")
+startButtonPath = NodePath("VBoxContainer/MarginContainer/Button")
+kitOptionButtonPath = NodePath("VBoxContainer/OptionButton")
+difficultyOptionButtonPath = NodePath("VBoxContainer/OptionButton2")
+
+[node name="TableBackdrop" parent="." instance=ExtResource("1_snl0a")]
+layer = 0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = -1
+anchor_right = 0.185
+anchor_bottom = 0.19700001
+offset_left = 213.0
+offset_top = 128.0
+offset_right = 729.88
+offset_bottom = 348.344
+theme = ExtResource("2_ey5ka")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Starting Kit"
+horizontal_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 0
+item_count = 2
+popup/item_0/text = "Basic Kit"
+popup/item_0/id = 0
+popup/item_1/text = "Shepherd's Kit"
+popup/item_1/id = 1
+popup/item_1/disabled = true
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Difficulty"
+horizontal_alignment = 1
+
+[node name="OptionButton2" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 1
+item_count = 7
+popup/item_0/text = "Easy"
+popup/item_0/id = 0
+popup/item_1/text = "Medium"
+popup/item_1/id = 1
+popup/item_2/text = "Hard"
+popup/item_2/id = 2
+popup/item_3/text = "Hard II"
+popup/item_3/id = 3
+popup/item_4/text = "Hard III"
+popup/item_4/id = 4
+popup/item_5/text = "Hard IV"
+popup/item_5/id = 5
+popup/item_6/text = "Hard V"
+popup/item_6/id = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 60
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Continue"

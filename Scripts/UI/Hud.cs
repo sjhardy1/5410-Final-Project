@@ -37,7 +37,7 @@ public partial class Hud : CanvasLayer
 		signalBus.StopPlacing += storageButton.Hide;
 
 		signalBus.RaidBegin += Hide;
-		signalBus.RaidEnded += (int healCost, int repairCost) => Show();
+		signalBus.RaidEnded += ShowSelf;
 
 		// Keep HUD synced whenever resource values change.
 		runState.ResourcesChanged += OnResourcesChanged;
@@ -65,6 +65,17 @@ public partial class Hud : CanvasLayer
 			runState.TimerChanged -= UpdateTimer;
 			runState.WaveChanged -= UpdateWave;
 		}
+		SignalBus signalBus = GetNode<SignalBus>("/root/SignalBus");
+		Button storageButton = storage.GetNodeOrNull<Button>("StorageButton");
+		signalBus.Placing -= storageButton.Show;
+		signalBus.StopPlacing -= storageButton.Hide;
+		signalBus.RaidBegin -= Hide;
+		signalBus.RaidEnded -= ShowSelf;
+	}
+
+	private void ShowSelf(int healCost, int repairCost)
+	{
+		Show();
 	}
 
 	private void OnResourcesChanged(int food, int wood, int metaCurrency)

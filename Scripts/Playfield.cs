@@ -26,13 +26,13 @@ public partial class Playfield : Node2D
                 }
             }
         }
-        GetNode<SignalBus>("/root/SignalBus").Placing += () => SetShowShader(true);
-        GetNode<SignalBus>("/root/SignalBus").StopPlacing += () => SetShowShader(false);
+        GetNode<SignalBus>("/root/SignalBus").Placing += ShowShader;
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing += HideShader;
     }
     public override void _ExitTree()
     {
-        GetNode<SignalBus>("/root/SignalBus").Placing -= () => SetShowShader(true);
-        GetNode<SignalBus>("/root/SignalBus").StopPlacing -= () => SetShowShader(false);
+        GetNode<SignalBus>("/root/SignalBus").Placing -= ShowShader;
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing -= HideShader;
     }
     private void SetShowShader(bool show)
     {
@@ -41,6 +41,8 @@ public partial class Playfield : Node2D
             mat.SetShaderParameter("show_overlay", show);
         }
     }
+    private void HideShader() => SetShowShader(false);
+    private void ShowShader() => SetShowShader(true);
     public override void _Process(double delta)
     {
         if(ground.Material is ShaderMaterial mat)

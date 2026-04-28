@@ -37,12 +37,13 @@ public partial class GameRoot : Node2D
 
 		choiceScreen = GetNode<ChoiceScreen>("ChoiceScreen");
 		hud = GetNode<Hud>("HUD");
-		hud.Initialize(maxWave);
 		placementController = GetNode<PlacementController>("PlacementController");
 		raidController = GetNode<RaidController>("RaidController");
 
 		runState = GetNode<RunState>("/root/RunState");
 		signalBus = GetNode<SignalBus>("/root/SignalBus");
+		maxWave = runState.difficulty * 2 + 6;
+		hud.Initialize(maxWave);
 
 		recruitButton = hud.GetNode<Button>("Control/RecruitButton");
 		recruitButton.Pressed += OnRecruitButtonPressed;
@@ -263,8 +264,20 @@ public partial class GameRoot : Node2D
 	private void InitializeNewRun()
 	{
 		runState.ResetRun();
-		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("wheat_farm") as PlaceableDefinition));
-		runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("warrior") as PlaceableDefinition));
+		switch(runState.kitId)
+		{
+			case 0:
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("wheat_farm") as PlaceableDefinition));
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("warrior") as PlaceableDefinition));
+				break;
+			case 1:
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("sheep_farm") as PlaceableDefinition));
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("sheep_farm") as PlaceableDefinition));
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("archer") as PlaceableDefinition));
+				break;
+			default:
+				break;
+		}
 		hud.UpdateStorage();
 
 		GridPlaceable townCenter = InstantiatePlaceable(database.GetLootById("town_center") as PlaceableDefinition);
@@ -279,6 +292,7 @@ public partial class GameRoot : Node2D
 		int finalScore = runState.Wave + (isWin ? 10 : -1);
 		gameEnd.Initialize(isWin, [runState.Wave, maxWave], finalScore);
 		runState.AddMetaCurrency(finalScore);
+		saveManager.SaveMetaState(runState.ToMetaData());
 		AddChild(gameEnd);
 		MarkScreenAsBusy();
 	}
