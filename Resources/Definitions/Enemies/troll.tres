@@ -16,15 +16,16 @@ metadata/_custom_type_script = "uid://yaxpoere2ivy"
 [sub_resource type="Resource" id="Resource_oatr5"]
 script = ExtResource("2_vy8pb")
 MaxHealth = 500.0
-WeightCoefficient = 3.0
+DamageReductionPercent = 25.0
+WeightCoefficient = 10.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
 [sub_resource type="Resource" id="Resource_cauau"]
 script = ExtResource("3_jp3jo")
 AttackDamage = 80.0
 AttackRange = 2.0
-AttackCooldown = 2.0
-KnockbackCoefficient = 3.0
+AttackCooldown = 3.0
+KnockbackCoefficient = 4.0
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 
 [resource]
@@ -32,6 +33,6 @@ script = ExtResource("4_2e4dy")
 CoreAttributes = SubResource("Resource_x8hwp")
 DefensiveAttributes = SubResource("Resource_oatr5")
 OffensiveAttributes = SubResource("Resource_cauau")
-moveSpeed = 50.0
+moveSpeed = 25.0
 Value = 40
 Scene = ExtResource("4_vy8pb")

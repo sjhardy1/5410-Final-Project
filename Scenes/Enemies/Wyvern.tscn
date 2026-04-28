@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1d0pyymv3eeb"]
+
+[ext_resource type="TileSet" uid="uid://wqrqwor2fpo7" path="res://Resources/Tilesets/Monsters.tres" id="1_a0hxi"]
+
+[node name="Wyvern" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-68, -72)
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 8, 0, 0, 0)
+tile_set = ExtResource("1_a0hxi")

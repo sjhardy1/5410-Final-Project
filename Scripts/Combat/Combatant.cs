@@ -8,6 +8,8 @@ public partial class Combatant : RigidBody2D, ITargetable
     private PackedScene SlashScene = GD.Load<PackedScene>("res://Scenes/FX/Slash.tscn");
     private PackedScene ArrowScene = GD.Load<PackedScene>("res://Scenes/FX/Arrow.tscn");
     private PackedScene DarkOrbScene = GD.Load<PackedScene>("res://Scenes/FX/DarkOrb.tscn");
+    private PackedScene FireballScene = GD.Load<PackedScene>("res://Scenes/FX/Fireball.tscn");
+    private PackedScene ExplosionScene = GD.Load<PackedScene>("res://Scenes/FX/Explosion.tscn");
     public float attackCooldownTimer = 0f;
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
@@ -22,7 +24,6 @@ public partial class Combatant : RigidBody2D, ITargetable
     private FootprintShape footprint;
     //[Signal] public delegate void DefeatedSignalEventHandler();
     public event Action Defeated;
-
     public float AttackSpeedMultipler = 1.0f;
 
     public void Process(double delta)
@@ -95,6 +96,8 @@ public partial class Combatant : RigidBody2D, ITargetable
     }
     public void ChangeState(ICombatantState newState)
     {
+        // Prevent out of bounds enemies from attacking 
+        if(newState is AttackState && !GetNode<RunState>("/root/RunState").gridBounds.HasPoint(Position / TileSize)) return;
         if(currentState != null) currentState.Exit();
         currentState = newState;
         currentState.Enter();
@@ -132,6 +135,10 @@ public partial class Combatant : RigidBody2D, ITargetable
         {
             return CreateProjectileAnimation(400f, 0f, distance, target.Position, "dark_orb");
         }
+        if(CoreAttributes.Id == "wyvern")
+        {
+            return CreateProjectileAnimation(1000f, 0.5f, distance, target.Position, "fireball", ExplosionScene);
+        }
         if(faction == Faction.Enemy)
         {
             AnimatedSprite2D slashInstance = SlashScene.Instantiate<AnimatedSprite2D>();
@@ -145,7 +152,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         }
         return wait;
     }
-    private float CreateProjectileAnimation(float speed, float chargeDelay, float distance, Vector2 targetPosition, string type)
+    private float CreateProjectileAnimation(float speed, float chargeDelay, float distance, Vector2 targetPosition, string type, PackedScene hitEffectScene = null)
     {
         PackedScene projectileScene = type switch
         {
@@ -155,7 +162,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         };
         Projectile projectileInstance = projectileScene.Instantiate<Projectile>();
         float liveTime = distance / speed;
-        projectileInstance.Initialize(targetPosition, speed, liveTime);
+        projectileInstance.Initialize(targetPosition, speed, liveTime, hitEffectScene);
         if(chargeDelay > 0f)
         {
             Timer timer = new Timer();

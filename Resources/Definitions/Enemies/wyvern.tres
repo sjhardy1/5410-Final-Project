@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=9 format=3 uid="uid://c7n60okgp1i11"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_76hd2"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_rdsu2"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="3_ct1jj"]
+[ext_resource type="PackedScene" uid="uid://b1d0pyymv3eeb" path="res://Scenes/Enemies/Wyvern.tscn" id="4_1fjcg"]
+[ext_resource type="Script" uid="uid://vjqfi3wgfrst" path="res://Scripts/Resources/EnemyDefinition.cs" id="5_vy0fr"]
+
+[sub_resource type="Resource" id="Resource_w1rsf"]
+script = ExtResource("1_76hd2")
+Id = "wyvern"
+DisplayName = "Wyvern"
+Description = "Big Strong Dragon, shoots fireballs"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_mtmth"]
+script = ExtResource("2_rdsu2")
+MaxHealth = 1000.0
+DamageReductionPercent = 35.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_hys3t"]
+script = ExtResource("3_ct1jj")
+AttackDamage = 150.0
+AttackRange = 4.0
+AttackCooldown = 1.5
+KnockbackCoefficient = 2.5
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("5_vy0fr")
+CoreAttributes = SubResource("Resource_w1rsf")
+DefensiveAttributes = SubResource("Resource_mtmth")
+OffensiveAttributes = SubResource("Resource_hys3t")
+moveSpeed = 75.0
+Value = 150
+minimumWave = 6
+Scene = ExtResource("4_1fjcg")
