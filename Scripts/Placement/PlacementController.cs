@@ -59,6 +59,7 @@ public partial class PlacementController : Node2D
         if (activePlaceable != null)
         {
             RemoveChild(activePlaceable);
+            activePlaceable.Material = null;
             GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable);
             activePlaceable = null;
             GetNode<SignalBus>("/root/SignalBus").PublishStopPlacing();
@@ -74,6 +75,7 @@ public partial class PlacementController : Node2D
         if (activePlaceable != null)
         {
             RemoveChild(activePlaceable);
+            activePlaceable.Material = null;
             GetNode<SignalBus>("/root/SignalBus").PublishPlaceableAddedToStorage(activePlaceable);
         }
 

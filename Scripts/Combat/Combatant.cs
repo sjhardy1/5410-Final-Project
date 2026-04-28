@@ -97,7 +97,6 @@ public partial class Combatant : RigidBody2D, ITargetable
     public void ChangeState(ICombatantState newState)
     {
         // Prevent out of bounds enemies from attacking 
-        if(newState is AttackState && !GetNode<RunState>("/root/RunState").gridBounds.HasPoint(Position / TileSize)) return;
         if(currentState != null) currentState.Exit();
         currentState = newState;
         currentState.Enter();
@@ -156,9 +155,9 @@ public partial class Combatant : RigidBody2D, ITargetable
     {
         PackedScene projectileScene = type switch
         {
-            "arrow" => ArrowScene,
             "dark_orb" => DarkOrbScene,
-            _ => SlashScene
+            "fireball" => FireballScene,
+            _ => ArrowScene
         };
         Projectile projectileInstance = projectileScene.Instantiate<Projectile>();
         float liveTime = distance / speed;
@@ -216,7 +215,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         float closestDistance = float.MaxValue;
         foreach (Combatant combatant in runState.ActiveCombatants)
         {
-            if (combatant.faction != this.faction && runState.gridBounds.HasPoint(combatant.Position / TileSize))
+            if (combatant.faction != this.faction)
             {
                 float distance = Position.DistanceTo(combatant.Position);
                 if (distance < closestDistance)
@@ -228,7 +227,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         }
         foreach (CombatObject building in runState.ActiveObjects)
         {
-            if (building.faction != this.faction && runState.gridBounds.HasPoint(building.Position / TileSize))
+            if (building.faction != this.faction)
             {
                 float distance = Position.DistanceTo(building.Position);
                 if (distance < closestDistance)

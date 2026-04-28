@@ -17,6 +17,7 @@ metadata/_custom_type_script = "uid://yaxpoere2ivy"
 script = ExtResource("2_rdsu2")
 MaxHealth = 1000.0
 DamageReductionPercent = 35.0
+WeightCoefficient = 10.0
 metadata/_custom_type_script = "uid://ps3pt1ne84ju"
 
 [sub_resource type="Resource" id="Resource_hys3t"]

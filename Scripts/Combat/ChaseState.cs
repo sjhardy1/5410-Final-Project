@@ -8,7 +8,7 @@ public partial class ChaseState : ICombatantState
     private const float ProbeForwardOffset = 48f;
     private const float AngleStepDegrees = 10f;
     private const float MaxScanDegrees = 180f;
-    private const float AvoidanceCommitDuration = 1.0f;
+    private float AvoidanceCommitDuration = 0.5f;
 
     private Combatant combatant;
     private ITargetable target;
@@ -40,6 +40,7 @@ public partial class ChaseState : ICombatantState
     {
         float deltaF = (float)delta;
         committedSteerTimeRemaining = Mathf.Max(0f, committedSteerTimeRemaining - deltaF);
+        AvoidanceCommitDuration += deltaF * 0.3f; // Increase commitment over time
 
         // Move towards the target
         if (target != null)
