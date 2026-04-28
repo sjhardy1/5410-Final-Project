@@ -12,6 +12,7 @@ timerLabelPath = NodePath("Control/TimerLabel")
 storageCardScene = ExtResource("2_qc5w2")
 storagePath = NodePath("Control/Storage")
 phaseButtonPath = NodePath("Control/PhaseButton")
+wavePath = NodePath("Control/WaveLabel")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -68,6 +69,17 @@ offset_top = 41.0
 offset_right = 591.0
 offset_bottom = 64.0
 text = "Timer"
+
+[node name="WaveLabel" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.7270001
+anchor_bottom = 6.5990005
+offset_left = 38.0
+offset_top = 279.0
+offset_right = 109.92
+offset_bottom = 43.039978
+text = "Wave: 1/12"
 
 [node name="Storage" type="VBoxContainer" parent="Control"]
 layout_mode = 0

@@ -80,10 +80,10 @@ region = Rect2(960, 0, 192, 192)
 [sub_resource type="SpriteFrames" id="SpriteFrames_ouo20"]
 animations = [{
 "frames": [{
-"duration": 0.25,
+"duration": 0.5,
 "texture": SubResource("AtlasTexture_ouo20")
 }, {
-"duration": 0.25,
+"duration": 0.5,
 "texture": SubResource("AtlasTexture_fqxsf")
 }, {
 "duration": 1.0,

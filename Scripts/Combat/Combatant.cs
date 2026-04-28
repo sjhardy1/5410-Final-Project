@@ -26,6 +26,7 @@ public partial class Combatant : RigidBody2D, ITargetable
     public void Process(double delta)
     {
         LinearVelocity *= 0.95f; // Apply friction
+        ZIndex = (int)(Position.Y / TileSize) + 10;
         attackCooldownTimer += (float)delta;
         currentState.Process(delta);
     }   

@@ -9,12 +9,15 @@ public partial class Hud : CanvasLayer
 	[Export] public PackedScene storageCardScene;
 	[Export] public NodePath storagePath;
 	[Export] public NodePath phaseButtonPath;
+	[Export] public NodePath wavePath;
 	private Label foodLabel;
 	private Label woodLabel;
 	private Label timerLabel;
+	private Label waveLabel;
 	private RunState runState;
 	private Button phaseButton;
 	private VBoxContainer storage;
+	private int maxWave = 12;
 
 	public override void _Ready()
 	{
@@ -22,6 +25,7 @@ public partial class Hud : CanvasLayer
 		woodLabel = GetNodeOrNull<Label>(woodLabelPath);
 		timerLabel = GetNodeOrNull<Label>(timerLabelPath);
 		storage = GetNodeOrNull<VBoxContainer>(storagePath);
+		waveLabel = GetNodeOrNull<Label>(wavePath);
 		Button storageButton = storage.GetNodeOrNull<Button>("StorageButton");
 
 		phaseButton = GetNodeOrNull<Button>(phaseButtonPath);
@@ -37,6 +41,7 @@ public partial class Hud : CanvasLayer
 
 		// Keep HUD synced whenever resource values change.
 		runState.ResourcesChanged += OnResourcesChanged;
+		runState.WaveChanged += UpdateWave;
 		phaseButton.Pressed += signalBus.PublishRaidBegin;
 		storageButton.Pressed += signalBus.PublishCancelPlacement;
 
@@ -46,6 +51,11 @@ public partial class Hud : CanvasLayer
 		runState.TimerChanged += UpdateTimer;
 		ClearStorage();
 	}
+	public void Initialize(int maxWave)
+	{
+		this.maxWave = maxWave;
+		UpdateWave(runState.Wave);
+	}
 
 	public override void _ExitTree()
 	{
@@ -53,6 +63,7 @@ public partial class Hud : CanvasLayer
 		{
 			runState.ResourcesChanged -= OnResourcesChanged;
 			runState.TimerChanged -= UpdateTimer;
+			runState.WaveChanged -= UpdateWave;
 		}
 	}
 
@@ -84,6 +95,13 @@ public partial class Hud : CanvasLayer
 			{
 				timerLabel.Text = $"Raid Time: {Mathf.CeilToInt(raidTimeElapsed)}s";
 			}
+		}
+	}
+	public void UpdateWave(int wave)
+	{
+		if (waveLabel != null)
+		{
+			waveLabel.Text = $"Wave: {wave}/{maxWave}";
 		}
 	}
 	private void ClearStorage()

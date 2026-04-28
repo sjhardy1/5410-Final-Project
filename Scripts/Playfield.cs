@@ -21,12 +21,18 @@ public partial class Playfield : Node2D
                     AnimatedSprite2D tree = (AnimatedSprite2D)treeScene.Instantiate();
                     tree.Position = pos;
                     tree.Play(GD.Randf() > 0.5f ? "small1" : "small2");
+                    tree.ZIndex = 1000;
                     AddChild(tree);
                 }
             }
         }
         GetNode<SignalBus>("/root/SignalBus").Placing += () => SetShowShader(true);
         GetNode<SignalBus>("/root/SignalBus").StopPlacing += () => SetShowShader(false);
+    }
+    public override void _ExitTree()
+    {
+        GetNode<SignalBus>("/root/SignalBus").Placing -= () => SetShowShader(true);
+        GetNode<SignalBus>("/root/SignalBus").StopPlacing -= () => SetShowShader(false);
     }
     private void SetShowShader(bool show)
     {

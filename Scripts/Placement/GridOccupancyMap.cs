@@ -17,6 +17,10 @@ public partial class GridOccupancyMap : Node2D
         GetNode<SignalBus>("/root/SignalBus").ClearCells += UpdateOccupiedCells; 
         tiles = GetNode<TileMapLayer>("Tiles"); 
     }
+    public override void _ExitTree()
+    {
+        GetNode<SignalBus>("/root/SignalBus").ClearCells -= UpdateOccupiedCells;
+    }
 
     public Vector2I WorldToCell(Vector2 worldPosition)
     {
@@ -75,16 +79,15 @@ public partial class GridOccupancyMap : Node2D
 
     private void UpdateOccupiedCells()
     {
-        GD.Print("Recreating occupancy map...");
         RunState runstate = GetNode<RunState>("/root/RunState");
         occupiedCells.Clear();
-        tiles.Clear();
+        //tiles.Clear();
         foreach (GridPlaceable placeable in runstate.ActivePlaceables)
         {
             foreach (Vector2I cell in placeable.GetOccupiedCells())
             {
                 occupiedCells[cell] = placeable;
-                tiles.SetCell(cell, 1, Vector2I.Zero);
+                //tiles.SetCell(cell, 1, Vector2I.Zero);
             }
         }
     }
@@ -97,6 +100,7 @@ public partial class GridOccupancyMap : Node2D
         }
         placeable.AnchorCell = anchorCell;
         placeable.GlobalPosition = CellToWorld(anchorCell, placeable.def is UnitDefinition);
+        placeable.ZIndex = (int)(placeable.GlobalPosition.Y / CellSize.Y) + 10;
         GetNode<SignalBus>("/root/SignalBus").PublishPlaceablePlaced(placeable);
         UpdateOccupiedCells();
         return true;

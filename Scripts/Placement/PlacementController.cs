@@ -19,6 +19,10 @@ public partial class PlacementController : Node2D
         SetupMaterials();
         GetNode<SignalBus>("/root/SignalBus").CancelPlacement += CancelPlacement;
     }
+    public override void _ExitTree()
+    {
+        GetNode<SignalBus>("/root/SignalBus").CancelPlacement -= CancelPlacement;
+    }
 
     public override void _UnhandledInput(InputEvent @event)
     {

@@ -15,10 +15,13 @@ public partial class GameRoot : Node2D
 	private RaidController raidController;
 	private Hud hud;
 	private Button pauseButton;
+	private Button recruitButton;
+	private Button constructButton;
 	private RunState runState;
 	private Queue lootQueue = new Queue();
 	private int nextUid = 1;
 	private bool isScreenBusy = false;
+	private int maxWave = 12;
 	[Export] private PackedScene upkeepReportScene;
 	[Export] private PackedScene gameEndScene;
 	[Export] private PackedScene notifScene;
@@ -34,127 +37,56 @@ public partial class GameRoot : Node2D
 
 		choiceScreen = GetNode<ChoiceScreen>("ChoiceScreen");
 		hud = GetNode<Hud>("HUD");
+		hud.Initialize(maxWave);
 		placementController = GetNode<PlacementController>("PlacementController");
 		raidController = GetNode<RaidController>("RaidController");
 
 		runState = GetNode<RunState>("/root/RunState");
 		signalBus = GetNode<SignalBus>("/root/SignalBus");
 
-		Button recruitButton = hud.GetNode<Button>("Control/RecruitButton");
-		recruitButton.Pressed += () =>
-		{
-			if(runState.TrySpendResources(50, 0))
-			{
-				lootQueue.Enqueue(new PendingLoot(2, LootType.Unit, runState.Wave));
-			} else {
-				Notification notification = notifScene.Instantiate<Notification>();
-				notification.Initialize("Not enough food to recruit unit!");
-				AddChild(notification);
-			}
-		};
-		Button constructButton = hud.GetNode<Button>("Control/ConstructButton");
-		constructButton.Pressed += () =>
-		{            
-			if(runState.TrySpendResources(0, 50))
-			{
-				runState.pendingConstruction++;
-				Notification notification = notifScene.Instantiate<Notification>();
-				notification.Initialize("Construction queued! It will appear as a loot choice at the end of the round.");
-				AddChild(notification);
-			} else {
-				Notification notification = notifScene.Instantiate<Notification>();
-				notification.Initialize("Not enough wood to construct building!");
-				AddChild(notification);
-			}
-		};
+		recruitButton = hud.GetNode<Button>("Control/RecruitButton");
+		recruitButton.Pressed += OnRecruitButtonPressed;
+		constructButton = hud.GetNode<Button>("Control/ConstructButton");
+		constructButton.Pressed += OnConstructButtonPressed;
 		pauseButton = GetNode<Button>(pauseButtonPath);
 		pauseButton.Pressed += PauseGame;
 
-		signalBus.ChoicePicked += (Dictionary<string, Variant> choiceData) =>
-		{
-			string chosenId = (string)choiceData["Id"];
-			LootDefinition chosenLoot = database.GetLootById(chosenId);
-			chosenLoot.Uid = nextUid++;
-			if(chosenLoot is PlaceableDefinition def)
-			{
-				placementController.BeginPlacement(InstantiatePlaceable(def));
-			}
-			GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
-			MarkScreenAsFree();
-			choiceScreen.Hide();
-		};        
-		signalBus.PlaceablePlaced += (GridPlaceable placeable) =>
-		{
-			runState.ActivePlaceables.Add(placeable);
-		};
-		signalBus.RaidEnded += (int healCost, int repairCost) =>
-		{
-			foreach(Node child in placementController.GetChildren())
-			{
-				if(child is GridPlaceable placeable)
-				{
-					placeable.Show();
-				}
-			}
-			runState.AdvanceWave();
-			runState.StartDowntime();
-			ResolveUpkeep(healCost, repairCost);
-		};
-		signalBus.RaidBegin += () =>
-		{
-			foreach(GridPlaceable placeable in runState.ActivePlaceables)
-			{
-				if(placeable.def is UnitDefinition unitDef)
-				{
-					GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
-					raidController.PlaceUnit(placeable);
-				}
-				else if(placeable.def is BuildingDefinition buildingDef)
-				{
-					GD.Print("Placing building: " + buildingDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
-					raidController.PlaceBuilding(placeable);
-				}
-			}
-			foreach(Node child in placementController.GetChildren())
-			{
-				if(child is GridPlaceable placeable)
-				{
-					placeable.Hide();
-				}
-			}
-			raidController.StartRaid(database);
-			runState.StartRaid();
-		};
-		signalBus.PlaceableAddedToStorage += (GridPlaceable placeable) =>
-		{
-			runState.StoredPlaceables.Add(placeable);
-			hud.UpdateStorage();
-		};
-		signalBus.PlaceableRemovedFromStorage += (GridPlaceable placeable) =>
-		{
-			runState.StoredPlaceables.Remove(placeable);
-			placementController.BeginPlacement(placeable);
-		};
-		signalBus.PlaceableRemovedFromActive += (GridPlaceable placeable) =>
-		{
-			placementController.RemoveChild(placeable);
-			runState.ActivePlaceables.Remove(placeable);
-			placementController.BeginPlacement(placeable);
-		};
-		signalBus.GameLost += () => {
-			saveManager.DeleteRunSave();
-			GameEndScreen gameEnd = gameEndScene.Instantiate<GameEndScreen>();
-			gameEnd.Initialize(false, [runState.Wave, 10], 5);
-			AddChild(gameEnd);
-			MarkScreenAsBusy();
-		};
+		signalBus.ChoicePicked += OnChoicePicked;        
+		signalBus.PlaceablePlaced += OnPlaceablePlaced;
+		signalBus.RaidEnded += OnRaidEnded;
+		signalBus.RaidBegin += OnRaidBegin;
+		signalBus.PlaceableAddedToStorage += OnPlaceableAddedToStorage;
+		signalBus.PlaceableRemovedFromStorage += OnPlaceableRemovedFromStorage;
+		signalBus.PlaceableRemovedFromActive += OnPlaceableRemovedFromActive;
+		signalBus.GameLost += OnGameLost;
 		GameManager gameManager = GetNode<GameManager>("/root/GameManager");
 		if (gameManager.ConsumeLoadSavedRunOnGameRoot() && TryLoadSavedRun())
 		{
 			return;
 		}
-
 		InitializeNewRun();
+	}
+	public override void _ExitTree()
+	{
+		if (recruitButton != null)
+		{
+			recruitButton.Pressed -= OnRecruitButtonPressed;
+		}
+		if (constructButton != null)
+		{
+			constructButton.Pressed -= OnConstructButtonPressed;
+		}
+		if (signalBus != null)
+		{
+			signalBus.ChoicePicked -= OnChoicePicked;
+			signalBus.PlaceablePlaced -= OnPlaceablePlaced;
+			signalBus.RaidEnded -= OnRaidEnded;
+			signalBus.RaidBegin -= OnRaidBegin;
+			signalBus.PlaceableAddedToStorage -= OnPlaceableAddedToStorage;
+			signalBus.PlaceableRemovedFromStorage -= OnPlaceableRemovedFromStorage;
+			signalBus.PlaceableRemovedFromActive -= OnPlaceableRemovedFromActive;
+			signalBus.GameLost -= OnGameLost;
+		}
 	}
 	public override void _UnhandledInput(InputEvent @event)
 	{
@@ -340,6 +272,17 @@ public partial class GameRoot : Node2D
 		placementController.occupancyMap.TryPlace(townCenter, Vector2I.Zero);
 	}
 
+	private void FinalizeGame(bool isWin)
+	{
+		saveManager.DeleteRunSave();
+		GameEndScreen gameEnd = gameEndScene.Instantiate<GameEndScreen>();
+		int finalScore = runState.Wave + (isWin ? 10 : -1);
+		gameEnd.Initialize(isWin, [runState.Wave, maxWave], finalScore);
+		runState.AddMetaCurrency(finalScore);
+		AddChild(gameEnd);
+		MarkScreenAsBusy();
+	}
+
 	private void RestoreSavedPlaceables()
 	{
 		foreach (Variant value in runState.LoadedStoredPlaceablesData)
@@ -423,6 +366,111 @@ public partial class GameRoot : Node2D
 		GridPlaceable placeable = def.Scene.Instantiate<GridPlaceable>();
 		placeable.Initialize(runtimeDefinition);
 		return placeable;
+	}
+	private void OnRecruitButtonPressed()
+	{
+		if(runState.TrySpendResources(50, 0))
+		{
+			lootQueue.Enqueue(new PendingLoot(2, LootType.Unit, runState.Wave));
+		} else {
+			Notification notification = notifScene.Instantiate<Notification>();
+			notification.Initialize("Not enough food to recruit unit!");
+			AddChild(notification);
+		}
+	}
+	private void OnConstructButtonPressed()
+	{
+		if(runState.TrySpendResources(0, 50))
+		{
+			runState.pendingConstruction++;
+			Notification notification = notifScene.Instantiate<Notification>();
+			notification.Initialize("Construction queued! It will appear as a loot choice at the end of the round.");
+			AddChild(notification);
+		} else {
+			Notification notification = notifScene.Instantiate<Notification>();
+			notification.Initialize("Not enough wood to construct building!");
+			AddChild(notification);
+		}
+	}
+	private void OnChoicePicked(Dictionary<string, Variant> choiceData)
+	{
+		string chosenId = (string)choiceData["Id"];
+		LootDefinition chosenLoot = database.GetLootById(chosenId);
+		chosenLoot.Uid = nextUid++;
+		if(chosenLoot is PlaceableDefinition def)
+		{
+			placementController.BeginPlacement(InstantiatePlaceable(def));
+		}
+		GD.Print($"Player picked: {chosenLoot.CoreAttributes.DisplayName}");
+		MarkScreenAsFree();
+		choiceScreen.Hide();
+	}
+	private void OnPlaceablePlaced(GridPlaceable placeable)
+	{
+		runState.ActivePlaceables.Add(placeable);
+	}
+	private void OnRaidEnded(int healCost, int repairCost)
+	{
+		if(runState.Wave >= maxWave)
+		{
+			FinalizeGame(true);
+			return;
+		}
+		foreach(Node child in placementController.GetChildren())
+		{
+			if(child is GridPlaceable placeable)
+			{
+				placeable.Show();
+			}
+		}
+		runState.AdvanceWave();
+		runState.StartDowntime();
+		ResolveUpkeep(healCost, repairCost);
+	}
+	private void OnRaidBegin()
+	{
+		foreach(GridPlaceable placeable in runState.ActivePlaceables)
+		{
+			if(placeable.def is UnitDefinition unitDef)
+			{
+				GD.Print("Placing unit: " + unitDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
+				raidController.PlaceUnit(placeable);
+			}
+			else if(placeable.def is BuildingDefinition buildingDef)
+			{
+				GD.Print("Placing building: " + buildingDef.CoreAttributes.DisplayName+" at "+ placeable.AnchorCell);
+				raidController.PlaceBuilding(placeable);
+			}
+		}
+		foreach(Node child in placementController.GetChildren())
+		{
+			if(child is GridPlaceable placeable)
+			{
+				placeable.Hide();
+			}
+		}
+		raidController.StartRaid(database);
+		runState.StartRaid();
+	}
+	private void OnPlaceableAddedToStorage(GridPlaceable placeable)
+	{
+		runState.StoredPlaceables.Add(placeable);
+		hud.UpdateStorage();
+	}
+	private void OnPlaceableRemovedFromStorage(GridPlaceable placeable)
+	{
+		runState.StoredPlaceables.Remove(placeable);
+		placementController.BeginPlacement(placeable);
+	}
+	private void OnPlaceableRemovedFromActive(GridPlaceable placeable)
+	{
+		placementController.RemoveChild(placeable);
+		runState.ActivePlaceables.Remove(placeable);
+		placementController.BeginPlacement(placeable);
+	}
+	private void OnGameLost()
+	{
+		FinalizeGame(false);
 	}
 	private void PauseGame()
 	{
