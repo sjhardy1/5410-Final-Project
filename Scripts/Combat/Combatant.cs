@@ -5,6 +5,9 @@ public partial class Combatant : RigidBody2D, ITargetable
 {
     private const float TileSize = 64f;
     private const float CollisionRadius = TileSize / 2.5f;
+    private PackedScene SlashScene = GD.Load<PackedScene>("res://Scenes/Enemies/Slash.tscn");
+    private PackedScene ArrowScene = GD.Load<PackedScene>("res://Scenes/Units/Arrow.tscn");
+    public float attackCooldownTimer = 0f;
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
     public OffensiveAttributes OffensiveAttributes { get; set; }
@@ -19,8 +22,11 @@ public partial class Combatant : RigidBody2D, ITargetable
     //[Signal] public delegate void DefeatedSignalEventHandler();
     public event Action Defeated;
 
+
     public void Process(double delta)
     {
+        LinearVelocity *= 0.95f; // Apply friction
+        attackCooldownTimer += (float)delta;
         currentState.Process(delta);
     }   
     public Combatant(UnitDefinition definition)
@@ -36,8 +42,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         footprint = definition.Footprint;
         faction = Faction.Ally;
         moveSpeed = definition.moveSpeed;
-        GravityScale = 0f;
-        LockRotation = true;
+        Setup();
     }
     public Combatant(EnemyDefinition definition, Vector2 position)
     {
@@ -52,6 +57,10 @@ public partial class Combatant : RigidBody2D, ITargetable
         Position = position;
         faction = Faction.Enemy;
         moveSpeed = definition.moveSpeed;
+        Setup();
+    }
+    private void Setup()
+    {
         GravityScale = 0f;
         LockRotation = true;
     }
@@ -89,7 +98,45 @@ public partial class Combatant : RigidBody2D, ITargetable
     }
     public void PerformAttack(ITargetable target)
     {
-        // Simple damage calculation: attacker's attack minus defender's defense
+        Vector2 direction = Position.DirectionTo(target.Position);
+        float distance = Position.DistanceTo(target.Position);
+        float wait = 0.25f;
+        if(faction == Faction.Enemy)
+        {
+            AnimatedSprite2D slashInstance = SlashScene.Instantiate<AnimatedSprite2D>();
+            AddChild(slashInstance);
+            slashInstance.AnimationLooped += slashInstance.QueueFree;
+            slashInstance.Rotation += direction.Angle();
+            slashInstance.Position = direction * (distance - 64);
+        }
+        if(CoreAttributes.Id == "archer")
+        {
+            Arrow arrowInstance = ArrowScene.Instantiate<Arrow>();
+            AddChild(arrowInstance);
+            float speed = 2000f;
+            float liveTime = distance / speed;
+            wait = liveTime;
+            arrowInstance.Initialize(target.Position, speed, liveTime);
+        }
+        Timer timer = new Timer();
+        timer.WaitTime = wait; // Delay the damage application to sync with
+        timer.Autostart = true;
+        AddChild(timer);
+        timer.Timeout += () => {
+            try
+            {
+                ApplyAttack(target);
+            }
+            catch (ObjectDisposedException){}
+            timer.QueueFree();
+        };
+    }
+    public void ApplyAttack(ITargetable target)
+    {
+        if(!target.IsInsideTree()) return;
+        if(target is Combatant combatant){
+            combatant.ApplyCentralImpulse(Position.DirectionTo(target.Position) * 256f * OffensiveAttributes.KnockbackCoefficient); 
+        }
         float damage = OffensiveAttributes.AttackDamage - target.DefensiveAttributes.Armor / 2;
         if (damage < 0) damage = 0; // Prevent healing from negative damage
         target.TakeDamage(damage);

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://5mviseswg73y"]
+
+[ext_resource type="TileSet" uid="uid://wqrqwor2fpo7" path="res://Resources/Tilesets/Monsters.tres" id="1_8nfr2"]
+
+[node name="DreadKnight" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-48, -52)
+scale = Vector2(3, 3)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 4, 0, 0, 0)
+tile_set = ExtResource("1_8nfr2")

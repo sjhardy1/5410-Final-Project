@@ -7,7 +7,7 @@ public partial class EnemyDefinition : Resource
     [Export] public CoreAttributes CoreAttributes { get; set; }
     [Export] public DefensiveAttributes DefensiveAttributes { get; set; }
     [Export] public OffensiveAttributes OffensiveAttributes { get; set; }
-    [Export] public float moveSpeed { get; set; }
+    [Export] public float moveSpeed { get; set; } = 100;
     [Export] public int Value { get; set; }
     [Export] public PackedScene Scene { get; set; }
 }

@@ -50,20 +50,9 @@ public partial class ChaseState : ICombatantState
             }
 
             Vector2 desiredDirection = (target.Position - combatant.Position).Normalized();
-            if (desiredDirection == Vector2.Zero)
-            {
-                combatant.LinearVelocity = Vector2.Zero;
-                return;
-            }
-
             if (TryGetSteeringDirection(desiredDirection, out Vector2 steeringDirection))
             {
-                combatant.LinearVelocity = steeringDirection * combatant.moveSpeed;
-            }
-            else
-            {
-                // No clear direction found in the scan, so stop instead of pushing into blockers.
-                combatant.LinearVelocity = Vector2.Zero;
+                combatant.LinearVelocity += steeringDirection * combatant.moveSpeed * deltaF * 4f;
             }
         }
         else

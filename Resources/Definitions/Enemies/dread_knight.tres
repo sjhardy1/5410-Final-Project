@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=9 format=3 uid="uid://8a73hb3vr8mi"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_out3f"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_42olp"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="3_uffox"]
+[ext_resource type="PackedScene" uid="uid://5mviseswg73y" path="res://Scenes/Enemies/DreadKnight.tscn" id="4_42olp"]
+[ext_resource type="Script" uid="uid://vjqfi3wgfrst" path="res://Scripts/Resources/EnemyDefinition.cs" id="4_84udb"]
+
+[sub_resource type="Resource" id="Resource_83yrw"]
+script = ExtResource("1_out3f")
+Id = "dread_knight"
+DisplayName = "Dread Knight"
+Description = "Armored enemy"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_7cpdf"]
+script = ExtResource("2_42olp")
+MaxHealth = 150.0
+Armor = 15.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_o82yi"]
+script = ExtResource("3_uffox")
+AttackDamage = 30.0
+AttackRange = 1.5
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("4_84udb")
+CoreAttributes = SubResource("Resource_83yrw")
+DefensiveAttributes = SubResource("Resource_7cpdf")
+OffensiveAttributes = SubResource("Resource_o82yi")
+Value = 30
+Scene = ExtResource("4_42olp")

@@ -80,10 +80,10 @@ region = Rect2(960, 0, 192, 192)
 [sub_resource type="SpriteFrames" id="SpriteFrames_ouo20"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 0.25,
 "texture": SubResource("AtlasTexture_ouo20")
 }, {
-"duration": 1.0,
+"duration": 0.25,
 "texture": SubResource("AtlasTexture_fqxsf")
 }, {
 "duration": 1.0,
@@ -123,7 +123,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -146,7 +146,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
-"speed": 5.0
+"speed": 7.5
 }]
 
 [node name="Warrior" type="Node2D"]
@@ -154,5 +154,6 @@ script = ExtResource("1_wxa1f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ouo20")
+animation = &"attack"
 autoplay = "default"
-frame_progress = 0.42267928
+frame_progress = 0.13627662
