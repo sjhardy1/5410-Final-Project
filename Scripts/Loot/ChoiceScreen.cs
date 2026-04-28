@@ -29,30 +29,31 @@ public partial class ChoiceScreen : CanvasLayer
 		cardContainer.AddChild(card);	
 		return card;
 	}
-	public void GenerateCards(GameDatabase database, int num, LootType ?type = null, int ?round = null)
+	public void GenerateCards(GameDatabase database, int num, LootType ?type = null)
 	{
 		Array<LootDefinition> lootPool = database.GetAllLoot();
 		var filteredLoot = new Dictionary<LootDefinition, float>();
+		int round = GetNode<RunState>("/root/RunState").Wave;
 		foreach (var loot in lootPool)
 		{
 			if(type != null  && !(type == loot.LootType)) continue;
-			if(round != null && loot.LootAttributes.UnlockWave > round) continue;
+			if(loot.LootAttributes.UnlockWave > round) continue;
 			switch (loot.LootAttributes.Rarity)
 			{
 				case Rarity.Common:
 					filteredLoot.Add(loot, 10f);
 					break;
 				case Rarity.Uncommon:
-					filteredLoot.Add(loot, 4f);
+					filteredLoot.Add(loot, 4f + round * 1f);
 					break;
 				case Rarity.Rare:
-					filteredLoot.Add(loot, 2f);
+					filteredLoot.Add(loot, 2f + Mathf.Pow(round, 2) * 0.15f);
 					break;
 				case Rarity.Epic:
-					filteredLoot.Add(loot, 1f);
+					filteredLoot.Add(loot, 1f + Mathf.Pow(round, 3) * 0.01f);
 					break;
 				case Rarity.Legendary:
-					filteredLoot.Add(loot, 0.5f);
+					filteredLoot.Add(loot, 0.5f + Mathf.Pow(round, 4) * 0.0005f);
 					break;
 			}
 		}

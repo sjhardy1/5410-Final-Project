@@ -30,7 +30,7 @@ public partial class ChaseState : ICombatantState
     public void Exit()
     {
         target.Defeated -= OnTargetDefeated;
-        combatant.LinearVelocity = Vector2.Zero;
+        combatant.LinearVelocity *= 0.2f;
     }
 
     public void Process(double delta)
@@ -54,18 +54,19 @@ public partial class ChaseState : ICombatantState
             {
                 combatant.LinearVelocity += steeringDirection * combatant.moveSpeed * deltaF * 4f;
             }
+            if(desiredDirection.X < 0){
+                if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = true;
+                if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = true;
+            } else {
+                if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = false;
+                if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = false;
+            }
         }
         else
         {
             combatant.LinearVelocity = Vector2.Zero;
         }
-        if(combatant.LinearVelocity.X < 0){
-            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = true;
-            if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = true;
-        } else {
-            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.FlipH = false;
-            if(combatant.childScene.GetNodeOrNull<Sprite2D>("Sprite2D") is Sprite2D sprite2) sprite2.FlipH = false;
-        }
+        
         // If within attack range, transition to AttackState
         if (target != null && CombatRangeUtility.IsTargetInAttackRange(combatant, target))
         {

@@ -14,6 +14,8 @@ public partial class RunSetupScreen : CanvasLayer
         RunState runState = GetNode<RunState>("/root/RunState");
 
         if(runState.HasUpgrade("kit_1")) kitOptionButton.SetItemDisabled(1, false);
+        if(runState.HasUpgrade("kit_2")) kitOptionButton.SetItemDisabled(2, false);
+        if(runState.HasUpgrade("kit_3")) kitOptionButton.SetItemDisabled(3, false);
 
         startButton.Pressed += () => {
             runState.kitId = kitOptionButton.Selected;

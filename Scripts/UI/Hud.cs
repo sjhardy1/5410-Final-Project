@@ -94,17 +94,13 @@ public partial class Hud : CanvasLayer
 			woodLabel.Text = $"Wood: {wood}";
 		}
 	}
-	private void UpdateTimer(float downtimeTimeRemaining, float raidTimeElapsed)
+	private void UpdateTimer(float downtimeTimeRemaining)
 	{
 		if (timerLabel != null)
 		{
 			if (runState.Phase == RunPhase.Downtime)
 			{
 				timerLabel.Text = $"Downtime: {Mathf.CeilToInt(downtimeTimeRemaining)}s";
-			}
-			else if (runState.Phase == RunPhase.Raid)
-			{
-				timerLabel.Text = $"Raid Time: {Mathf.CeilToInt(raidTimeElapsed)}s";
 			}
 		}
 	}

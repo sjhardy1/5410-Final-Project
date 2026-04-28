@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=9 format=3 uid="uid://du8dfb4lj3run"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_et858"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_sbp2e"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="3_io02b"]
+[ext_resource type="PackedScene" uid="uid://c2373t6v7d4bc" path="res://Scenes/Enemies/BlackMage.tscn" id="4_fgjtc"]
+[ext_resource type="Script" uid="uid://vjqfi3wgfrst" path="res://Scripts/Resources/EnemyDefinition.cs" id="5_qyydx"]
+
+[sub_resource type="Resource" id="Resource_b54ul"]
+script = ExtResource("1_et858")
+Id = "black_mage"
+DisplayName = "Black Mage"
+Description = "Shoot magical bolts"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_x6r8n"]
+script = ExtResource("2_sbp2e")
+MaxHealth = 80.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_7grly"]
+script = ExtResource("3_io02b")
+AttackDamage = 40.0
+AttackRange = 5.0
+AttackCooldown = 1.2
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("5_qyydx")
+CoreAttributes = SubResource("Resource_b54ul")
+DefensiveAttributes = SubResource("Resource_x6r8n")
+OffensiveAttributes = SubResource("Resource_7grly")
+Value = 15
+minimumWave = 3
+Scene = ExtResource("4_fgjtc")

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=4 uid="uid://vsan2ucs3xqj"]
+
+[ext_resource type="TileSet" uid="uid://cl8l4wvubm2hm" path="res://Resources/Tilesets/Farm.tres" id="1_bnif4"]
+[ext_resource type="Script" uid="uid://bdtaosq7yhcy7" path="res://Scripts/Placement/GridPlaceable.cs" id="1_br8w7"]
+
+[node name="Workshop" type="Node2D"]
+script = ExtResource("1_br8w7")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD/////BAAAAAEAAAD//wAABAAAAAIAAAAAAP//BAABAAEAAAAAAAAABAABAAIAAAD///7/BAAAAAAAAAAAAP7/BAABAAAAAAA=")
+tile_set = ExtResource("1_bnif4")

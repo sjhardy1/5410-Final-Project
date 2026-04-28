@@ -46,7 +46,7 @@ public partial class GridPlaceable : Node2D
 
     public override void _Input(InputEvent @event)
     {
-        if(storage || placing) return;
+        if(storage || placing || GetNode<RunState>("/root/RunState").Phase != RunPhase.Downtime) return;
         if (@event is InputEventMouseButton mouseButton)
         {
             if (mouseButton.ButtonIndex == MouseButton.Left)
@@ -87,7 +87,7 @@ public partial class GridPlaceable : Node2D
 
     public override void _Process(double delta)
     {
-        if(storage || placing) return;
+        if(storage || placing || GetNode<RunState>("/root/RunState").Phase != RunPhase.Downtime) return;
 
         // Only accumulate hold time if mouse is pressed and hovering
         if (isMousePressed && isMouseHovering && !holdAlreadyEmitted)

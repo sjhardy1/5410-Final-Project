@@ -119,7 +119,7 @@ public partial class RaidController : Node2D
             Array<EnemyDefinition> affordableEnemies = new Array<EnemyDefinition>();
             foreach (EnemyDefinition enemy in enemies)
             {
-                if (enemy.Value <= wavePower)
+                if (enemy.Value <= wavePower && enemy.minimumWave <= wave)
                 {
                     affordableEnemies.Add(enemy);
                 }
@@ -146,6 +146,10 @@ public partial class RaidController : Node2D
             {
                 combatant.OffensiveAttributes.AttackDamage += 10;
                 combatant.moveSpeed += 25;
+            }
+            if(buffer.def.CoreAttributes.Id == "workshop")
+            {
+                combatant.OffensiveAttributes.AttackCooldown = Mathf.Pow(combatant.OffensiveAttributes.AttackCooldown * 5, 0.8f) / 5;
             }
         }
         runState.ActiveCombatants.Add(combatant);

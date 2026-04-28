@@ -42,8 +42,6 @@ public partial class GameRoot : Node2D
 
 		runState = GetNode<RunState>("/root/RunState");
 		signalBus = GetNode<SignalBus>("/root/SignalBus");
-		maxWave = runState.difficulty * 2 + 6;
-		hud.Initialize(maxWave);
 
 		recruitButton = hud.GetNode<Button>("Control/RecruitButton");
 		recruitButton.Pressed += OnRecruitButtonPressed;
@@ -63,9 +61,12 @@ public partial class GameRoot : Node2D
 		GameManager gameManager = GetNode<GameManager>("/root/GameManager");
 		if (gameManager.ConsumeLoadSavedRunOnGameRoot() && TryLoadSavedRun())
 		{
-			return;
+
+		} else {
+			InitializeNewRun();
 		}
-		InitializeNewRun();
+		maxWave = runState.difficulty * 2 + 6;
+		hud.Initialize(maxWave);
 	}
 	public override void _ExitTree()
 	{
@@ -103,7 +104,7 @@ public partial class GameRoot : Node2D
 			PendingLoot pendingLoot = (PendingLoot)lootQueue.Dequeue();
 			MarkScreenAsBusy();
 			choiceScreen.Show();
-			choiceScreen.GenerateCards(database, pendingLoot.num, pendingLoot.lootType, runState.Wave);
+			choiceScreen.GenerateCards(database, pendingLoot.num, pendingLoot.lootType);
 		}
 	}
 	private void MarkScreenAsBusy()
@@ -272,8 +273,15 @@ public partial class GameRoot : Node2D
 				break;
 			case 1:
 				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("sheep_farm") as PlaceableDefinition));
-				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("sheep_farm") as PlaceableDefinition));
 				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("archer") as PlaceableDefinition));
+				break;
+			case 2:
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("lumber_mill") as PlaceableDefinition));
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("sharpshooter") as PlaceableDefinition));
+				break;
+			case 3:
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("workshop") as PlaceableDefinition));
+				runState.StoredPlaceables.Add(InstantiatePlaceable(database.GetLootById("bulwark") as PlaceableDefinition));
 				break;
 			default:
 				break;

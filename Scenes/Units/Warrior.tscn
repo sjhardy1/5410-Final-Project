@@ -94,7 +94,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -156,4 +156,4 @@ script = ExtResource("1_wxa1f")
 sprite_frames = SubResource("SpriteFrames_ouo20")
 animation = &"attack"
 autoplay = "default"
-frame_progress = 0.13627662
+frame_progress = 0.86500597

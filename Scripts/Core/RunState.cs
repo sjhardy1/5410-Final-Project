@@ -23,7 +23,7 @@ public partial class RunState : Node
     public delegate void WaveChangedEventHandler(int wave);
 
     [Signal]
-    public delegate void TimerChangedEventHandler(float downtimeTimeRemaining, float raidTimeElapsed);
+    public delegate void TimerChangedEventHandler(float downtimeTimeRemaining);
 
     [Export]
     public float defaultDowntimeSeconds = 180f;
@@ -40,13 +40,10 @@ public partial class RunState : Node
     public Array LoadedStoredPlaceablesData { get; private set; } = new Array();
     public int Wave { get; private set; } = 1;
     public float DowntimeTimeRemaining { get; private set; }
-    public float RaidTimeElapsed { get; private set; }
     public int pendingConstruction = 0;
     public int kitId = 0;
     public int difficulty = 0;
     public Dictionary<string, Variant> PurchasedUpgrades { get; private set; } = new Dictionary<string, Variant>();
-
-    public SignalBus signalBus;
 
     public override void _Ready()
     {
@@ -60,17 +57,13 @@ public partial class RunState : Node
         if (Phase == RunPhase.Downtime)
         {
             DowntimeTimeRemaining = Mathf.Max(0f, DowntimeTimeRemaining - dt);
-            EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+            EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining);
 
             if (DowntimeTimeRemaining <= 0f)
             {
                 SetPhase(RunPhase.Raid);
+                GetNode<SignalBus>("/root/SignalBus").PublishRaidBegin();
             }
-        }
-        else if (Phase == RunPhase.Raid)
-        {
-            RaidTimeElapsed += dt;
-            EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
         }
     }
 
@@ -78,9 +71,8 @@ public partial class RunState : Node
     {
         float duration = durationSeconds > 0f ? durationSeconds : defaultDowntimeSeconds;
         DowntimeTimeRemaining = duration;
-        RaidTimeElapsed = 0f;
         SetPhase(RunPhase.Downtime);
-        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining);
     }
 
     public void StartRaid()
@@ -165,7 +157,6 @@ public partial class RunState : Node
         Food = 100 + (GetUpgradeLevel("extra_food") * 20);
         Wood = 40 + (GetUpgradeLevel("extra_wood") * 10);
         Wave = 1;
-        RaidTimeElapsed = 0f;
         DowntimeTimeRemaining = defaultDowntimeSeconds;
         pendingConstruction = 0;
         ActivePlaceables.Clear();
@@ -178,20 +169,20 @@ public partial class RunState : Node
         EmitSignal(nameof(PhaseChanged), (int)RunPhase.Downtime, (int)RunPhase.Downtime);
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
         EmitSignal(nameof(WaveChanged), Wave);
-        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining);
     }
 
     public Dictionary<string, Variant> ToSaveData(GridPlaceable activePlaceable = null)
     {
         return new Dictionary<string, Variant>
         {
-            { "phase", (int)Phase },
             { "current_round", Wave },
+            { "difficulty", difficulty},
             { "wave", Wave },
             { "food", Food },
             { "wood", Wood },
             { "downtime_remaining", DowntimeTimeRemaining },
-            { "raid_elapsed", RaidTimeElapsed },
+            { "pending_construction", pendingConstruction },
             { "active_placeables", SerializePlaceables(ActivePlaceables, true) },
             { "stored_placeables", SerializePlaceables(StoredPlaceables, false, activePlaceable) }
         };
@@ -209,21 +200,22 @@ public partial class RunState : Node
         StoredPlaceables.Clear();
         ActiveCombatants.Clear();
         ActiveObjects.Clear();
-        pendingConstruction = 0;
+        Phase = RunPhase.Downtime;
 
-        Phase = data.ContainsKey("phase") ? (RunPhase)(int)data["phase"] : RunPhase.Downtime;
+        pendingConstruction = data.ContainsKey("pending_construction") ? (int)data["pending_construction"] : 0;
         Food = data.ContainsKey("food") ? (int)data["food"] : 200;
         Wood = data.ContainsKey("wood") ? (int)data["wood"] : 100;
         Wave = data.ContainsKey("current_round") ? (int)data["current_round"] : data.ContainsKey("wave") ? (int)data["wave"] : 1;
+        difficulty = data.ContainsKey("difficulty") ? (int)data["difficulty"] : 0;
+        GD.Print($"Loaded run with difficulty {difficulty} and wave {Wave}");
         DowntimeTimeRemaining = data.ContainsKey("downtime_remaining") ? (float)data["downtime_remaining"] : defaultDowntimeSeconds;
-        RaidTimeElapsed = data.ContainsKey("raid_elapsed") ? (float)data["raid_elapsed"] : 0f;
         LoadedActivePlaceablesData = ReadPlaceableArray(data, "active_placeables");
         LoadedStoredPlaceablesData = ReadPlaceableArray(data, "stored_placeables");
 
         EmitSignal(nameof(PhaseChanged), (int)Phase, (int)Phase);
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
         EmitSignal(nameof(WaveChanged), Wave);
-        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining, RaidTimeElapsed);
+        EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining);
     }
 
     private static Array SerializePlaceables(Collections.List<GridPlaceable> placeables, bool includeAnchorCell, GridPlaceable extraPlaceable = null)
@@ -380,8 +372,8 @@ public partial class RunState : Node
             "extra_food" => "Extra Starting Food",
             "extra_wood" => "Extra Starting Wood",
             "kit_1" => "Shepherd's Kit",
-            "kit_2" => "Starting Kit 2",
-            "kit_3" => "Starting Kit 3",
+            "kit_2" => "Hunter's Kit",
+            "kit_3" => "Giant's Kit",
             _ => "Unknown Upgrade"
         };
     }

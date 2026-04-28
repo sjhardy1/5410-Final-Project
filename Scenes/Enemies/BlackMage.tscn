@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2373t6v7d4bc"]
+
+[ext_resource type="TileSet" uid="uid://wqrqwor2fpo7" path="res://Resources/Tilesets/Monsters.tres" id="1_41pwt"]
+
+[node name="BlackMage" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-41, -41)
+scale = Vector2(2.5, 2.5)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 4, 0, 0, 0)
+tile_set = ExtResource("1_41pwt")

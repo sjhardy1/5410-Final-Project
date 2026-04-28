@@ -44,4 +44,5 @@ Footprint = SubResource("Resource_4ydvj")
 DefensiveAttributes = SubResource("Resource_1c043")
 OffensiveAttributes = SubResource("Resource_lvyvw")
 moveSpeed = 70.0
+UpkeepFoodPerRound = 10
 Scene = ExtResource("6_prts8")

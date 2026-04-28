@@ -98,15 +98,15 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j1ujw")
 }, {
-"duration": 2.0,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_uh63l")
 }, {
-"duration": 2.0,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_wsexe")
 }],
 "loop": true,
 "name": &"attack",
-"speed": 7.5
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -129,7 +129,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 5.0
+"speed": 7.5
 }, {
 "frames": [{
 "duration": 1.0,
@@ -156,4 +156,4 @@ script = ExtResource("1_mxb4a")
 sprite_frames = SubResource("SpriteFrames_2dd5l")
 animation = &"attack"
 autoplay = "default"
-frame_progress = 0.7814139
+frame_progress = 0.674481

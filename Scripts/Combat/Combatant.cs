@@ -5,8 +5,9 @@ public partial class Combatant : RigidBody2D, ITargetable
 {
     private const float TileSize = 64f;
     private const float CollisionRadius = TileSize / 2.5f;
-    private PackedScene SlashScene = GD.Load<PackedScene>("res://Scenes/Enemies/Slash.tscn");
-    private PackedScene ArrowScene = GD.Load<PackedScene>("res://Scenes/Units/Arrow.tscn");
+    private PackedScene SlashScene = GD.Load<PackedScene>("res://Scenes/FX/Slash.tscn");
+    private PackedScene ArrowScene = GD.Load<PackedScene>("res://Scenes/FX/Arrow.tscn");
+    private PackedScene DarkOrbScene = GD.Load<PackedScene>("res://Scenes/FX/DarkOrb.tscn");
     public float attackCooldownTimer = 0f;
     public CoreAttributes CoreAttributes { get; set; }
     public DefensiveAttributes DefensiveAttributes { get; set; }
@@ -99,28 +100,9 @@ public partial class Combatant : RigidBody2D, ITargetable
     }
     public void PerformAttack(ITargetable target)
     {
-        Vector2 direction = Position.DirectionTo(target.Position);
-        float distance = Position.DistanceTo(target.Position);
-        float wait = 0.25f;
-        if(faction == Faction.Enemy)
-        {
-            AnimatedSprite2D slashInstance = SlashScene.Instantiate<AnimatedSprite2D>();
-            AddChild(slashInstance);
-            slashInstance.AnimationLooped += slashInstance.QueueFree;
-            slashInstance.Rotation += direction.Angle();
-            slashInstance.Position = direction * (distance - 64);
-        }
-        if(CoreAttributes.Id == "archer")
-        {
-            Arrow arrowInstance = ArrowScene.Instantiate<Arrow>();
-            AddChild(arrowInstance);
-            float speed = 2000f;
-            float liveTime = distance / speed;
-            wait = liveTime;
-            arrowInstance.Initialize(target.Position, speed, liveTime);
-        }
+        
         Timer timer = new Timer();
-        timer.WaitTime = wait; // Delay the damage application to sync with
+        timer.WaitTime = DoAttackAnimation(target); // Delay the damage application to sync with animation
         timer.Autostart = true;
         AddChild(timer);
         timer.Timeout += () => {
@@ -132,11 +114,60 @@ public partial class Combatant : RigidBody2D, ITargetable
             timer.QueueFree();
         };
     }
+    public float DoAttackAnimation(ITargetable target)
+    {
+        Vector2 direction = Position.DirectionTo(target.Position);
+        float distance = Position.DistanceTo(target.Position);
+        float wait = 0.25f;
+        if(CoreAttributes.Id == "archer")
+        {
+            return CreateProjectileAnimation(1500f, 0.5f, distance, target.Position, ArrowScene);
+        }
+        if(CoreAttributes.Id == "sharpshooter")
+        {
+            return CreateProjectileAnimation(3000f, 1f, distance, target.Position, ArrowScene);
+        }
+        if(CoreAttributes.Id == "black_mage")
+        {
+            return CreateProjectileAnimation(400f, 0f, distance, target.Position, DarkOrbScene);
+        }
+        if(faction == Faction.Enemy)
+        {
+            AnimatedSprite2D slashInstance = SlashScene.Instantiate<AnimatedSprite2D>();
+            AddChild(slashInstance);
+            slashInstance.AnimationLooped += slashInstance.QueueFree;
+            slashInstance.Rotation += direction.Angle();
+            slashInstance.Position = direction * (distance - 64);
+        }
+        return wait;
+    }
+    private float CreateProjectileAnimation(float speed, float chargeDelay, float distance, Vector2 targetPosition, PackedScene projectileScene)
+    {
+        Projectile projectileInstance = projectileScene.Instantiate<Projectile>();
+        float liveTime = distance / speed;
+        projectileInstance.Initialize(targetPosition, speed, liveTime);
+        if(chargeDelay > 0f)
+        {
+            Timer timer = new Timer();
+            timer.WaitTime = chargeDelay;
+            timer.Autostart = true;
+            timer.Timeout += () => {
+                GD.Print("Creating delayed projectile towards " + targetPosition);
+                AddChild(projectileInstance);
+                timer.QueueFree();
+            };
+            AddChild(timer);
+        } else
+        {
+            AddChild(projectileInstance);
+        }
+        return liveTime + chargeDelay;
+    }
     public void ApplyAttack(ITargetable target)
     {
         if(!target.IsInsideTree()) return;
         if(target is Combatant combatant){
-            combatant.ApplyCentralImpulse(Position.DirectionTo(target.Position) * 256f * OffensiveAttributes.KnockbackCoefficient); 
+            combatant.ApplyCentralImpulse(Position.DirectionTo(target.Position) * 256f * OffensiveAttributes.KnockbackCoefficient / target.DefensiveAttributes.WeightCoefficient); 
         }
         float damage = OffensiveAttributes.AttackDamage - target.DefensiveAttributes.Armor / 2;
         if (damage < 0) damage = 0; // Prevent healing from negative damage
@@ -144,7 +175,7 @@ public partial class Combatant : RigidBody2D, ITargetable
     }
     public void TakeDamage(float damage)
     {
-        DefensiveAttributes.Health -= damage;
+        DefensiveAttributes.Health -= damage * (1f - DefensiveAttributes.DamageReductionPercent / 100f);
         if (DefensiveAttributes.Health <= 0)
         {
             Die();

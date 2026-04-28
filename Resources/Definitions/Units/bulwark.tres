@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://dslpfm6ok6m14"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_jupre"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_eqp1f"]
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="2_y2ia8"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="3_gouyu"]
+[ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="4_eqp1f"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="5_83bga"]
+[ext_resource type="PackedScene" uid="uid://ba78p3pdy3wdi" path="res://Scenes/Units/Bulwark.tscn" id="6_p4gxa"]
+
+[sub_resource type="Resource" id="Resource_83bga"]
+script = ExtResource("1_jupre")
+Id = "bulwark"
+DisplayName = "Bulwark"
+Description = "Not as strong as a warrior, but this guy is leagues ahead when it comes to endurance."
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_bmc5n"]
+script = ExtResource("2_eqp1f")
+MaxHealth = 250.0
+Armor = 30.0
+DamageReductionPercent = 25.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_p4gxa"]
+script = ExtResource("2_y2ia8")
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
+
+[sub_resource type="Resource" id="Resource_7gy73"]
+script = ExtResource("3_gouyu")
+Rarity = 1
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[sub_resource type="Resource" id="Resource_xum3j"]
+script = ExtResource("5_83bga")
+AttackDamage = 30.0
+AttackRange = 2.0
+AttackCooldown = 1.5
+KnockbackCoefficient = 1.5
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("4_eqp1f")
+CoreAttributes = SubResource("Resource_83bga")
+LootAttributes = SubResource("Resource_7gy73")
+Footprint = SubResource("Resource_p4gxa")
+DefensiveAttributes = SubResource("Resource_bmc5n")
+OffensiveAttributes = SubResource("Resource_xum3j")
+moveSpeed = 85.0
+UpkeepFoodPerRound = 15
+Scene = ExtResource("6_p4gxa")

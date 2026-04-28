@@ -13,12 +13,19 @@ public partial class AttackState : ICombatantState
 
     public void Enter()
     {
-        combatant.LinearVelocity = Vector2.Zero;
+        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite)
+        {
+            sprite.AnimationLooped += OnAttackAnimationLooped;
+        }
     }
 
     public void Exit()
     {
         target.Defeated -= OnTargetDefeated;
+        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite)
+        {
+            sprite.AnimationLooped -= OnAttackAnimationLooped;
+        }
     }
 
     public void Process(double delta)
@@ -30,7 +37,9 @@ public partial class AttackState : ICombatantState
         }
         if (combatant.attackCooldownTimer >= combatant.OffensiveAttributes.AttackCooldown)
         {
-            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("attack");
+            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) {
+                sprite.Play("attack");
+            }
             combatant.PerformAttack(target);
             combatant.attackCooldownTimer = 0f; // Reset timer for next attack
         }
@@ -41,11 +50,16 @@ public partial class AttackState : ICombatantState
             return;
         }
     }
+    private void OnAttackAnimationLooped()
+    {
+        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite 
+        && sprite.Animation == "attack") {
+            sprite.Play("default");
+        }
+    }
 
     private void OnTargetDefeated()
     {
-        
-        GD.Print(combatant.CoreAttributes.DisplayName + "#" + combatant.uid + " defeated " + target.CoreAttributes.DisplayName + "#" + target.uid + ", now changing to idle state.");
         combatant.ChangeState(new IdleState(combatant));
     }
 }

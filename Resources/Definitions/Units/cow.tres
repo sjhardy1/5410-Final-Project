@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://jcb4yf0nudn"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_glrop"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_7x7n8"]
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="3_dbgsl"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_0hws4"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="5_l20q7"]
+[ext_resource type="PackedScene" uid="uid://cs12xyugpultu" path="res://Scenes/Units/Cow.tscn" id="6_vypby"]
+[ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="7_xbqn8"]
+
+[sub_resource type="Resource" id="Resource_q24i0"]
+script = ExtResource("1_glrop")
+Id = "cow"
+DisplayName = "Cow"
+Description = "A legendary beast revered by Hindus and appreciated by many others."
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_ihg17"]
+script = ExtResource("2_7x7n8")
+MaxHealth = 300.0
+DamageReductionPercent = 50.0
+WeightCoefficient = 3.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_l0k5a"]
+script = ExtResource("3_dbgsl")
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
+
+[sub_resource type="Resource" id="Resource_b2j2f"]
+script = ExtResource("4_0hws4")
+Rarity = 4
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[sub_resource type="Resource" id="Resource_uk2yi"]
+script = ExtResource("5_l20q7")
+AttackDamage = 150.0
+AttackRange = 1.5
+KnockbackCoefficient = 10.0
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("7_xbqn8")
+CoreAttributes = SubResource("Resource_q24i0")
+LootAttributes = SubResource("Resource_b2j2f")
+Footprint = SubResource("Resource_l0k5a")
+DefensiveAttributes = SubResource("Resource_ihg17")
+OffensiveAttributes = SubResource("Resource_uk2yi")
+moveSpeed = 150.0
+UpkeepFoodPerRound = 25
+Scene = ExtResource("6_vypby")

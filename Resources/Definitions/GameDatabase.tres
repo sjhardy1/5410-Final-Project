@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GameDatabase" load_steps=15 format=3 uid="uid://cgjspbxyjg1xa"]
+[gd_resource type="Resource" script_class="GameDatabase" load_steps=20 format=3 uid="uid://cgjspbxyjg1xa"]
 
 [ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="1_rw3jd"]
 [ext_resource type="Resource" uid="uid://bnfb0jq4ey6em" path="res://Resources/Definitions/Buildings/sheep_farm.tres" id="2_p25vr"]
@@ -11,12 +11,17 @@
 [ext_resource type="Resource" uid="uid://ket7bfjmwaiw" path="res://Resources/Definitions/Units/warrior.tres" id="6_5kasm"]
 [ext_resource type="Resource" uid="uid://bn0d5d0750vdm" path="res://Resources/Definitions/Buildings/town_center.tres" id="6_o6x6v"]
 [ext_resource type="Resource" uid="uid://c75kmbkhbr14m" path="res://Resources/Definitions/Enemies/goblin.tres" id="6_y00kp"]
+[ext_resource type="Resource" uid="uid://c0a8ebyaad4w0" path="res://Resources/Definitions/Buildings/workshop.tres" id="7_kvnhk"]
 [ext_resource type="Resource" uid="uid://cx0dncy3d5l2d" path="res://Resources/Definitions/Enemies/troll.tres" id="7_l4iuq"]
 [ext_resource type="Resource" uid="uid://8a73hb3vr8mi" path="res://Resources/Definitions/Enemies/dread_knight.tres" id="10_odi34"]
+[ext_resource type="Resource" uid="uid://du8dfb4lj3run" path="res://Resources/Definitions/Enemies/black_mage.tres" id="11_2x5vv"]
 [ext_resource type="Resource" uid="uid://b0vlkppnh2e8s" path="res://Resources/Definitions/Units/archer.tres" id="13_2x5vv"]
+[ext_resource type="Resource" uid="uid://jcb4yf0nudn" path="res://Resources/Definitions/Units/cow.tres" id="15_4qm2c"]
+[ext_resource type="Resource" uid="uid://dslpfm6ok6m14" path="res://Resources/Definitions/Units/bulwark.tres" id="16_87tup"]
+[ext_resource type="Resource" uid="uid://lghtamxy85oe" path="res://Resources/Definitions/Units/sharpshooter.tres" id="17_87tup"]
 
 [resource]
 script = ExtResource("5_y00kp")
-Buildings = Array[ExtResource("1_rw3jd")]([ExtResource("2_p25vr"), ExtResource("3_5kasm"), ExtResource("4_p25vr"), ExtResource("5_st5le"), ExtResource("6_o6x6v")])
-Units = Array[ExtResource("4_rj1ip")]([ExtResource("6_5kasm"), ExtResource("13_2x5vv")])
-Enemies = Array[ExtResource("5_rj1ip")]([ExtResource("6_y00kp"), ExtResource("7_l4iuq"), ExtResource("10_odi34")])
+Buildings = Array[ExtResource("1_rw3jd")]([ExtResource("2_p25vr"), ExtResource("3_5kasm"), ExtResource("4_p25vr"), ExtResource("5_st5le"), ExtResource("6_o6x6v"), ExtResource("7_kvnhk")])
+Units = Array[ExtResource("4_rj1ip")]([ExtResource("6_5kasm"), ExtResource("13_2x5vv"), ExtResource("15_4qm2c"), ExtResource("16_87tup"), ExtResource("17_87tup")])
+Enemies = Array[ExtResource("5_rj1ip")]([ExtResource("6_y00kp"), ExtResource("7_l4iuq"), ExtResource("10_odi34"), ExtResource("11_2x5vv")])

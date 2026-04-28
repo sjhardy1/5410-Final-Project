@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Arrow : Sprite2D
+public partial class Projectile : Node2D
 {
 	private Vector2 targetGlobalPosition;
 	private float speed = 400f;

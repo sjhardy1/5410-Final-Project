@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=3 uid="uid://cs12xyugpultu"]
+
+[ext_resource type="Script" uid="uid://bdtaosq7yhcy7" path="res://Scripts/Placement/GridPlaceable.cs" id="1_nk0b2"]
+[ext_resource type="Texture2D" uid="uid://cuwfbgfkuvy3r" path="res://Assets/Sprout Lands - Sprites - Basic pack/Characters/Free Cow Sprites.png" id="2_1sis7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqxjr"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tjl37"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2afdf"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kwx7o"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_di7p6"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4icm"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxdpf"]
+atlas = ExtResource("2_1sis7")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_shn0q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqxjr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tjl37")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2afdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kwx7o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_di7p6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4icm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dxdpf")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[node name="Cow" type="Node2D"]
+script = ExtResource("1_nk0b2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -20)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_shn0q")
+autoplay = "default"
+frame_progress = 0.8476048

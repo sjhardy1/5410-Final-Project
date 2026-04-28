@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=10 format=3 uid="uid://c0a8ebyaad4w0"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_ut8xp"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_q8ne6"]
+[ext_resource type="Resource" uid="uid://b5xfjdhdl63u3" path="res://Resources/Footprints/2x2.tres" id="3_hnveq"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_q5lxv"]
+[ext_resource type="PackedScene" uid="uid://vsan2ucs3xqj" path="res://Scenes/Buildings/Workshop.tscn" id="5_el7ht"]
+[ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="6_x3ukf"]
+
+[sub_resource type="Resource" id="Resource_f12lx"]
+script = ExtResource("1_ut8xp")
+Id = "workshop"
+DisplayName = "Workshop"
+Description = "Produces 10 wood per round. Increases all units' attack speed"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_2ctmw"]
+script = ExtResource("2_q8ne6")
+MaxHealth = 500.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_h4sq3"]
+script = ExtResource("4_q5lxv")
+UnlockWave = 3
+Rarity = 1
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[resource]
+script = ExtResource("6_x3ukf")
+CoreAttributes = SubResource("Resource_f12lx")
+LootAttributes = SubResource("Resource_h4sq3")
+Footprint = ExtResource("3_hnveq")
+DefensiveAttributes = SubResource("Resource_2ctmw")
+UpkeepFoodPerRound = 3
+UpkeepWoodPerRound = 3
+Scene = ExtResource("5_el7ht")
+ProductionWoodPerRound = 10

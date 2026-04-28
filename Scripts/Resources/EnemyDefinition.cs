@@ -9,5 +9,6 @@ public partial class EnemyDefinition : Resource
     [Export] public OffensiveAttributes OffensiveAttributes { get; set; }
     [Export] public float moveSpeed { get; set; } = 100;
     [Export] public int Value { get; set; }
+    [Export] public int minimumWave { get; set; } = 1;
     [Export] public PackedScene Scene { get; set; }
 }

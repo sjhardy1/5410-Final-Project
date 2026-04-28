@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://lghtamxy85oe"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_h5gf3"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_hiege"]
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="3_kn20i"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_femqd"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="5_nlep2"]
+[ext_resource type="PackedScene" uid="uid://fqynxts12dag" path="res://Scenes/Units/Sharpshooter.tscn" id="6_hiege"]
+[ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="6_ky2n4"]
+
+[sub_resource type="Resource" id="Resource_x2je7"]
+script = ExtResource("1_h5gf3")
+Id = "sharpshooter"
+DisplayName = "Sharpshooter"
+Description = "Shooter slower than an archer, but can see farther and hit harder."
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_jlvit"]
+script = ExtResource("2_hiege")
+MaxHealth = 100.0
+Armor = 10.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_6wbcx"]
+script = ExtResource("3_kn20i")
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
+
+[sub_resource type="Resource" id="Resource_57hkr"]
+script = ExtResource("4_femqd")
+UnlockWave = 3
+Rarity = 1
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[sub_resource type="Resource" id="Resource_kqwt4"]
+script = ExtResource("5_nlep2")
+AttackDamage = 60.0
+AttackRange = 10.0
+AttackCooldown = 4.0
+KnockbackCoefficient = 1.5
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("6_ky2n4")
+CoreAttributes = SubResource("Resource_x2je7")
+LootAttributes = SubResource("Resource_57hkr")
+Footprint = SubResource("Resource_6wbcx")
+DefensiveAttributes = SubResource("Resource_jlvit")
+OffensiveAttributes = SubResource("Resource_kqwt4")
+moveSpeed = 85.0
+UpkeepFoodPerRound = 15
+Scene = ExtResource("6_hiege")

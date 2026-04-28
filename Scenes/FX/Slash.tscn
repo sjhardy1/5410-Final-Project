@@ -85,4 +85,4 @@ rotation = 1.5707964
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_mtxob")
 autoplay = "default"
-frame_progress = 0.41278324
+frame_progress = 0.9814934
