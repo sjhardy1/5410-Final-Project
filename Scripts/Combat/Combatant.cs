@@ -23,11 +23,12 @@ public partial class Combatant : RigidBody2D, ITargetable
     //[Signal] public delegate void DefeatedSignalEventHandler();
     public event Action Defeated;
 
+    public float AttackSpeedMultipler = 1.0f;
 
     public void Process(double delta)
     {
         LinearVelocity *= 0.95f; // Apply friction
-        ZIndex = (int)(Position.Y / TileSize) + 10;
+        ZIndex = (int)(GlobalPosition.Y / TileSize) + 10;
         attackCooldownTimer += (float)delta;
         currentState.Process(delta);
     }   
@@ -39,7 +40,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         {
             DefensiveAttributes.Health = DefensiveAttributes.MaxHealth;
         }
-        OffensiveAttributes = definition.OffensiveAttributes;
+        OffensiveAttributes = definition.OffensiveAttributes.Duplicate() as OffensiveAttributes;
         Scene = definition.Scene;
         footprint = definition.Footprint;
         faction = Faction.Ally;
@@ -54,7 +55,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         {
             DefensiveAttributes.Health = DefensiveAttributes.MaxHealth;
         }
-        OffensiveAttributes = definition.OffensiveAttributes;
+        OffensiveAttributes = definition.OffensiveAttributes.Duplicate() as OffensiveAttributes;
         Scene = definition.Scene;
         Position = position;
         faction = Faction.Enemy;
@@ -121,11 +122,11 @@ public partial class Combatant : RigidBody2D, ITargetable
         float wait = 0.25f;
         if(CoreAttributes.Id == "archer")
         {
-            return CreateProjectileAnimation(1500f, 0.5f, distance, target.Position, "arrow");
+            return CreateProjectileAnimation(1500f, 0.5f / AttackSpeedMultipler, distance, target.Position, "arrow");
         }
         if(CoreAttributes.Id == "sharpshooter")
         {
-            return CreateProjectileAnimation(3000f, 1f, distance, target.Position, "arrow");
+            return CreateProjectileAnimation(3000f, 1f / AttackSpeedMultipler, distance, target.Position, "arrow");
         }
         if(CoreAttributes.Id == "black_mage")
         {
@@ -208,7 +209,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         float closestDistance = float.MaxValue;
         foreach (Combatant combatant in runState.ActiveCombatants)
         {
-            if (combatant.faction != this.faction)
+            if (combatant.faction != this.faction && runState.gridBounds.HasPoint(combatant.Position / TileSize))
             {
                 float distance = Position.DistanceTo(combatant.Position);
                 if (distance < closestDistance)
@@ -220,7 +221,7 @@ public partial class Combatant : RigidBody2D, ITargetable
         }
         foreach (CombatObject building in runState.ActiveObjects)
         {
-            if (building.faction != this.faction)
+            if (building.faction != this.faction && runState.gridBounds.HasPoint(building.Position / TileSize))
             {
                 float distance = Position.DistanceTo(building.Position);
                 if (distance < closestDistance)

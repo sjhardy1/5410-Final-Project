@@ -9,11 +9,13 @@
 script = ExtResource("1_u8tjb")
 
 [node name="Fence" type="TileMapLayer" parent="."]
+use_parent_material = true
 scale = Vector2(2, 2)
 tile_map_data = PackedByteArray("AAD+//7/AAABAAAAAAD+////AAAAAAEAAAD+/wAAAAAAAAEAAAD+/wEAAAAAAAEAAAD+/wIAAAAAAAEAAAD+/wMAAAABAAIAAAD///7/AAADAAMAAAD//wMAAAACAAMAAAAAAAMAAAACAAMAAAABAAMAAAACAAMAAAACAAMAAAACAAMAAAADAAEAAAAAAAAAAAADAAIAAAAAAAEAAAADAAMAAAADAAIAAAA=")
 tile_set = ExtResource("1_dni65")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+use_parent_material = true
 position = Vector2(-10, -59)
 sprite_frames = ExtResource("2_u8tjb")
 animation = &"small1"
@@ -21,9 +23,11 @@ autoplay = "small1"
 frame_progress = 0.22329725
 
 [node name="House" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_map_data = PackedByteArray("AAABAP//AAABAAEAAAABAAAAAAABAAIAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAEAAAAAAAAAAAAAAAIAAAABAP7/AAABAAAAAAA=")
 tile_set = ExtResource("2_wu27x")
 
 [node name="Stump" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_map_data = PackedByteArray("AAAAAAIABAAFAAwAAAAAAAMABAAFAA0AAAAAAAQABAAFAA4AAAABAAIABAAGAAwAAAABAAMABAAGAA0AAAABAAQABAAGAA4AAAADAAMABAAFAAwAAAADAAQABAAFAA0AAAADAAUABAAFAA4AAAAEAAMABAAGAAwAAAAEAAQABAAGAA0AAAAEAAUABAAGAA4AAAA=")
 tile_set = ExtResource("1_dni65")

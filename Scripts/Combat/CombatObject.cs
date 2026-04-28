@@ -37,9 +37,11 @@ public partial class CombatObject : StaticBody2D, ITargetable
         AddFootprintCollisions(footprint);
 
         healthBar = new HealthBar();
-        healthBar.Position = new Vector2(0f, -40f);
+        healthBar.Position = new Vector2(32f, -60f);
         healthBar.SetAttributes(DefensiveAttributes);
         AddChild(healthBar);
+
+        ZIndex = (int)(GlobalPosition.Y / TileSize) + 10;
     }
     public override void _ExitTree()
     {

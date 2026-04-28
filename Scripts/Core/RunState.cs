@@ -27,6 +27,7 @@ public partial class RunState : Node
 
     [Export]
     public float defaultDowntimeSeconds = 180f;
+    [Export] public Rect2 gridBounds = new Rect2(-11, -10, 22, 20);
 
     public RunPhase Phase { get; private set; } = RunPhase.Downtime;
     public int Food { get; private set; } = 200;

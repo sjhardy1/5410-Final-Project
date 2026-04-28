@@ -24,7 +24,10 @@ public partial class ChaseState : ICombatantState
 
     public void Enter()
     {
-        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("run");
+        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) {
+            sprite.Play("run");
+            sprite.SpeedScale = 1f;
+        }
     }
 
     public void Exit()

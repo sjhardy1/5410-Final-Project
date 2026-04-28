@@ -101,21 +101,25 @@ animations = [{
 script = ExtResource("1_brwdu")
 
 [node name="House" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_map_data = PackedByteArray("AAABAP//AAABAAEAAAABAAAAAAABAAIAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAEAAAAAAAAAAAAAAAIAAAABAP7/AAABAAAAAAA=")
 tile_set = ExtResource("1_c1h6j")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
+use_parent_material = true
 scale = Vector2(2, 2)
 tile_map_data = PackedByteArray("AAAAAAMAAAACAAIAAAD+//7/AAABAAAAAAD+////AAAAAAEAAAD+/wAAAAAAAAEAAAD+/wEAAAAAAAEAAAD+/wIAAAAAAAEAAAD+/wMAAAABAAIAAAD///7/AAADAAMAAAD//wMAAAACAAIAAAABAAMAAAACAAIAAAACAAMAAAACAAIAAAADAAEAAAAAAAAAAAADAAIAAAAAAAEAAAADAAMAAAADAAIAAAA=")
 tile_set = ExtResource("2_brwdu")
 
 [node name="Sheep" type="AnimatedSprite2D" parent="."]
+use_parent_material = true
 position = Vector2(36, 66)
 sprite_frames = SubResource("SpriteFrames_wdg18")
 autoplay = "default"
 frame_progress = 0.5220789
 
 [node name="Sheep2" type="AnimatedSprite2D" parent="."]
+use_parent_material = true
 position = Vector2(-15, 24)
 sprite_frames = SubResource("SpriteFrames_wdg18")
 autoplay = "default"

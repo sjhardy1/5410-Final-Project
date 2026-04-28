@@ -32,7 +32,7 @@ public partial class HealthBar : Node2D
         {
             lastHealth = defensiveAttributes.Health;
             lastMaxHealth = defensiveAttributes.MaxHealth;
-            BarWidth = 5 * Mathf.Sqrt(lastMaxHealth); // Example scaling, can be adjusted
+            BarWidth = 5 * Mathf.Sqrt(lastMaxHealth);
             QueueRedraw();
         }
     }

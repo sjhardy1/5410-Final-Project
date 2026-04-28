@@ -153,7 +153,8 @@ animations = [{
 script = ExtResource("1_1wyhh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_axig4")
 animation = &"attack"
 autoplay = "default"
-frame_progress = 0.6632625
+frame_progress = 0.35384253

@@ -7,6 +7,7 @@ public partial class RaidController : Node2D
     private RunState runState;
     private SignalBus signalBus;
     [Export] public float spawnDelay = 1.0f;
+    private float tempSpawnDelay;
     private float spawnTimer = 0f;
     private Queue<Combatant> waveQueue;
     private int nextUid = 1;
@@ -53,12 +54,11 @@ public partial class RaidController : Node2D
         if (runState.Phase != RunPhase.Raid) return;
         // Spawn logic
         spawnTimer += (float)delta;
-        if (spawnTimer >= spawnDelay)
+        if (spawnTimer >= tempSpawnDelay)
         {
-            spawnTimer -= spawnDelay;
+            spawnTimer -= tempSpawnDelay;
             if (waveQueue != null && waveQueue.Count > 0)
             {
-                GD.Print("Spawning enemy, " + waveQueue.Count + " remaining in queue.");
                 Combatant nextEnemy = waveQueue.Dequeue();
                 nextEnemy.uid = nextUid++;
                 runState.ActiveCombatants.Add(nextEnemy);
@@ -126,9 +126,10 @@ public partial class RaidController : Node2D
             }
             if (affordableEnemies.Count == 0) break;
             EnemyDefinition chosenEnemy = affordableEnemies[GD.RandRange(0, affordableEnemies.Count - 1)];
-            queue.Enqueue(new Combatant(chosenEnemy, Vector2.One.Rotated(GD.Randf() * Mathf.Pi * 2) * 500));
+            queue.Enqueue(new Combatant(chosenEnemy, Vector2.One.Rotated(GD.Randf() * Mathf.Pi * 2) * 700));
             wavePower -= chosenEnemy.Value;
         }
+        tempSpawnDelay = spawnDelay * 5 / queue.Count;
         return queue;
     }
     public void PlaceUnit(GridPlaceable placeable)
@@ -149,7 +150,9 @@ public partial class RaidController : Node2D
             }
             if(buffer.def.CoreAttributes.Id == "workshop")
             {
-                combatant.OffensiveAttributes.AttackCooldown = Mathf.Pow(combatant.OffensiveAttributes.AttackCooldown * 5, 0.8f) / 5;
+                float newCooldown = Mathf.Pow(combatant.OffensiveAttributes.AttackCooldown * 5, 0.8f) / 5;
+                combatant.AttackSpeedMultipler *= combatant.OffensiveAttributes.AttackCooldown / newCooldown;
+                combatant.OffensiveAttributes.AttackCooldown = newCooldown;
             }
         }
         runState.ActiveCombatants.Add(combatant);

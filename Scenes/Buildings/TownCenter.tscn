@@ -7,5 +7,6 @@
 script = ExtResource("1_mni3f")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_map_data = PackedByteArray("AAD///7/AwAAAAEAAAD/////AwAAAAIAAAD//wAAAwAAAAMAAAD//wEAAwAAAAQAAAAAAP3/AwABAAAAAAAAAP7/AwABAAEAAAAAAP//AwABAAIAAAAAAAAAAwABAAMAAAAAAAEAAwABAAQAAAABAP7/AwACAAEAAAABAP//AwACAAIAAAABAAEAAwACAAQAAAABAAAAAwACAAMAAAA=")
 tile_set = ExtResource("1_88qrv")

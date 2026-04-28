@@ -153,8 +153,9 @@ animations = [{
 script = ExtResource("1_ktm3l")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+use_parent_material = true
 scale = Vector2(1.2, 1.2)
 sprite_frames = SubResource("SpriteFrames_q7gje")
 animation = &"attack"
 autoplay = "default"
-frame_progress = 0.7913533
+frame_progress = 0.021458667

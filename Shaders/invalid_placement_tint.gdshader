@@ -6,5 +6,5 @@ uniform float tint_strength = 0.65;
 void fragment() {
     vec4 tex = texture(TEXTURE, UV);
     vec3 blended = mix(tex.rgb, tint_color.rgb, clamp(tint_strength, 0.0, 1.0));
-    COLOR = vec4(0.5, 0.5, 0.5, tex.a);
+    COLOR = vec4(blended, tex.a);
 }

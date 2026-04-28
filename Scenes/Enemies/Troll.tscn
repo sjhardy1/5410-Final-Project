@@ -5,6 +5,7 @@
 [node name="Troll" type="Node2D"]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
+use_parent_material = true
 position = Vector2(-91, -94)
 scale = Vector2(6, 6)
 tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0)

@@ -11,13 +11,10 @@ public partial class IdleState : ICombatantState
 
     public void Enter()
     {
-        combatant.LinearVelocity = Vector2.Zero;
-        try
-        {
-            if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) sprite.Play("default");
+        if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) {
+            sprite.Play("default");
+            sprite.SpeedScale = 1f;
         }
-        catch(Exception e){GD.PrintErr("Error caused by " + combatant.CoreAttributes.DisplayName + "#" + combatant.uid + " in IdleState.Enter: " + e.Message);}
-        
     }
 
     public void Exit()

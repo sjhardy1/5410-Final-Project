@@ -8,6 +8,7 @@ public partial class GridOccupancyMap : Node2D
     [Export] public Vector2I CellSize { get; set; } = new Vector2I(64, 64);
     [Export] public Vector2I BoundsMinCell { get; set; } = new Vector2I(-10, -10);
     [Export] public Vector2I BoundsMaxCell { get; set; } = new Vector2I(10, 10);
+    [Export] public PackedScene notifScene;
 
     private TileMapLayer tiles;
     private readonly System.Collections.Generic.Dictionary<Vector2I, GridPlaceable> occupiedCells = new();
@@ -96,6 +97,9 @@ public partial class GridOccupancyMap : Node2D
     {
         if (!CanPlace(placeable, anchorCell))
         {
+            Notification notification = notifScene.Instantiate() as Notification;
+			notification.Initialize("Invalid placement!");
+			AddChild(notification);
             return false;
         }
         placeable.AnchorCell = anchorCell;

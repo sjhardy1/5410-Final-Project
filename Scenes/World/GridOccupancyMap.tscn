@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bh21usguyak6y"]
+[gd_scene load_steps=4 format=3 uid="uid://bh21usguyak6y"]
 
 [ext_resource type="Script" uid="uid://bwwu5pjjxs4mr" path="res://Scripts/Placement/GridOccupancyMap.cs" id="1_rgna5"]
 [ext_resource type="TileSet" uid="uid://ck545wppfjoej" path="res://Resources/Tilesets/Playfield.tres" id="2_0vby5"]
+[ext_resource type="PackedScene" uid="uid://dw82fb44cpb8u" path="res://Scenes/UI/Notification.tscn" id="2_phiip"]
 
 [node name="GridOccupancyMap" type="Node2D"]
 script = ExtResource("1_rgna5")
+BoundsMinCell = Vector2i(-11, -11)
+notifScene = ExtResource("2_phiip")
 
 [node name="Tiles" type="TileMapLayer" parent="."]
 tile_set = ExtResource("2_0vby5")

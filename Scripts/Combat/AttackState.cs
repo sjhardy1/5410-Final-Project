@@ -39,6 +39,7 @@ public partial class AttackState : ICombatantState
         {
             if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite) {
                 sprite.Play("attack");
+                sprite.SpeedScale = combatant.AttackSpeedMultipler;
             }
             combatant.PerformAttack(target);
             combatant.attackCooldownTimer = 0f; // Reset timer for next attack
@@ -55,6 +56,7 @@ public partial class AttackState : ICombatantState
         if(combatant.childScene.GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D") is AnimatedSprite2D sprite 
         && sprite.Animation == "attack") {
             sprite.Play("default");
+            sprite.SpeedScale = 1f;
         }
     }
 
