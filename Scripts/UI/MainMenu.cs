@@ -35,6 +35,9 @@ public partial class MainMenu : CanvasLayer
 			Notification notification = notifScene.Instantiate() as Notification;
 			notification.Initialize("No saved run found.");
 			AddChild(notification);
+			RunState runState = GetNode<RunState>("/root/RunState");
+			runState.sfxPlayer.Stream = runState.audioCache["denied"];
+			runState.sfxPlayer.Play();
 		}
 	}
 	private void TryStartNewGame()

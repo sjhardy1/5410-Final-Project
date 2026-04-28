@@ -398,6 +398,9 @@ public partial class GameRoot : Node2D
 			Notification notification = notifScene.Instantiate<Notification>();
 			notification.Initialize("Not enough food to recruit unit!");
 			AddChild(notification);
+			RunState runState = GetNode<RunState>("/root/RunState");
+			runState.sfxPlayer.Stream = runState.audioCache["denied"];
+			runState.sfxPlayer.Play();
 		}
 	}
 	private void OnConstructButtonPressed()
@@ -412,6 +415,9 @@ public partial class GameRoot : Node2D
 			Notification notification = notifScene.Instantiate<Notification>();
 			notification.Initialize("Not enough wood to construct building!");
 			AddChild(notification);
+			RunState runState = GetNode<RunState>("/root/RunState");
+			runState.sfxPlayer.Stream = runState.audioCache["denied"];
+			runState.sfxPlayer.Play();
 		}
 	}
 	private void OnChoicePicked(Dictionary<string, Variant> choiceData)

@@ -44,10 +44,27 @@ public partial class RunState : Node
     public int kitId = 0;
     public int difficulty = 0;
     public Dictionary<string, Variant> PurchasedUpgrades { get; private set; } = new Dictionary<string, Variant>();
+    public Dictionary<string, AudioStream> audioCache = new Dictionary<string, AudioStream>();
+    public AudioStreamPlayer musicPlayer = new AudioStreamPlayer();
+    public AudioStreamPlayer sfxPlayer = new AudioStreamPlayer();
+    public int masterVolume = 0;
+    public int sfxVolume = 0;
+    public int musicVolume = 0;
 
     public override void _Ready()
     {
         DowntimeTimeRemaining = defaultDowntimeSeconds;
+        audioCache["relaxed"] = GD.Load<AudioStream>("res://Assets/Audio/chill_music_looped.tres");
+        audioCache["intense"] = GD.Load<AudioStream>("res://Assets/Audio/intense_music_looped.tres");
+        audioCache["arrow"] = GD.Load<AudioStream>("res://Assets/Audio/arrow.wav");
+        audioCache["slash"] = GD.Load<AudioStream>("res://Assets/Audio/slash.wav");
+        audioCache["magic"] = GD.Load<AudioStream>("res://Assets/Audio/magic.wav");
+        audioCache["denied"] = GD.Load<AudioStream>("res://Assets/Audio/denied.wav");
+        musicPlayer.Stream = audioCache["relaxed"];
+        AddChild(musicPlayer);
+        musicPlayer.Play();
+        AddChild(sfxPlayer);
+        RegisterVolume();
     }
 
     public override void _Process(double delta)
@@ -73,6 +90,17 @@ public partial class RunState : Node
         DowntimeTimeRemaining = duration;
         SetPhase(RunPhase.Downtime);
         EmitSignal(nameof(TimerChanged), DowntimeTimeRemaining);
+    }
+    public void UpdateVolume(int master, int music, int sfx)
+    {
+        masterVolume = master;
+        musicVolume = music;
+        sfxVolume = sfx;
+        RegisterVolume();
+    }
+    private void RegisterVolume(){
+        musicPlayer.VolumeDb = -10f + masterVolume + musicVolume;
+        sfxPlayer.VolumeDb = -10f + masterVolume + sfxVolume;
     }
 
     public void StartRaid()
@@ -200,7 +228,7 @@ public partial class RunState : Node
         StoredPlaceables.Clear();
         ActiveCombatants.Clear();
         ActiveObjects.Clear();
-        Phase = RunPhase.Downtime;
+        SetPhase(RunPhase.Downtime);
 
         pendingConstruction = data.ContainsKey("pending_construction") ? (int)data["pending_construction"] : 0;
         Food = data.ContainsKey("food") ? (int)data["food"] : 200;
@@ -278,7 +306,15 @@ public partial class RunState : Node
         {
             return;
         }
-
+        if(next == RunPhase.Raid)
+        {
+            musicPlayer.Stream = audioCache["intense"];
+            musicPlayer.Play();
+        } else if (next == RunPhase.Downtime)
+        {
+            musicPlayer.Stream = audioCache["relaxed"];
+            musicPlayer.Play();
+        }
         RunPhase previous = Phase;
         Phase = next;
         EmitSignal(nameof(PhaseChanged), (int)previous, (int)Phase);
@@ -307,6 +343,20 @@ public partial class RunState : Node
         {
             PurchasedUpgrades = new Dictionary<string, Variant>();
         }
+        if(metaData.ContainsKey("audio_settings"))
+        {
+            Dictionary<string, Variant> audioSettings = (Dictionary<string, Variant>)metaData["audio_settings"];
+            masterVolume = audioSettings.ContainsKey("master") ? (int)audioSettings["master"] : 0;
+            musicVolume = audioSettings.ContainsKey("music") ? (int)audioSettings["music"] : 0;
+            sfxVolume = audioSettings.ContainsKey("sfx") ? (int)audioSettings["sfx"] : 0;
+        }
+        else
+        {
+            masterVolume = 0;
+            musicVolume = 0;
+            sfxVolume = 0;
+        }
+        RegisterVolume();
     }
 
     public Dictionary<string, Variant> ToMetaData()
@@ -314,7 +364,12 @@ public partial class RunState : Node
         return new Dictionary<string, Variant>
         {
             { "crystals", MetaCurrency },
-            { "upgrades", PurchasedUpgrades }
+            { "upgrades", PurchasedUpgrades },
+            {"audio_settings", new Dictionary<string, Variant>{
+                {"master", masterVolume},
+                {"music", musicVolume},
+                {"sfx", sfxVolume}
+            } }
         };
     }
 

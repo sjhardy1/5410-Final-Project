@@ -20,6 +20,9 @@ public partial class GameEndScreen : CanvasLayer
 		}
 		GetNode<Label>(roundsMessage).Text = $"Rounds completed: {roundsCompleted[0]}/{roundsCompleted[1]}";
 		GetNode<Label>(crystalMessage).Text = $"+{crystals} Crystals earned";
-		GetNode<Button>(button).Pressed += () => GetNode<GameManager>("/root/GameManager").ChangeScene("menu");
+		GetNode<Button>(button).Pressed += () => {
+			GetNode<RunState>("/root/RunState").StartDowntime();
+			GetNode<GameManager>("/root/GameManager").ChangeScene("menu");
+		};
 	}
 }

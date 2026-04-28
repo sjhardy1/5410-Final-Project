@@ -121,15 +121,15 @@ public partial class Combatant : RigidBody2D, ITargetable
         float wait = 0.25f;
         if(CoreAttributes.Id == "archer")
         {
-            return CreateProjectileAnimation(1500f, 0.5f, distance, target.Position, ArrowScene);
+            return CreateProjectileAnimation(1500f, 0.5f, distance, target.Position, "arrow");
         }
         if(CoreAttributes.Id == "sharpshooter")
         {
-            return CreateProjectileAnimation(3000f, 1f, distance, target.Position, ArrowScene);
+            return CreateProjectileAnimation(3000f, 1f, distance, target.Position, "arrow");
         }
         if(CoreAttributes.Id == "black_mage")
         {
-            return CreateProjectileAnimation(400f, 0f, distance, target.Position, DarkOrbScene);
+            return CreateProjectileAnimation(400f, 0f, distance, target.Position, "dark_orb");
         }
         if(faction == Faction.Enemy)
         {
@@ -138,11 +138,20 @@ public partial class Combatant : RigidBody2D, ITargetable
             slashInstance.AnimationLooped += slashInstance.QueueFree;
             slashInstance.Rotation += direction.Angle();
             slashInstance.Position = direction * (distance - 64);
+            RunState runState = GetNode<RunState>("/root/RunState");
+            runState.sfxPlayer.Stream = runState.audioCache["slash"];
+            runState.sfxPlayer.Play();
         }
         return wait;
     }
-    private float CreateProjectileAnimation(float speed, float chargeDelay, float distance, Vector2 targetPosition, PackedScene projectileScene)
+    private float CreateProjectileAnimation(float speed, float chargeDelay, float distance, Vector2 targetPosition, string type)
     {
+        PackedScene projectileScene = type switch
+        {
+            "arrow" => ArrowScene,
+            "dark_orb" => DarkOrbScene,
+            _ => SlashScene
+        };
         Projectile projectileInstance = projectileScene.Instantiate<Projectile>();
         float liveTime = distance / speed;
         projectileInstance.Initialize(targetPosition, speed, liveTime);
@@ -152,7 +161,9 @@ public partial class Combatant : RigidBody2D, ITargetable
             timer.WaitTime = chargeDelay;
             timer.Autostart = true;
             timer.Timeout += () => {
-                GD.Print("Creating delayed projectile towards " + targetPosition);
+                RunState runState = GetNode<RunState>("/root/RunState");
+                runState.sfxPlayer.Stream = runState.audioCache[type == "arrow" ? "arrow" : "magic"];
+                runState.sfxPlayer.Play();
                 AddChild(projectileInstance);
                 timer.QueueFree();
             };
