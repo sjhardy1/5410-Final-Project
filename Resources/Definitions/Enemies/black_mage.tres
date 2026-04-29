@@ -23,6 +23,7 @@ script = ExtResource("3_io02b")
 AttackDamage = 40.0
 AttackRange = 5.0
 AttackCooldown = 1.2
+KnockbackCoefficient = 0.5
 metadata/_custom_type_script = "uid://b5jbjr2bqll35"
 
 [resource]

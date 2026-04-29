@@ -10,6 +10,7 @@ public partial class Projectile : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		ZIndex = 100;
 		Timer timer = new Timer();
 		timer.WaitTime = liveTime;
 		timer.Autostart = true;
@@ -28,8 +29,9 @@ public partial class Projectile : Node2D
 		if (hitEffectScene != null)
 		{
 			AnimatedSprite2D hitEffectInstance = hitEffectScene.Instantiate<AnimatedSprite2D>();
-			hitEffectInstance.GlobalPosition = targetGlobalPosition;
 			GetParent().AddChild(hitEffectInstance);
+			hitEffectInstance.GlobalPosition = targetGlobalPosition;
+			hitEffectInstance.ZIndex = 100;
 			hitEffectInstance.AnimationLooped += () =>
 			{
 				hitEffectInstance.QueueFree();

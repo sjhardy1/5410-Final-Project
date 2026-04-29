@@ -51,6 +51,7 @@ public partial class RunState : Node
     public int masterVolume = 0;
     public int sfxVolume = 0;
     public int musicVolume = 0;
+    public bool starvation = false;
 
     public override void _Ready()
     {
@@ -151,11 +152,13 @@ public partial class RunState : Node
         return true;
     }
 
-    public void ForceSpendResources(int foodCost, int woodCost)
+    public bool ForceSpendResources(int foodCost, int woodCost)
     {
+        bool paidInFull = Food >= foodCost && Wood >= woodCost;
         Food = Mathf.Max(0, Food - foodCost);
         Wood = Mathf.Max(0, Wood - woodCost);
         EmitSignal(nameof(ResourcesChanged), Food, Wood, MetaCurrency);
+        return paidInFull;
     }
 
     public void AddMetaCurrency(int amount)

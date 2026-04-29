@@ -9,7 +9,7 @@ public partial class UpkeepReport : CanvasLayer
     [Export] public NodePath newFoodPath;
     [Export] public NodePath newWoodPath;
     private VBoxContainer contentBox;
-    public void Initialize(Queue<string> foodChangeSources, Queue<int> foodChanges, Queue<string> woodChangeSources, Queue<int> woodChanges, int newFood, int newWood, bool insufficientWood)
+    public void Initialize(Queue<string> foodChangeSources, Queue<int> foodChanges, Queue<string> woodChangeSources, Queue<int> woodChanges, int newFood, int newWood, bool insufficientWood, bool starvation)
     {
         contentBox = GetNode<VBoxContainer>("ContentBox");
         foreach(Node child in contentBox.GetChildren())
@@ -42,13 +42,11 @@ public partial class UpkeepReport : CanvasLayer
         AddEntry("Total Wood Upkeep", totalWoodChange, "Wood");
         if(insufficientWood)
         {
-            Label warningLabel = new Label();
-            warningLabel.Text = "! Residents don't have enough wood to cook their food. Food consumption efficiency greatly decreased.";
-            warningLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
-            warningLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.5f, 0.2f));
-            warningLabel.AddThemeFontSizeOverride("font_size", 12);
-            contentBox.AddChild(warningLabel);
-            contentBox.MoveChild(warningLabel, contentBox.GetChildCount() - 4);
+            AddWarningLabel("! Residents don't have enough wood to maintain their buildings. Wood upkeep efficiency greatly decreased.");
+        }
+        if(starvation)
+        {
+            AddWarningLabel("! Residents are starving and cannot work or fight effectively.");
         }
         GetNode<Label>(newFoodPath).Text = $"Food: {newFood}";
         GetNode<Label>(newWoodPath).Text = $"Wood: {newWood}";
@@ -77,6 +75,16 @@ public partial class UpkeepReport : CanvasLayer
         entry.AddChild(typeLabel);
         contentBox.AddChild(entry);
         contentBox.MoveChild(entry, contentBox.GetChildCount() - 4);
+    }
+    public void AddWarningLabel(string message)
+    {
+        Label warningLabel = new Label();
+        warningLabel.Text = message;
+        warningLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+        warningLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.2f, 0.2f));
+        warningLabel.AddThemeFontSizeOverride("font_size", 12);
+        contentBox.AddChild(warningLabel);
+        contentBox.MoveChild(warningLabel, contentBox.GetChildCount() - 4);
     }
     public void AddBreak()
     {

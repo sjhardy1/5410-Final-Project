@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" load_steps=10 format=3 uid="uid://babuepmkbswbx"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_skhnq"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_hpn8k"]
+[ext_resource type="Resource" uid="uid://duxipoiu1r5hk" path="res://Resources/Footprints/3x3.tres" id="3_s6h8a"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_jv4dc"]
+[ext_resource type="PackedScene" uid="uid://c5ytmbf8ljg0m" path="res://Scenes/Buildings/Orchard.tscn" id="5_fvi2l"]
+[ext_resource type="Script" uid="uid://dhuqnws7k75f2" path="res://Scripts/Resources/BuildingDefinition.cs" id="6_xagbw"]
+
+[sub_resource type="Resource" id="Resource_kd3xg"]
+script = ExtResource("1_skhnq")
+Id = "orchard"
+DisplayName = "Orchard"
+Description = "Produces 40 food and 10 wood per round. Decreases all units' attack speed."
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_ffeoj"]
+script = ExtResource("2_hpn8k")
+MaxHealth = 1000.0
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_r7isf"]
+script = ExtResource("4_jv4dc")
+UnlockWave = 4
+Rarity = 2
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[resource]
+script = ExtResource("6_xagbw")
+CoreAttributes = SubResource("Resource_kd3xg")
+LootAttributes = SubResource("Resource_r7isf")
+Footprint = ExtResource("3_s6h8a")
+DefensiveAttributes = SubResource("Resource_ffeoj")
+UpkeepFoodPerRound = 3
+UpkeepWoodPerRound = 3
+Scene = ExtResource("5_fvi2l")
+ProductionFoodPerRound = 40
+ProductionWoodPerRound = 10

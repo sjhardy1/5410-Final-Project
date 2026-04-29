@@ -138,13 +138,14 @@ public partial class Combatant : RigidBody2D, ITargetable
         {
             return CreateProjectileAnimation(1000f, 0.5f, distance, target.Position, "fireball", ExplosionScene);
         }
-        if(faction == Faction.Enemy)
+        if(faction == Faction.Enemy || CoreAttributes.Id == "cow")
         {
             AnimatedSprite2D slashInstance = SlashScene.Instantiate<AnimatedSprite2D>();
             AddChild(slashInstance);
             slashInstance.AnimationLooped += slashInstance.QueueFree;
             slashInstance.Rotation += direction.Angle();
             slashInstance.Position = direction * (distance - 64);
+            slashInstance.ZIndex = 100;
             RunState runState = GetNode<RunState>("/root/RunState");
             runState.sfxPlayer.Stream = runState.audioCache["slash"];
             runState.sfxPlayer.Play();

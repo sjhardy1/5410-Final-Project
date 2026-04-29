@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=4 uid="uid://c5ytmbf8ljg0m"]
+
+[ext_resource type="Script" uid="uid://bdtaosq7yhcy7" path="res://Scripts/Placement/GridPlaceable.cs" id="1_8hdxn"]
+[ext_resource type="TileSet" uid="uid://cl8l4wvubm2hm" path="res://Resources/Tilesets/Farm.tres" id="1_rq27v"]
+[ext_resource type="TileSet" uid="uid://dcuvsgegy3fbr" path="res://Resources/Tilesets/Details.tres" id="2_8hdxn"]
+
+[node name="Orchard" type="Node2D"]
+script = ExtResource("1_8hdxn")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+use_parent_material = true
+tile_map_data = PackedByteArray("AAAAAP7/BQAAAAAAAAAAAP//BQAAAAEAAAAAAAAABQAAAAIAAAABAP7/BQABAAAAAAABAP//BQABAAEAAAABAAAABQABAAIAAAA=")
+tile_set = ExtResource("1_rq27v")
+
+[node name="TileMapLayer2" type="TileMapLayer" parent="."]
+use_parent_material = true
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAD///7/AAADAAMAAAADAAIAAAAAAAEAAAACAAMAAAACAAMAAAADAAMAAAADAAIAAAAAAAMAAAACAAMAAAABAAMAAAACAAMAAAD+/wIAAAAAAAEAAAD+/wMAAAABAAIAAAD//wMAAAACAAMAAAD+/wAAAAAAAAEAAAD+/wEAAAAAAAEAAAD+////AAAAAAEAAAD+//7/AAABAAAAAAADAAEAAAAAAAAAAAABAAEAAgADAAAAAAABAAIAAgADAAEAAAACAAEAAgAEAAAAAAACAAIAAgAEAAEAAAD//wEAAgADAAAAAAD//wIAAgADAAEAAAAAAAEAAgAEAAAAAAAAAAIAAgAEAAEAAAD/////AgAAAAMAAAD//wAAAgAAAAMAAAA=")
+tile_set = ExtResource("2_8hdxn")

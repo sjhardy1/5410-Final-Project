@@ -129,7 +129,6 @@ public partial class GameRoot : Node2D
 	}
 	private void ResolveUpkeep(int healCost, int repairCost)
 	{
-
 		for(int i = 0; i < runState.pendingConstruction; i++)
 		{
 			lootQueue.Enqueue(new PendingLoot(3, LootType.Building));
@@ -145,6 +144,7 @@ public partial class GameRoot : Node2D
 		int totalBuildingWoodUpkeep = 0;
 		int totalUnitFoodUpkeep = 0;
 		bool decreasedFoodEfficiency = false;
+		bool starvation = false;
 		runState.ForceSpendResources(healCost, repairCost);
 		if(healCost > 0)
 		{
@@ -194,20 +194,20 @@ public partial class GameRoot : Node2D
 				//Spend Resources
 				if(runState.TrySpendResources(0, buildingDef.UpkeepWoodPerRound))
 				{
-					runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0);
+					if(!runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0)) starvation = true;
 					totalBuildingFoodUpkeep += placeable.def.UpkeepFoodPerRound;
 					totalBuildingWoodUpkeep += buildingDef.UpkeepWoodPerRound;
 				}
 				else
 				{
 					decreasedFoodEfficiency = true;
-					runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound, 0);
+					if(!runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound, 0)) starvation = true;
 					totalBuildingFoodUpkeep += placeable.def.UpkeepFoodPerRound * 2 + buildingDef.UpkeepWoodPerRound;
 				}
 			}
 			if(placeable.def is UnitDefinition)
 			{
-				runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0);
+				if(!runState.ForceSpendResources(placeable.def.UpkeepFoodPerRound, 0)) starvation = true;
 				totalUnitFoodUpkeep += placeable.def.UpkeepFoodPerRound;
 			}
 		}
@@ -237,8 +237,10 @@ public partial class GameRoot : Node2D
 		}
 		woodChangeSources.Enqueue("Building Upkeep");
 		woodChanges.Enqueue(-totalBuildingWoodUpkeep);
+		runState.starvation = starvation;
+
 		UpkeepReport upkeepReport = upkeepReportScene.Instantiate<UpkeepReport>();
-		upkeepReport.Initialize(foodChangeSources, foodChanges, woodChangeSources, woodChanges, runState.Food, runState.Wood, decreasedFoodEfficiency);
+		upkeepReport.Initialize(foodChangeSources, foodChanges, woodChangeSources, woodChanges, runState.Food, runState.Wood, decreasedFoodEfficiency, starvation);
 		AddChild(upkeepReport);
 		MarkScreenAsBusy();
 		upkeepReport.TreeExited += MarkScreenAsFree;

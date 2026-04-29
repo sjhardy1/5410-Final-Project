@@ -69,6 +69,8 @@ public partial class RaidController : Node2D
         if (IsRaidOver())
         {
             signalBus.PublishRaidEnded(healCost, repairCost);
+            healCost = 0;
+            repairCost = 0;
             CleanupRaid();
         }
         if (isGameLost())
@@ -148,12 +150,22 @@ public partial class RaidController : Node2D
                 combatant.OffensiveAttributes.AttackDamage += 10;
                 combatant.moveSpeed += 25;
             }
+            if(buffer.def.CoreAttributes.Id == "orchard")
+            {
+                float newCooldown = Mathf.Pow(combatant.OffensiveAttributes.AttackCooldown * 5, 1.1f) / 5;
+                combatant.AttackSpeedMultipler *= combatant.OffensiveAttributes.AttackCooldown / newCooldown;
+                combatant.OffensiveAttributes.AttackCooldown = newCooldown;
+            }
             if(buffer.def.CoreAttributes.Id == "workshop")
             {
                 float newCooldown = Mathf.Pow(combatant.OffensiveAttributes.AttackCooldown * 5, 0.8f) / 5;
                 combatant.AttackSpeedMultipler *= combatant.OffensiveAttributes.AttackCooldown / newCooldown;
                 combatant.OffensiveAttributes.AttackCooldown = newCooldown;
             }
+        }
+        if (runState.starvation)
+        {
+            combatant.DefensiveAttributes.Health *= 0.5f;
         }
         runState.ActiveCombatants.Add(combatant);
         combatant.Position = placeable.AnchorCell * 64 + Vector2.One * 32;

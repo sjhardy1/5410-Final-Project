@@ -34,6 +34,5 @@ CoreAttributes = SubResource("Resource_w1rsf")
 DefensiveAttributes = SubResource("Resource_mtmth")
 OffensiveAttributes = SubResource("Resource_hys3t")
 moveSpeed = 75.0
-Value = 150
-minimumWave = 6
+Value = 5
 Scene = ExtResource("4_1fjcg")

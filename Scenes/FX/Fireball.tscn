@@ -224,5 +224,6 @@ animations = [{
 [node name="Fireball" type="AnimatedSprite2D"]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_33hk1")
+autoplay = "default"
 frame_progress = 0.8613189
 script = ExtResource("1_upq2u")
