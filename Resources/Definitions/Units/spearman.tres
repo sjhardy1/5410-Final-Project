@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://1e4ier4wv6vo"]
+
+[ext_resource type="Script" uid="uid://yaxpoere2ivy" path="res://Scripts/Resources/CoreAttributes.cs" id="1_0k05q"]
+[ext_resource type="Script" uid="uid://ps3pt1ne84ju" path="res://Scripts/Resources/DefensiveAttributes.cs" id="2_rhxl2"]
+[ext_resource type="Script" uid="uid://c7yxj2rsk70jq" path="res://Scripts/Resources/FootprintShape.cs" id="3_7c4o0"]
+[ext_resource type="Script" uid="uid://56jqwa01y5dl" path="res://Scripts/Resources/LootAttributes.cs" id="4_y622s"]
+[ext_resource type="Script" uid="uid://b5jbjr2bqll35" path="res://Scripts/Resources/OffensiveAttributes.cs" id="5_idf8l"]
+[ext_resource type="PackedScene" uid="uid://cal8i3jhwsi00" path="res://Scenes/Units/Spearman.tscn" id="6_0a07d"]
+[ext_resource type="Script" uid="uid://ck4gj522yac40" path="res://Scripts/Resources/UnitDefinition.cs" id="7_21chs"]
+
+[sub_resource type="Resource" id="Resource_gp48f"]
+script = ExtResource("1_0k05q")
+Id = "spearman"
+DisplayName = "Spearman"
+Description = "Attacks super quickly"
+metadata/_custom_type_script = "uid://yaxpoere2ivy"
+
+[sub_resource type="Resource" id="Resource_vgi42"]
+script = ExtResource("2_rhxl2")
+MaxHealth = 150.0
+Armor = 10.0
+WeightCoefficient = 1.5
+metadata/_custom_type_script = "uid://ps3pt1ne84ju"
+
+[sub_resource type="Resource" id="Resource_3k1hr"]
+script = ExtResource("3_7c4o0")
+metadata/_custom_type_script = "uid://c7yxj2rsk70jq"
+
+[sub_resource type="Resource" id="Resource_u33ii"]
+script = ExtResource("4_y622s")
+UnlockWave = 3
+Rarity = 2
+metadata/_custom_type_script = "uid://56jqwa01y5dl"
+
+[sub_resource type="Resource" id="Resource_8jdlu"]
+script = ExtResource("5_idf8l")
+AttackDamage = 20.0
+AttackRange = 2.5
+AttackCooldown = 0.3
+KnockbackCoefficient = 0.5
+metadata/_custom_type_script = "uid://b5jbjr2bqll35"
+
+[resource]
+script = ExtResource("7_21chs")
+CoreAttributes = SubResource("Resource_gp48f")
+LootAttributes = SubResource("Resource_u33ii")
+Footprint = SubResource("Resource_3k1hr")
+DefensiveAttributes = SubResource("Resource_vgi42")
+OffensiveAttributes = SubResource("Resource_8jdlu")
+moveSpeed = 120.0
+UpkeepFoodPerRound = 15
+Scene = ExtResource("6_0a07d")
